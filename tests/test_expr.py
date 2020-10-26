@@ -2,13 +2,26 @@
 
 import pytest
 
-from antlr4 import InputStream, CommonTokenStream
+from typing import List
+
+from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
 
 
-from wizard.expr import WizardExpressionVisitor, SubPackages, Value, VariableType
-from wizard.errors import WizardNameError, WizardTypeError
+from wizard.expr import (
+    WizardExpressionVisitor,
+    SubPackage,
+    SubPackages,
+    Value,
+    VariableType,
+)
+from wizard.errors import (
+    WizardNameError,
+    WizardParseError,
+    WizardTypeError,
+    WizardIndexError,
+)
 
 
 class ExpressionChecker(WizardExpressionVisitor):
@@ -17,6 +30,7 @@ class ExpressionChecker(WizardExpressionVisitor):
         lexer = wizardLexer(input_stream)
         stream = CommonTokenStream(lexer)
         parser = wizardParser(stream)
+        parser._errHandler = BailErrorStrategy()
         return self.visitExpr(parser.parseWizard().body().expr(0))
 
 
@@ -51,12 +65,10 @@ def test_constant():
     assert c.parse('"hello world"') == Value("hello world")
 
 
-def test_add_minus():
+def test_add_sub():
 
     c = ExpressionChecker(
-        {"x": Value(4), "y": Value(-3), "s": Value("hello"), "b": Value(False)},
-        SubPackages([]),
-        {},
+        {"x": Value(4), "y": Value(-3), "s": Value("hello")}, SubPackages([]), {},
     )
 
     # Constant / Ints.
@@ -86,6 +98,22 @@ def test_add_minus():
         c.parse("x + 'a'")
 
 
+def test_mul_div_mod_pow():
+
+    c = ExpressionChecker({"x": Value(4), "y": Value(1.3)}, SubPackages([]), {})
+
+    # Constant:
+    assert c.parse("3 * 4") == Value(12)
+    assert c.parse("3 * 1.5") == Value(4.5)
+    assert c.parse("3 / 2") == Value(1.5)
+    assert c.parse("3 % 4") == Value(3)
+    assert c.parse("4 % 3") == Value(1)
+    assert c.parse("2 ^ 4") == Value(16)
+
+    # Variables:
+    assert c.parse("x / 8") == Value(0.5)
+
+
 def test_increment_decrement():
 
     c = ExpressionChecker({"x": Value(0), "y": Value(0)}, SubPackages([]), {})
@@ -101,6 +129,40 @@ def test_increment_decrement():
 
     assert c.parse("y--") == Value(-1)
     assert c._variables["y"] == Value(-1)
+
+
+def test_containers():
+    class MySubPackage(SubPackage):
+
+        _files: List[str]
+
+        def __new__(cls, name: str, files: List[str]):
+            value = SubPackage.__new__(cls, name)
+            value._files = files
+            return value
+
+        def files(self):
+            return iter(self._files)
+
+    subpackages = SubPackages(
+        [MySubPackage("foo", ["a", "x/y", "b"]), MySubPackage("bar", ["b", "u", "c/d"])]
+    )
+
+    c = ExpressionChecker({}, subpackages, {})
+
+    assert c.parse("SubPackages") == Value(subpackages)
+    assert c.parse("SubPackages[0]") == Value(subpackages[0])
+    assert c.parse("SubPackages[1]") == Value(subpackages[1])
+
+    with pytest.raises(WizardIndexError):
+        c.parse("SubPackages[10]")
+
+    assert c.parse("SubPackages[0] == 'foo'") == Value(True)
+    assert c.parse("SubPackages[0] == 'fo'") == Value(False)
+
+    assert c.parse("'foo' in SubPackages") == Value(True)
+    assert c.parse("'bar' in SubPackages") == Value(True)
+    assert c.parse("'baz' in SubPackages") == Value(False)
 
 
 def test_functions():

@@ -9,6 +9,15 @@ class WizardError(Exception):
     pass
 
 
+class WizardParseError(WizardError):
+
+    """
+    Error raised when a parsing error occurs.
+    """
+
+    pass
+
+
 class WizardUnsupportedOperation(WizardError):
     """
     Error raised when an operation is not supported (not yet implemented).

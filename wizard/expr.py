@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from abc import abstractmethod
+from abc import abstractproperty
 from enum import Enum, auto
 from typing import (
     Callable,
@@ -33,22 +33,12 @@ class Void:
     pass
 
 
-class SubPackage(str, Iterable[str]):
+class SubPackage(str):
+    def __new__(cls, *args, **kwargs):
+        return str.__new__(cls, *args, **kwargs)
 
-    _name: str
-
-    def __init__(self, name: str):
-        self._name = name
-
-    @property
-    def name(self) -> str:
-        """
-        Returns:
-            The name of this subpackage.
-        """
-
-    @abstractmethod
-    def __iter__(self) -> Iterator[str]:
+    @abstractproperty
+    def files(self) -> Iterable[str]:
         pass
 
 
@@ -79,9 +69,9 @@ class VariableType(Enum):
     def from_pytype(pytype: Type) -> "VariableType":
         if pytype is Void:
             return VariableType.VOID
-        if pytype is SubPackages:
+        if issubclass(pytype, SubPackages):
             return VariableType.LIST_SUBPACKAGES
-        if pytype is SubPackage:
+        if issubclass(pytype, SubPackage):
             return VariableType.SUBPACKAGE
         if pytype is bool:
             return VariableType.BOOL
@@ -277,7 +267,13 @@ class Value:
         if case_insensitive:
             item = Value(item._value.lower())
 
-        for istr in iter(self._value):
+        it: Iterable[str]
+        if isinstance(self._value, SubPackages):
+            it = iter(self._value)
+        else:
+            it = self._value.files
+
+        for istr in it:
             if case_insensitive:
                 istr = istr.lower()
             if item._value == istr:
@@ -300,7 +296,13 @@ class Value:
         if not isinstance(self._value, (SubPackage, SubPackages)):
             raise WizardTypeError(f"Cannot iterate variable of type {self._type}.")
 
-        return (Value(x) for x in self._value)
+        it: Iterable[str]
+        if isinstance(self._value, SubPackages):
+            it = iter(self._value)
+        else:
+            it = self._value.files
+
+        return (Value(x) for x in it)
 
     # Those operations are not "Wizardly", i.e. they make sense in Python:
 
@@ -321,6 +323,9 @@ class Value:
 
     def __bool__(self) -> bool:
         return bool(self._value)
+
+    def __repr__(self) -> str:
+        return "{}({})".format(self.type, self.value)
 
 
 class WizardExpressionVisitor:
