@@ -2,8 +2,6 @@
 
 import pytest
 
-from typing import List
-
 from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
@@ -11,14 +9,12 @@ from wizard.antlr4.wizardParser import wizardParser
 
 from wizard.expr import (
     WizardExpressionVisitor,
-    SubPackage,
     SubPackages,
     Value,
     VariableType,
 )
 from wizard.errors import (
     WizardNameError,
-    WizardParseError,
     WizardTypeError,
     WizardIndexError,
 )
@@ -132,20 +128,13 @@ def test_increment_decrement():
 
 
 def test_containers():
-    class MySubPackage(SubPackage):
-
-        _files: List[str]
-
-        def __new__(cls, name: str, files: List[str]):
-            value = SubPackage.__new__(cls, name)
-            value._files = files
-            return value
-
-        def files(self):
-            return iter(self._files)
+    from .test_utils import MockSubPackage
 
     subpackages = SubPackages(
-        [MySubPackage("foo", ["a", "x/y", "b"]), MySubPackage("bar", ["b", "u", "c/d"])]
+        [
+            MockSubPackage("foo", ["a", "x/y", "b"]),
+            MockSubPackage("bar", ["b", "u", "c/d"]),
+        ]
     )
 
     c = ExpressionChecker({}, subpackages, {})

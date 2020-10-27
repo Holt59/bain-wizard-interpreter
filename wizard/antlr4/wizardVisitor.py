@@ -1,4 +1,4 @@
-# Generated from .\wizard.g4 by ANTLR 4.8
+# Generated from .\wizparse\wizards\wizard.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .wizardParser import wizardParser
@@ -34,8 +34,43 @@ class wizardVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#controlFlowStmt.
-    def visitControlFlowStmt(self, ctx:wizardParser.ControlFlowStmtContext):
+    # Visit a parse tree produced by wizardParser#Break.
+    def visitBreak(self, ctx:wizardParser.BreakContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#Cancel.
+    def visitCancel(self, ctx:wizardParser.CancelContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#Continue.
+    def visitContinue(self, ctx:wizardParser.ContinueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#For.
+    def visitFor(self, ctx:wizardParser.ForContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#If.
+    def visitIf(self, ctx:wizardParser.IfContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#Return.
+    def visitReturn(self, ctx:wizardParser.ReturnContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#Select.
+    def visitSelect(self, ctx:wizardParser.SelectContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by wizardParser#While.
+    def visitWhile(self, ctx:wizardParser.WhileContext):
         return self.visitChildren(ctx)
 
 
@@ -64,13 +99,13 @@ class wizardVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#forRangeLoop.
-    def visitForRangeLoop(self, ctx:wizardParser.ForRangeLoopContext):
+    # Visit a parse tree produced by wizardParser#forRangeHeader.
+    def visitForRangeHeader(self, ctx:wizardParser.ForRangeHeaderContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#forInLoop.
-    def visitForInLoop(self, ctx:wizardParser.ForInLoopContext):
+    # Visit a parse tree produced by wizardParser#forInHeader.
+    def visitForInHeader(self, ctx:wizardParser.ForInHeaderContext):
         return self.visitChildren(ctx)
 
 
@@ -119,113 +154,108 @@ class wizardVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#TIMES_DIVIDE_MODULO.
-    def visitTIMES_DIVIDE_MODULO(self, ctx:wizardParser.TIMES_DIVIDE_MODULOContext):
+    # Visit a parse tree produced by wizardParser#PreIncrement.
+    def visitPreIncrement(self, ctx:wizardParser.PreIncrementContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#PLUS_MINUS.
-    def visitPLUS_MINUS(self, ctx:wizardParser.PLUS_MINUSContext):
+    # Visit a parse tree produced by wizardParser#DotFunctionCall.
+    def visitDotFunctionCall(self, ctx:wizardParser.DotFunctionCallContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#CONSTANTS.
-    def visitCONSTANTS(self, ctx:wizardParser.CONSTANTSContext):
+    # Visit a parse tree produced by wizardParser#Or.
+    def visitOr(self, ctx:wizardParser.OrContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#OR.
-    def visitOR(self, ctx:wizardParser.ORContext):
+    # Visit a parse tree produced by wizardParser#In.
+    def visitIn(self, ctx:wizardParser.InContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#FUNCTION_CALL.
-    def visitFUNCTION_CALL(self, ctx:wizardParser.FUNCTION_CALLContext):
+    # Visit a parse tree produced by wizardParser#PostDecrement.
+    def visitPostDecrement(self, ctx:wizardParser.PostDecrementContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#LESSER.
-    def visitLESSER(self, ctx:wizardParser.LESSERContext):
+    # Visit a parse tree produced by wizardParser#TimesDivideModulo.
+    def visitTimesDivideModulo(self, ctx:wizardParser.TimesDivideModuloContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#IN.
-    def visitIN(self, ctx:wizardParser.INContext):
+    # Visit a parse tree produced by wizardParser#Index.
+    def visitIndex(self, ctx:wizardParser.IndexContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#EQUAL.
-    def visitEQUAL(self, ctx:wizardParser.EQUALContext):
+    # Visit a parse tree produced by wizardParser#Exponentiation.
+    def visitExponentiation(self, ctx:wizardParser.ExponentiationContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#GREATER.
-    def visitGREATER(self, ctx:wizardParser.GREATERContext):
+    # Visit a parse tree produced by wizardParser#PlusMinus.
+    def visitPlusMinus(self, ctx:wizardParser.PlusMinusContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#POWER.
-    def visitPOWER(self, ctx:wizardParser.POWERContext):
+    # Visit a parse tree produced by wizardParser#Not.
+    def visitNot(self, ctx:wizardParser.NotContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#INDEXING.
-    def visitINDEXING(self, ctx:wizardParser.INDEXINGContext):
+    # Visit a parse tree produced by wizardParser#Lesser.
+    def visitLesser(self, ctx:wizardParser.LesserContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#PRE_DECREMENT.
-    def visitPRE_DECREMENT(self, ctx:wizardParser.PRE_DECREMENTContext):
+    # Visit a parse tree produced by wizardParser#Negative.
+    def visitNegative(self, ctx:wizardParser.NegativeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#PRE_INCREMENT.
-    def visitPRE_INCREMENT(self, ctx:wizardParser.PRE_INCREMENTContext):
+    # Visit a parse tree produced by wizardParser#Equal.
+    def visitEqual(self, ctx:wizardParser.EqualContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#MINUS.
-    def visitMINUS(self, ctx:wizardParser.MINUSContext):
+    # Visit a parse tree produced by wizardParser#And.
+    def visitAnd(self, ctx:wizardParser.AndContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#POST_INCREMENT.
-    def visitPOST_INCREMENT(self, ctx:wizardParser.POST_INCREMENTContext):
+    # Visit a parse tree produced by wizardParser#Slice.
+    def visitSlice(self, ctx:wizardParser.SliceContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#NOT.
-    def visitNOT(self, ctx:wizardParser.NOTContext):
+    # Visit a parse tree produced by wizardParser#Value.
+    def visitValue(self, ctx:wizardParser.ValueContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#METHOD_CALL.
-    def visitMETHOD_CALL(self, ctx:wizardParser.METHOD_CALLContext):
+    # Visit a parse tree produced by wizardParser#Greater.
+    def visitGreater(self, ctx:wizardParser.GreaterContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#PARENS.
-    def visitPARENS(self, ctx:wizardParser.PARENSContext):
+    # Visit a parse tree produced by wizardParser#FunctionCall.
+    def visitFunctionCall(self, ctx:wizardParser.FunctionCallContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#POST_DECREMENT.
-    def visitPOST_DECREMENT(self, ctx:wizardParser.POST_DECREMENTContext):
+    # Visit a parse tree produced by wizardParser#PostIncrement.
+    def visitPostIncrement(self, ctx:wizardParser.PostIncrementContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#VARIABLE.
-    def visitVARIABLE(self, ctx:wizardParser.VARIABLEContext):
+    # Visit a parse tree produced by wizardParser#ParenExpr.
+    def visitParenExpr(self, ctx:wizardParser.ParenExprContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by wizardParser#SLICING.
-    def visitSLICING(self, ctx:wizardParser.SLICINGContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by wizardParser#AND.
-    def visitAND(self, ctx:wizardParser.ANDContext):
+    # Visit a parse tree produced by wizardParser#PreDecrement.
+    def visitPreDecrement(self, ctx:wizardParser.PreDecrementContext):
         return self.visitChildren(ctx)
 
 

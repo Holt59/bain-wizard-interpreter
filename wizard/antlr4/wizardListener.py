@@ -1,4 +1,4 @@
-# Generated from .\wizard.g4 by ANTLR 4.8
+# Generated from .\wizparse\wizards\wizard.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .wizardParser import wizardParser
@@ -53,12 +53,75 @@ class wizardListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#controlFlowStmt.
-    def enterControlFlowStmt(self, ctx:wizardParser.ControlFlowStmtContext):
+    # Enter a parse tree produced by wizardParser#Break.
+    def enterBreak(self, ctx:wizardParser.BreakContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#controlFlowStmt.
-    def exitControlFlowStmt(self, ctx:wizardParser.ControlFlowStmtContext):
+    # Exit a parse tree produced by wizardParser#Break.
+    def exitBreak(self, ctx:wizardParser.BreakContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Cancel.
+    def enterCancel(self, ctx:wizardParser.CancelContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Cancel.
+    def exitCancel(self, ctx:wizardParser.CancelContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Continue.
+    def enterContinue(self, ctx:wizardParser.ContinueContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Continue.
+    def exitContinue(self, ctx:wizardParser.ContinueContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#For.
+    def enterFor(self, ctx:wizardParser.ForContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#For.
+    def exitFor(self, ctx:wizardParser.ForContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#If.
+    def enterIf(self, ctx:wizardParser.IfContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#If.
+    def exitIf(self, ctx:wizardParser.IfContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Return.
+    def enterReturn(self, ctx:wizardParser.ReturnContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Return.
+    def exitReturn(self, ctx:wizardParser.ReturnContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Select.
+    def enterSelect(self, ctx:wizardParser.SelectContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Select.
+    def exitSelect(self, ctx:wizardParser.SelectContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#While.
+    def enterWhile(self, ctx:wizardParser.WhileContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#While.
+    def exitWhile(self, ctx:wizardParser.WhileContext):
         pass
 
 
@@ -107,21 +170,21 @@ class wizardListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#forRangeLoop.
-    def enterForRangeLoop(self, ctx:wizardParser.ForRangeLoopContext):
+    # Enter a parse tree produced by wizardParser#forRangeHeader.
+    def enterForRangeHeader(self, ctx:wizardParser.ForRangeHeaderContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#forRangeLoop.
-    def exitForRangeLoop(self, ctx:wizardParser.ForRangeLoopContext):
+    # Exit a parse tree produced by wizardParser#forRangeHeader.
+    def exitForRangeHeader(self, ctx:wizardParser.ForRangeHeaderContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#forInLoop.
-    def enterForInLoop(self, ctx:wizardParser.ForInLoopContext):
+    # Enter a parse tree produced by wizardParser#forInHeader.
+    def enterForInHeader(self, ctx:wizardParser.ForInHeaderContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#forInLoop.
-    def exitForInLoop(self, ctx:wizardParser.ForInLoopContext):
+    # Exit a parse tree produced by wizardParser#forInHeader.
+    def exitForInHeader(self, ctx:wizardParser.ForInHeaderContext):
         pass
 
 
@@ -206,201 +269,192 @@ class wizardListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#TIMES_DIVIDE_MODULO.
-    def enterTIMES_DIVIDE_MODULO(self, ctx:wizardParser.TIMES_DIVIDE_MODULOContext):
+    # Enter a parse tree produced by wizardParser#PreIncrement.
+    def enterPreIncrement(self, ctx:wizardParser.PreIncrementContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#TIMES_DIVIDE_MODULO.
-    def exitTIMES_DIVIDE_MODULO(self, ctx:wizardParser.TIMES_DIVIDE_MODULOContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#PLUS_MINUS.
-    def enterPLUS_MINUS(self, ctx:wizardParser.PLUS_MINUSContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#PLUS_MINUS.
-    def exitPLUS_MINUS(self, ctx:wizardParser.PLUS_MINUSContext):
+    # Exit a parse tree produced by wizardParser#PreIncrement.
+    def exitPreIncrement(self, ctx:wizardParser.PreIncrementContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#CONSTANTS.
-    def enterCONSTANTS(self, ctx:wizardParser.CONSTANTSContext):
+    # Enter a parse tree produced by wizardParser#DotFunctionCall.
+    def enterDotFunctionCall(self, ctx:wizardParser.DotFunctionCallContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#CONSTANTS.
-    def exitCONSTANTS(self, ctx:wizardParser.CONSTANTSContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#OR.
-    def enterOR(self, ctx:wizardParser.ORContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#OR.
-    def exitOR(self, ctx:wizardParser.ORContext):
+    # Exit a parse tree produced by wizardParser#DotFunctionCall.
+    def exitDotFunctionCall(self, ctx:wizardParser.DotFunctionCallContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#FUNCTION_CALL.
-    def enterFUNCTION_CALL(self, ctx:wizardParser.FUNCTION_CALLContext):
+    # Enter a parse tree produced by wizardParser#Or.
+    def enterOr(self, ctx:wizardParser.OrContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#FUNCTION_CALL.
-    def exitFUNCTION_CALL(self, ctx:wizardParser.FUNCTION_CALLContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#LESSER.
-    def enterLESSER(self, ctx:wizardParser.LESSERContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#LESSER.
-    def exitLESSER(self, ctx:wizardParser.LESSERContext):
+    # Exit a parse tree produced by wizardParser#Or.
+    def exitOr(self, ctx:wizardParser.OrContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#IN.
-    def enterIN(self, ctx:wizardParser.INContext):
+    # Enter a parse tree produced by wizardParser#In.
+    def enterIn(self, ctx:wizardParser.InContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#IN.
-    def exitIN(self, ctx:wizardParser.INContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#EQUAL.
-    def enterEQUAL(self, ctx:wizardParser.EQUALContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#EQUAL.
-    def exitEQUAL(self, ctx:wizardParser.EQUALContext):
+    # Exit a parse tree produced by wizardParser#In.
+    def exitIn(self, ctx:wizardParser.InContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#GREATER.
-    def enterGREATER(self, ctx:wizardParser.GREATERContext):
+    # Enter a parse tree produced by wizardParser#PostDecrement.
+    def enterPostDecrement(self, ctx:wizardParser.PostDecrementContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#GREATER.
-    def exitGREATER(self, ctx:wizardParser.GREATERContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#POWER.
-    def enterPOWER(self, ctx:wizardParser.POWERContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#POWER.
-    def exitPOWER(self, ctx:wizardParser.POWERContext):
+    # Exit a parse tree produced by wizardParser#PostDecrement.
+    def exitPostDecrement(self, ctx:wizardParser.PostDecrementContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#INDEXING.
-    def enterINDEXING(self, ctx:wizardParser.INDEXINGContext):
+    # Enter a parse tree produced by wizardParser#TimesDivideModulo.
+    def enterTimesDivideModulo(self, ctx:wizardParser.TimesDivideModuloContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#INDEXING.
-    def exitINDEXING(self, ctx:wizardParser.INDEXINGContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#PRE_DECREMENT.
-    def enterPRE_DECREMENT(self, ctx:wizardParser.PRE_DECREMENTContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#PRE_DECREMENT.
-    def exitPRE_DECREMENT(self, ctx:wizardParser.PRE_DECREMENTContext):
+    # Exit a parse tree produced by wizardParser#TimesDivideModulo.
+    def exitTimesDivideModulo(self, ctx:wizardParser.TimesDivideModuloContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#PRE_INCREMENT.
-    def enterPRE_INCREMENT(self, ctx:wizardParser.PRE_INCREMENTContext):
+    # Enter a parse tree produced by wizardParser#Index.
+    def enterIndex(self, ctx:wizardParser.IndexContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#PRE_INCREMENT.
-    def exitPRE_INCREMENT(self, ctx:wizardParser.PRE_INCREMENTContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#MINUS.
-    def enterMINUS(self, ctx:wizardParser.MINUSContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#MINUS.
-    def exitMINUS(self, ctx:wizardParser.MINUSContext):
+    # Exit a parse tree produced by wizardParser#Index.
+    def exitIndex(self, ctx:wizardParser.IndexContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#POST_INCREMENT.
-    def enterPOST_INCREMENT(self, ctx:wizardParser.POST_INCREMENTContext):
+    # Enter a parse tree produced by wizardParser#Exponentiation.
+    def enterExponentiation(self, ctx:wizardParser.ExponentiationContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#POST_INCREMENT.
-    def exitPOST_INCREMENT(self, ctx:wizardParser.POST_INCREMENTContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#NOT.
-    def enterNOT(self, ctx:wizardParser.NOTContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#NOT.
-    def exitNOT(self, ctx:wizardParser.NOTContext):
+    # Exit a parse tree produced by wizardParser#Exponentiation.
+    def exitExponentiation(self, ctx:wizardParser.ExponentiationContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#METHOD_CALL.
-    def enterMETHOD_CALL(self, ctx:wizardParser.METHOD_CALLContext):
+    # Enter a parse tree produced by wizardParser#PlusMinus.
+    def enterPlusMinus(self, ctx:wizardParser.PlusMinusContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#METHOD_CALL.
-    def exitMETHOD_CALL(self, ctx:wizardParser.METHOD_CALLContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#PARENS.
-    def enterPARENS(self, ctx:wizardParser.PARENSContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#PARENS.
-    def exitPARENS(self, ctx:wizardParser.PARENSContext):
+    # Exit a parse tree produced by wizardParser#PlusMinus.
+    def exitPlusMinus(self, ctx:wizardParser.PlusMinusContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#POST_DECREMENT.
-    def enterPOST_DECREMENT(self, ctx:wizardParser.POST_DECREMENTContext):
+    # Enter a parse tree produced by wizardParser#Not.
+    def enterNot(self, ctx:wizardParser.NotContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#POST_DECREMENT.
-    def exitPOST_DECREMENT(self, ctx:wizardParser.POST_DECREMENTContext):
-        pass
-
-
-    # Enter a parse tree produced by wizardParser#VARIABLE.
-    def enterVARIABLE(self, ctx:wizardParser.VARIABLEContext):
-        pass
-
-    # Exit a parse tree produced by wizardParser#VARIABLE.
-    def exitVARIABLE(self, ctx:wizardParser.VARIABLEContext):
+    # Exit a parse tree produced by wizardParser#Not.
+    def exitNot(self, ctx:wizardParser.NotContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#SLICING.
-    def enterSLICING(self, ctx:wizardParser.SLICINGContext):
+    # Enter a parse tree produced by wizardParser#Lesser.
+    def enterLesser(self, ctx:wizardParser.LesserContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#SLICING.
-    def exitSLICING(self, ctx:wizardParser.SLICINGContext):
+    # Exit a parse tree produced by wizardParser#Lesser.
+    def exitLesser(self, ctx:wizardParser.LesserContext):
         pass
 
 
-    # Enter a parse tree produced by wizardParser#AND.
-    def enterAND(self, ctx:wizardParser.ANDContext):
+    # Enter a parse tree produced by wizardParser#Negative.
+    def enterNegative(self, ctx:wizardParser.NegativeContext):
         pass
 
-    # Exit a parse tree produced by wizardParser#AND.
-    def exitAND(self, ctx:wizardParser.ANDContext):
+    # Exit a parse tree produced by wizardParser#Negative.
+    def exitNegative(self, ctx:wizardParser.NegativeContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Equal.
+    def enterEqual(self, ctx:wizardParser.EqualContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Equal.
+    def exitEqual(self, ctx:wizardParser.EqualContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#And.
+    def enterAnd(self, ctx:wizardParser.AndContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#And.
+    def exitAnd(self, ctx:wizardParser.AndContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Slice.
+    def enterSlice(self, ctx:wizardParser.SliceContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Slice.
+    def exitSlice(self, ctx:wizardParser.SliceContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Value.
+    def enterValue(self, ctx:wizardParser.ValueContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Value.
+    def exitValue(self, ctx:wizardParser.ValueContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#Greater.
+    def enterGreater(self, ctx:wizardParser.GreaterContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#Greater.
+    def exitGreater(self, ctx:wizardParser.GreaterContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#FunctionCall.
+    def enterFunctionCall(self, ctx:wizardParser.FunctionCallContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#FunctionCall.
+    def exitFunctionCall(self, ctx:wizardParser.FunctionCallContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#PostIncrement.
+    def enterPostIncrement(self, ctx:wizardParser.PostIncrementContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#PostIncrement.
+    def exitPostIncrement(self, ctx:wizardParser.PostIncrementContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#ParenExpr.
+    def enterParenExpr(self, ctx:wizardParser.ParenExprContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#ParenExpr.
+    def exitParenExpr(self, ctx:wizardParser.ParenExprContext):
+        pass
+
+
+    # Enter a parse tree produced by wizardParser#PreDecrement.
+    def enterPreDecrement(self, ctx:wizardParser.PreDecrementContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#PreDecrement.
+    def exitPreDecrement(self, ctx:wizardParser.PreDecrementContext):
         pass
 
 

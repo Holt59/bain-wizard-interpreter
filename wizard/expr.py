@@ -5,7 +5,6 @@ from enum import Enum, auto
 from typing import (
     Callable,
     List,
-    Iterator,
     Iterable,
     Mapping,
     MutableMapping,
@@ -330,6 +329,12 @@ class Value:
 
 class WizardExpressionVisitor:
 
+    """
+    Visitor for Wizard expression. This visitor can be used to interpret Wizard
+    expression and return `Value` object. The main entry point is `visitExpr()`
+    which takes an expression context and returns a `Value`.
+    """
+
     _subpackages: SubPackages
     _variables: MutableMapping[str, Value]
     _functions: Mapping[str, Callable[[List[Value]], Value]]
@@ -353,8 +358,8 @@ class WizardExpressionVisitor:
         self._subpackages = subpackages
         self._functions = functions
 
-    def visitTIMES_DIVIDE_MODULO(
-        self, ctx: wizardParser.TIMES_DIVIDE_MODULOContext
+    def visitTimesDivideModulo(
+        self, ctx: wizardParser.TimesDivideModuloContext
     ) -> Value:
         op: Callable[[Value, Value], Value] = Value.__mul__
         if ctx.Divide():
@@ -363,17 +368,16 @@ class WizardExpressionVisitor:
             op = Value.__mod__
         return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
 
-    def visitPLUS_MINUS(self, ctx: wizardParser.PLUS_MINUSContext) -> Value:
+    def visitPlusMinus(self, ctx: wizardParser.PlusMinusContext) -> Value:
         op: Callable[[Value, Value], Value] = Value.__add__
         if ctx.Minus():
             op = Value.__sub__
         return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
 
-    def visitOR(self, ctx: wizardParser.ORContext) -> Value:
+    def visitOr(self, ctx: wizardParser.OrContext) -> Value:
         return self.visitExpr(ctx.expr(0)) | self.visitExpr(ctx.expr(1))
 
-    # Visit a parse tree produced by wizardParser#FUNCTION_CALL.
-    def visitFUNCTION_CALL(self, ctx: wizardParser.FUNCTION_CALLContext) -> Value:
+    def visitFunctionCall(self, ctx: wizardParser.FunctionCallContext) -> Value:
 
         name = ctx.Identifier().getText()
         if name not in self._functions:
@@ -384,8 +388,7 @@ class WizardExpressionVisitor:
             values.append(self.visitExpr(ex))
         return self._functions[name](values)
 
-    # Visit a parse tree produced by wizardParser#METHOD_CALL.
-    def visitMETHOD_CALL(self, ctx: wizardParser.METHOD_CALLContext) -> Value:
+    def visitDotFunctionCall(self, ctx: wizardParser.DotFunctionCallContext) -> Value:
         values: List[Value] = [self.visitExpr(ctx.expr())]
 
         mname = "{}.{}".format(values[0].type, ctx.Identifier().getText())
@@ -397,94 +400,80 @@ class WizardExpressionVisitor:
 
         return self._functions[mname](values)
 
-    def visitLESSER(self, ctx: wizardParser.LESSERContext) -> Value:
+    def visitLesser(self, ctx: wizardParser.LesserContext) -> Value:
         op = Value.__le__
         if ctx.Lesser():
             op = Value.__lt__
         return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
 
-    # Visit a parse tree produced by wizardParser#IN.
-    def visitIN(self, ctx: wizardParser.INContext) -> Value:
+    def visitIn(self, ctx: wizardParser.InContext) -> Value:
         return self.visitExpr(ctx.expr(1)).contains(
             self.visitExpr(ctx.expr(0)), bool(ctx.Colon())
         )
 
-    # Visit a parse tree produced by wizardParser#EQUAL.
-    def visitEQUAL(self, ctx: wizardParser.EQUALContext) -> Value:
+    def visitEqual(self, ctx: wizardParser.EqualContext) -> Value:
         op = Value.equals
         if ctx.NotEqual():
             op = Value.not_equals
         return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
 
-    # Visit a parse tree produced by wizardParser#GREATER.
-    def visitGREATER(self, ctx: wizardParser.GREATERContext) -> Value:
+    def visitGreater(self, ctx: wizardParser.GreaterContext) -> Value:
         op = Value.__ge__
         if ctx.Lesser():
             op = Value.__gt__
         return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
 
-    # Visit a parse tree produced by wizardParser#POWER.
-    def visitPOWER(self, ctx: wizardParser.POWERContext) -> Value:
+    def visitExponentiation(self, ctx: wizardParser.ExponentiationContext) -> Value:
         return self.visitExpr(ctx.expr(0)) ** self.visitExpr(ctx.expr(1))
 
-    # Visit a parse tree produced by wizardParser#INDEXING.
-    def visitINDEXING(self, ctx: wizardParser.INDEXINGContext) -> Value:
+    def visitIndex(self, ctx: wizardParser.IndexContext) -> Value:
         return self.visitExpr(ctx.expr(0))[self.visitExpr(ctx.expr(1))]
 
-    # Visit a parse tree produced by wizardParser#PRE_DECREMENT.
-    def visitPRE_DECREMENT(self, ctx: wizardParser.PRE_DECREMENTContext) -> Value:
+    def visitPreDecrement(self, ctx: wizardParser.PreDecrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._variables:
             raise WizardNameError(name)
         self._variables[ctx.Identifier().getText()] -= Value(1)
         return self._variables[ctx.Identifier().getText()]
 
-    # Visit a parse tree produced by wizardParser#PRE_INCREMENT.
-    def visitPRE_INCREMENT(self, ctx: wizardParser.PRE_INCREMENTContext) -> Value:
+    def visitPreIncrement(self, ctx: wizardParser.PreIncrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._variables:
             raise WizardNameError(name)
         self._variables[ctx.Identifier().getText()] += Value(1)
         return self._variables[ctx.Identifier().getText()]
 
-    # Visit a parse tree produced by wizardParser#POST_INCREMENT.
-    def visitPOST_INCREMENT(self, ctx: wizardParser.POST_INCREMENTContext) -> Value:
+    def visitPostIncrement(self, ctx: wizardParser.PostIncrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._variables:
             raise WizardNameError(name)
         self._variables[ctx.Identifier().getText()] += Value(1)
         return self._variables[ctx.Identifier().getText()]
 
-    # Visit a parse tree produced by wizardParser#POST_DECREMENT.
-    def visitPOST_DECREMENT(self, ctx: wizardParser.POST_DECREMENTContext) -> Value:
+    def visitPostDecrement(self, ctx: wizardParser.PostDecrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._variables:
             raise WizardNameError(name)
         self._variables[ctx.Identifier().getText()] -= Value(1)
         return self._variables[ctx.Identifier().getText()]
 
-    # Visit a parse tree produced by wizardParser#MINUS.
-    def visitMINUS(self, ctx: wizardParser.MINUSContext) -> Value:
+    def visitNegative(self, ctx: wizardParser.NegativeContext) -> Value:
         return -self.visitExpr(ctx.expr())
 
-    # Visit a parse tree produced by wizardParser#NOT.
-    def visitNOT(self, ctx: wizardParser.NOTContext) -> Value:
+    def visitNot(self, ctx: wizardParser.NotContext) -> Value:
         return self.visitExpr(ctx.expr()).logical_not()
 
-    # Visit a parse tree produced by wizardParser#PARENS.
-    def visitPARENS(self, ctx: wizardParser.PARENSContext) -> Value:
+    def visitParenExpr(self, ctx: wizardParser.ParenExprContext) -> Value:
         return self.visitExpr(ctx.expr())
 
-    # Visit a parse tree produced by wizardParser#SLICING.
-    def visitSLICING(self, ctx: wizardParser.SLICINGContext) -> Value:
+    def visitSlice(self, ctx: wizardParser.SliceContext) -> Value:
         raise WizardUnsupportedOperation("slicing")
 
-    # Visit a parse tree produced by wizardParser#AND.
-    def visitAND(self, ctx: wizardParser.ANDContext) -> Value:
+    def visitAnd(self, ctx: wizardParser.AndContext) -> Value:
         lhs, rhs = self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1))
         return lhs & rhs
 
-    def visitCONSTANTS(self, ctx: wizardParser.CONSTANTSContext) -> Value:
+    def visitValue(self, ctx: wizardParser.ValueContext) -> Value:
         if ctx.constant():
             return self.visitConstant(ctx.constant())
         if ctx.integer():
@@ -493,14 +482,14 @@ class WizardExpressionVisitor:
             return self.visitDecimal(ctx.decimal())
         if ctx.string():
             return self.visitString(ctx.string())
+        if ctx.Identifier():
+            name = ctx.Identifier().getText()
+            if name not in self._variables:
+                raise WizardNameError(name)
+
+            return self._variables[ctx.Identifier().getText()]
+
         raise WizardNameError(ctx.getText())
-
-    def visitVARIABLE(self, ctx: wizardParser.VARIABLEContext) -> Value:
-        name = ctx.Identifier().getText()
-        if name not in self._variables:
-            raise WizardNameError(name)
-
-        return self._variables[ctx.Identifier().getText()]
 
     def visitConstant(self, ctx: wizardParser.ConstantContext) -> Value:
         if ctx.getText() == "False":

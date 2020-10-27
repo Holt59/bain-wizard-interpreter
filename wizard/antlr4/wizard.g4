@@ -42,14 +42,14 @@ compoundAssignment:
 /* = CONTROL FLOW = */
 // Statements that alter control flow.
 controlFlowStmt:
-	'Break'
-	| 'Cancel'
-	| 'Continue'
-	| forStmt
-	| ifStmt
-	| 'Return'
-	| selectStmt
-	| whileStmt;
+	'Break'			# Break
+	| 'Cancel'		# Cancel
+	| 'Continue'	# Continue
+	| forStmt		# For
+	| ifStmt		# If
+	| 'Return'		# Return
+	| selectStmt	# Select
+	| whileStmt		# While;
 
 // Describes what do in a select statement if a certain case is hit. expr must be a string,
 // type-check is during semantic analysis.
@@ -64,16 +64,20 @@ elifStmt: 'Elif' expr body;
 // An else statement, parsed like an if statement without a guard expression.
 elseStmt: 'Else' body;
 
-// A for loop. There are two possible types of for loop.
-forStmt: 'For' (forRangeLoop | forInLoop) 'EndFor';
+// A for loop. There are two possible types of for loop that differ only in their headers. They each
+// begin with the keyword For, followed by an iteration variable a and then the header. Finally, a
+// body and an EndFor keyword terminate the for loop.
+forStmt:
+	'For' Identifier (forRangeHeader | forInHeader) body 'EndFor';
 
-// A for loop of the form 'For a from b to c [by d]', where: a is a variable b is the start value c
-// is the end value d (optional) is the step size
-forRangeLoop:
-	Identifier 'from' expr 'to' expr ('by' expr)? body;
+// The header of a for loop of the form 'For a from b to c [by d]', where: a is the iteration
+// variable, as specified in forStmt b is the start value c is the end value d (optional) is the
+// step size
+forRangeHeader: 'from' expr 'to' expr ('by' expr)?;
 
-// A for loop of the form 'For a in b', where: a is a variable b is a value to iterate over
-forInLoop: Identifier In expr body;
+// The header of a for loop of the form 'For a in b', where: a is the iteration variable, as
+// specified in forStmt b is a value to iterate over
+forInHeader: In expr;
 
 // An if statement may have any number of elif statements, but at most one else statement.
 ifStmt: 'If' expr body elifStmt* elseStmt? 'EndIf';
@@ -85,7 +89,7 @@ selectStmt: (selectOne | selectMany) 'EndSelect';
 // semantic analysis. Note that we check whether or not the selectCaseList is valid and all these
 // expr's resolve to strings during semantic analysis. A trailing comma is allowed here - it's
 // simply ignored.
-selectCaseList: (caseStmt | defaultStmt)*;
+selectCaseList: (caseStmt 'Break')* (defaultStmt 'Break')?;
 optionTuple: expr Comma expr Comma expr;
 selectOne:
 	'SelectOne' expr (Comma optionTuple)* Comma? selectCaseList;
@@ -104,51 +108,48 @@ keywordStmt: Keyword argList;
 /* === EXPRESSIONS === */
 // A command with a return value. The order matters here - it specifies the operator precedence.
 expr:
-	LeftParenthesis expr RightParenthesis # PARENS
+	LeftParenthesis expr RightParenthesis # ParenExpr
 	// Function calls May not actually return anything - we still parse them as expressions for
 	// simplicity and check the return type when doing semantic analysis.
-	| expr Dot Identifier LeftParenthesis argList RightParenthesis	# METHOD_CALL
-	| Identifier LeftParenthesis argList RightParenthesis			# FUNCTION_CALL
+	| expr Dot Identifier LeftParenthesis argList RightParenthesis	# DotFunctionCall
+	| Identifier LeftParenthesis argList RightParenthesis			# FunctionCall
 	// Increment / Decrement Note that, for backwards compatibility, postfix and prefix should both
 	// return the new value.
-	| Increment Identifier	# PRE_INCREMENT
-	| Identifier Increment	# POST_INCREMENT
-	| Decrement Identifier	# PRE_DECREMENT
-	| Identifier Decrement	# POST_DECREMENT
+	| Increment Identifier	# PreIncrement
+	| Identifier Increment	# PostIncrement
+	| Decrement Identifier	# PreDecrement
+	| Identifier Decrement	# PostDecrement
 	// Mathematical operators, part 1
-	| Minus expr # MINUS
+	| Minus expr # Negative
 	// Logic operators, part 1
-	| ('!' | 'not') expr # NOT
+	| ('!' | 'not') expr # Not
 	// Indexing
-	| expr LeftBracket expr RightBracket # INDEXING
+	| expr LeftBracket expr RightBracket # Index
 	// Slicing
-	| expr LeftBracket expr? Colon expr? (Colon expr?)? RightBracket # SLICING
+	| expr LeftBracket expr? Colon expr? (Colon expr?)? RightBracket # Slice
 	// Mathematical operators, part 2
-	| expr Raise expr						# POWER
-	| expr (Times | Divide | Modulo) expr	# TIMES_DIVIDE_MODULO
-	| expr (Plus | Minus) expr				# PLUS_MINUS
+	| expr Raise expr						# Exponentiation
+	| expr (Times | Divide | Modulo) expr	# TimesDivideModulo
+	| expr (Plus | Minus) expr				# PlusMinus
 	// Comparison operators Colon present => case-insensitive
-	| expr (Greater | GreaterOrEqual) Colon? expr	# GREATER
-	| expr (Lesser | LesserOrEqual) Colon? expr		# LESSER
-	| expr (Equal | NotEqual) Colon? expr			# EQUAL
+	| expr (Greater | GreaterOrEqual) Colon? expr	# Greater
+	| expr (Lesser | LesserOrEqual) Colon? expr		# Lesser
+	| expr (Equal | NotEqual) Colon? expr			# Equal
 	// Logic operators, part 2
-	| expr ('|' | 'or') expr	# OR
-	| expr ('&' | 'and') expr	# AND
+	| expr ('|' | 'or') expr	# Or
+	| expr ('&' | 'and') expr	# And
 	// 'in' operator Colon present => case-insensitive
-	| expr In expr Colon? # IN
+	| expr In expr Colon? # In
 	// Direct values Constants, literals (three types) and variables
-	| (constant | decimal | integer | string)	# CONSTANTS
-	| Identifier								# VARIABLE;
+	| (constant | decimal | integer | string | Identifier) # Value;
 
 /* == NONEXECUTABLE EXPRESSIONS == */
 // These are expressions that immediately resolve to a value, without any operation being involved.
 // They cannot stand on their own, but we check this during semantic analysis.
 
 /* = CONSTANTS = */
-constant: // One of the predefined constants for wizards.
-	'False'
-	| 'True'
-	| 'SubPackages';
+// One of the predefined constants for wizards.
+constant: 'False' | 'True' | 'SubPackages';
 
 /* = LITERALS = */
 // Only three types in this language - plus some 'pseudotypes' for list-like objects such as
