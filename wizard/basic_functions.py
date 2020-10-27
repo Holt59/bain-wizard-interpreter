@@ -5,8 +5,6 @@ This file contains the implementation of the "basic" functions for BAIN Wizard,
 i.e. functions that do not require specific handling.
 """
 
-from typing import List
-
 from .expr import SubPackage, SubPackages, Value
 
 

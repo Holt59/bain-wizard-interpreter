@@ -405,6 +405,7 @@ class WizardExpressionVisitor:
         values: List[Value] = []
         for ex in ctx.argList().expr():
             values.append(self.visitExpr(ex))
+
         return self._functions[name](values)
 
     def visitDotFunctionCall(self, ctx: wizardParser.DotFunctionCallContext) -> Value:

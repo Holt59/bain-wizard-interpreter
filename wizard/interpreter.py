@@ -13,6 +13,7 @@ from typing import (
 
 from .antlr4.wizardParser import wizardParser
 
+from .basic_functions import WizardFunctions
 from .errors import WizardNameError, WizardParseError, WizardTypeError
 from .expr import SubPackage, SubPackages, Value, Void, WizardExpressionVisitor
 from .mmitf import SelectOption, ModManagerInterface
@@ -105,6 +106,9 @@ class WizardInterpreter:
     # check if a file exists, or install a subpackage, etc.
     _manager: ModManagerInterface
 
+    # Wizard functions utils:
+    _wizard_fns: WizardFunctions
+
     # The list of subpackages in the archives:
     _subpackages: SubPackages
 
@@ -122,20 +126,22 @@ class WizardInterpreter:
         self,
         manager: ModManagerInterface,
         subpackages: SubPackages,
-        functions: Mapping[str, Callable[[List[Value]], Value]],
+        extra_functions: Mapping[str, Callable[[List[Value]], Value]] = {},
     ):
         """
         Args:
             manager: The Mod Manager interface. See ModManagerInterface for
                 more details on what needs to be implemented.
             subpackages: The list of SubPackages in the archive.
-            functions: List of functions available to the script.
+            functions: List of extra functions to made available to the script.
+                Can override default functions.
         """
         self._manager = manager
+        self._wizard_fns = WizardFunctions()
 
         self._variables = {}
         self._subpackages = subpackages
-        self._functions = dict(functions)
+        self._functions = {}
 
         self._evisitor = WizardExpressionVisitor(
             self._variables, self._subpackages, self._functions
@@ -143,9 +149,48 @@ class WizardInterpreter:
 
         self._loops = []
 
-        self.add_manager_functions(manager)
+        self._functions.update(self.manager_functions(manager))
+        self._functions.update(self.basic_functions(self._wizard_fns))
+        self._functions.update(extra_functions)
 
-    def add_manager_functions(self, manager: ModManagerInterface):
+    def basic_functions(
+        self, wf: WizardFunctions
+    ) -> Mapping[str, Callable[[List[Value]], Value]]:
+        """
+        Create a list of basic functions.
+
+        Args:
+            wf: The WizardFunctions object to use for the basic functions.
+
+        Returns:
+            A mapping from function name to basic functions, including methods.
+        """
+
+        fns: MutableMapping[str, Callable[[List[Value]], Value]] = {}
+
+        def wrap(method: Callable) -> Callable[[List[Value]], Value]:
+            return lambda vs: method(*vs)  # type: ignore
+
+        # Add all the free functions:
+        for fname in dir(wf):
+            if fname.startswith("__"):
+                continue
+            fns[fname] = wrap(getattr(wf, fname))
+
+        # Add methods:
+        for fname in dir(wf):
+            if fname.startswith("__"):
+                continue
+            fns["string." + fname] = fns[fname]
+
+        for t in ("integer", "float", "bool"):
+            fns[t + ".str"] = wrap(wf.str)
+
+        return fns
+
+    def manager_functions(
+        self, manager: ModManagerInterface
+    ) -> Mapping[str, Callable[[List[Value]], Value]]:
         """
         Add manager functions to the _functions member variables. These functions
         calls method of the manager passed in.
@@ -199,6 +244,8 @@ class WizardInterpreter:
 
             return fn
 
+        fns: MutableMapping[str, Callable[[List[Value]], Value]] = {}
+
         for t in [
             # Functions:
             ("CompareGameVersion", manager.compareGameVersion, str),
@@ -240,12 +287,14 @@ class WizardInterpreter:
             ("SelectEspm", manager.selectPlugin, str),
             ("SelectSubPackage", manager.selectSubPackage, str),
         ]:
-            self._functions[t[0]] = wrap_method(*t)  # type: ignore
+            fns[t[0]] = wrap_method(*t)  # type: ignore
 
         # Varargs:
-        self._functions["DataFileExists"] = wrap_method(
+        fns["DataFileExists"] = wrap_method(
             "DataFileExists", manager.dataFileExists, str, varargs=True
         )
+
+        return fns
 
     def visit(self, ctx: wizardParser.ParseWizardContext):
         """

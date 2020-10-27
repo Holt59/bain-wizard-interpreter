@@ -235,3 +235,19 @@ EndSelect
     c.clear()
     c.parse(s)
     assert c._variables == {"x": Value(6)}
+
+
+def test_default_functions():
+
+    from .test_utils import MockManager
+
+    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+
+    c.parse("s = int('3')")
+    assert c._variables["s"] == Value(3)
+
+    c.parse("s = len('hello world')")
+    assert c._variables["s"] == Value(11)
+
+    c.parse("s = 'hello world'.len()")
+    assert c._variables["s"] == Value(11)
