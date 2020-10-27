@@ -19,7 +19,6 @@ from .errors import (
     WizardTypeError,
     WizardIndexError,
     WizardNameError,
-    WizardUnsupportedOperation,
 )
 
 

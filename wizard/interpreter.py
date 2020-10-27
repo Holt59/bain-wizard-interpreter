@@ -1,11 +1,20 @@
 # -*- encoding: utf-8 -*-
 
-from typing import Callable, Iterable, List, Mapping, MutableMapping, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    List,
+    Mapping,
+    MutableMapping,
+    Tuple,
+    Union,
+)
 
 from .antlr4.wizardParser import wizardParser
 
 from .errors import WizardNameError, WizardParseError, WizardTypeError
-from .expr import SubPackage, SubPackages, Value, WizardExpressionVisitor
+from .expr import SubPackage, SubPackages, Value, Void, WizardExpressionVisitor
 from .mmitf import SelectOption, ModManagerInterface
 
 
@@ -101,7 +110,7 @@ class WizardInterpreter:
 
     # The list of variables and functions:
     _variables: MutableMapping[str, Value]
-    _functions: Mapping[str, Callable[[List[Value]], Value]]
+    _functions: MutableMapping[str, Callable[[List[Value]], Value]]
 
     # The expression visitor:
     _evisitor: WizardExpressionVisitor
@@ -126,13 +135,117 @@ class WizardInterpreter:
 
         self._variables = {}
         self._subpackages = subpackages
-        self._functions = functions
+        self._functions = dict(functions)
 
         self._evisitor = WizardExpressionVisitor(
             self._variables, self._subpackages, self._functions
         )
 
         self._loops = []
+
+        self.add_manager_functions(manager)
+
+    def add_manager_functions(self, manager: ModManagerInterface):
+        """
+        Add manager functions to the _functions member variables. These functions
+        calls method of the manager passed in.
+
+        Args:
+            manager: The manager to delete the call to.
+        """
+
+        class optional:
+            t: type
+
+            def __init__(self, t: type):
+                self.t = type
+
+        def wrap_method(
+            name: str, method, *args: Union[optional, type], varargs: bool = False
+        ) -> Callable[[List[Value]], Value]:
+            def fn(vs: List[Value]) -> Value:
+
+                # List of Python arguments:
+                pargs = []
+
+                if not varargs and len(vs) > len(args):
+                    raise WizardTypeError(f"{name}: too many arguments.")
+
+                for iarg, arg in enumerate(args):
+                    if iarg >= len(vs) and not isinstance(arg, optional):
+                        raise WizardTypeError(
+                            f"{name}: missing required positional argument(s)."
+                        )
+
+                    tp: type
+                    if isinstance(arg, optional):
+                        tp = arg.t
+                    else:
+                        tp = arg
+
+                    if not isinstance(vs[iarg].value, tp):
+                        raise WizardTypeError(
+                            f"Argument at position {iarg} has incorrect type for"
+                            f" {name}."
+                        )
+
+                    pargs.append(vs[iarg].value)
+
+                ret = method(*pargs)
+                if ret is None:
+                    ret = Void()
+
+                return Value(ret)
+
+            return fn
+
+        for t in [
+            # Functions:
+            ("CompareGameVersion", manager.compareGameVersion, str),
+            ("CompareSEVersion", manager.compareSEVersion, str),
+            ("CompareGEVersion", manager.compareGEVersion, str),
+            ("CompareWBVersion", manager.compareWBVersion, str),
+            ("GetPluginLoadOrder", manager.getPluginLoadOrder, str, optional(int)),
+            ("GetPluginStatus", manager.getPluginStatus, str),
+            ("DisableINILine", manager.disableINILine, str, str, str),
+            ("EditINI", manager.editINI, str, str, str, Any, optional(str)),
+            ("GetFilename", manager.getFilename, str),
+            ("GetFolder", manager.getFolder, str),
+            # Keywords:
+            ("DeSelectAll", manager.deselectAll),
+            ("DeSelectAllPlugins", manager.deselectAllPlugins),
+            ("DeSelectAllEspms", manager.deselectAllPlugins),
+            ("DeSelectPlugin", manager.deselectPlugin, str),
+            ("DeSelectEspm", manager.deselectPlugin, str),
+            ("DeSelectSubPackage", manager.deselectSubPackage, str),
+            ("Note", manager.note, str),
+            ("RenamePlugin", manager.renamePlugin, str, str),
+            ("RenameEspm", manager.renamePlugin, str, str),
+            (
+                "RequireVersions",
+                manager.requiresVersions,
+                str,
+                optional(str),
+                optional(str),
+                optional(str),
+            ),
+            ("ResetPluginName", manager.resetPluginName, str),
+            ("ResetEspmName", manager.resetPluginName, str),
+            ("ResetAllPluginNames", manager.resetAllPluginNames),
+            ("ResetAllEpsmNames", manager.resetAllPluginNames),
+            ("SelectAll", manager.selectAll),
+            ("SelectAllPlugins", manager.selectAllPlugins),
+            ("SelectAllEspms", manager.selectAllPlugins),
+            ("SelectPlugin", manager.selectPlugin, str),
+            ("SelectEspm", manager.selectPlugin, str),
+            ("SelectSubPackage", manager.selectSubPackage, str),
+        ]:
+            self._functions[t[0]] = wrap_method(*t)  # type: ignore
+
+        # Varargs:
+        self._functions["DataFileExists"] = wrap_method(
+            "DataFileExists", manager.dataFileExists, str, varargs=True
+        )
 
     def visit(self, ctx: wizardParser.ParseWizardContext):
         """
