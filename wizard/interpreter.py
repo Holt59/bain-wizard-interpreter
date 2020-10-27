@@ -3,7 +3,6 @@
 from typing import Callable, Iterable, List, Mapping, MutableMapping, Tuple, Union
 
 from .antlr4.wizardParser import wizardParser
-from .antlr4.wizardVisitor import wizardVisitor
 
 from .errors import WizardNameError, WizardParseError, WizardTypeError
 from .expr import SubPackage, SubPackages, Value, WizardExpressionVisitor
@@ -85,22 +84,29 @@ class ReturnFlow(Exception):
     pass
 
 
-class WizardInterpreter(wizardVisitor):
-    def __getattribute__(self, name):
-        # For debug purpose:
-        if name.startswith("visit"):
-            if name not in WizardInterpreter.__dict__:
-                raise ValueError(f"Method {name} not implemented in WizardInterpreter.")
-        return object.__getattribute__(self, name)
+class WizardInterpreter:
 
+    """
+    The WizardInterpreter is the main interpreter for Wizard scripts. It contains
+    most control and flow operations (visitXXX function), and uses an expression
+    visitor to parse expression.
+    """
+
+    # The Mod Manager interface contains function that are MM-specific, e.g.
+    # check if a file exists, or install a subpackage, etc.
     _manager: ModManagerInterface
 
+    # The list of subpackages in the archives:
     _subpackages: SubPackages
+
+    # The list of variables and functions:
     _variables: MutableMapping[str, Value]
     _functions: Mapping[str, Callable[[List[Value]], Value]]
 
+    # The expression visitor:
     _evisitor: WizardExpressionVisitor
 
+    # The loop context:
     _loops: List[LoopContext]
 
     def __init__(
@@ -109,6 +115,13 @@ class WizardInterpreter(wizardVisitor):
         subpackages: SubPackages,
         functions: Mapping[str, Callable[[List[Value]], Value]],
     ):
+        """
+        Args:
+            manager: The Mod Manager interface. See ModManagerInterface for
+                more details on what needs to be implemented.
+            subpackages: The list of SubPackages in the archive.
+            functions: List of functions available to the script.
+        """
         self._manager = manager
 
         self._variables = {}
@@ -122,6 +135,9 @@ class WizardInterpreter(wizardVisitor):
         self._loops = []
 
     def visit(self, ctx: wizardParser.ParseWizardContext):
+        """
+        Visit the main context.
+        """
         self.visitBody(ctx.body())
 
     def visitBody(self, ctx: wizardParser.BodyContext):
@@ -130,6 +146,9 @@ class WizardInterpreter(wizardVisitor):
         if not ctx.children:
             return
 
+        # We simply loop over children (statement or expression),
+        # aborting if we have encountered a "break" or "continue"
+        # keyword.
         for c in ctx.children:
 
             if self._loops and self._loops[-1].is_break_or_continue():
@@ -143,6 +162,7 @@ class WizardInterpreter(wizardVisitor):
                 raise WizardParseError(f"Unknow context in body: {c}.")
 
     def visitStmt(self, ctx: wizardParser.StmtContext):
+        # Simple dispatch:
         if ctx.assignment():
             self.visitAssignment(ctx.assignment())
         elif ctx.compoundAssignment():
@@ -163,7 +183,7 @@ class WizardInterpreter(wizardVisitor):
 
         values: List[Value] = []
         for ex in ctx.argList().expr():
-            values.append(self.visitExpr(ex))
+            values.append(self._evisitor.visitExpr(ex))
         return self._functions[name](values)
 
     def visitAssignment(self, ctx: wizardParser.AssignmentContext):
@@ -171,7 +191,6 @@ class WizardInterpreter(wizardVisitor):
             ctx.expr()
         )
 
-    # Visit a parse tree produced by wizardParser#compoundAssignment.
     def visitCompoundAssignment(self, ctx: wizardParser.CompoundAssignmentContext):
         name: str = ctx.Identifier().getText()
         if name not in self._variables:
@@ -197,8 +216,8 @@ class WizardInterpreter(wizardVisitor):
             self._variables[name], self._evisitor.visitExpr(ctx.expr())
         )
 
-    # Visit a parse tree produced by wizardParser#controlFlowStmt.
     def visitControlFlowStmt(self, ctx: wizardParser.ControlFlowStmtContext):
+        # Simple dispatch:
         if isinstance(ctx, wizardParser.ForContext):
             self.visitForStmt(ctx.forStmt())
         elif isinstance(ctx, wizardParser.WhileContext):
