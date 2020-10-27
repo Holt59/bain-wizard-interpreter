@@ -154,6 +154,41 @@ def test_containers():
     assert c.parse("'baz' in SubPackages") == Value(False)
 
 
+def test_index_and_slice():
+    c = ExpressionChecker({}, [], {})
+
+    assert c.parse("'hello world'[0]") == Value("h")
+    assert c.parse("'hello world'[10]") == Value("d")
+    assert c.parse("'hello world'[-1]") == Value("d")
+    assert c.parse("'hello world'[-11]") == Value("h")
+
+    with pytest.raises(WizardIndexError):
+        assert c.parse("'hello world'[11]")
+
+    with pytest.raises(WizardIndexError):
+        assert c.parse("'hello world'[-12]")
+
+    assert c.parse("'hello world'[:]") == Value("hello world")
+    assert c.parse("'hello world'[0:]") == Value("hello world")
+    assert c.parse("'hello world'[0::2]") == Value("hlowrd")
+
+    assert c.parse("'hello world'[:3]") == Value("hel")
+    assert c.parse("'hello world'[0:4]") == Value("hell")
+    assert c.parse("'hello world'[2:5]") == Value("llo")
+    assert c.parse("'hello world'[2:6:2]") == Value("lo")
+    assert c.parse("'hello world'[-3:]") == Value("rld")
+
+    # From the "README":
+    assert c.parse('"Hello"[0]') == Value("H")
+    assert c.parse('"Hello"[2]') == Value("l")
+    assert c.parse('"Hello"[0:]') == Value("Hello")
+    assert c.parse('"Hello"[:]') == Value("Hello")
+    assert c.parse('"Hello"[0:2]') == Value("He")
+    assert c.parse('"Hello"[-1]') == Value("o")
+    assert c.parse('"Hello"[1:3]') == Value("el")
+    assert c.parse('"Hello"[-2:]') == Value("lo")
+
+
 def test_functions():
 
     c = ExpressionChecker(

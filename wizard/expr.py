@@ -8,6 +8,7 @@ from typing import (
     Iterable,
     Mapping,
     MutableMapping,
+    Optional,
     Type,
     Union,
 )
@@ -281,7 +282,7 @@ class Value:
         return Value(False)
 
     def __getitem__(self, index: "Value") -> "Value":
-        if not isinstance(self._value, (SubPackage, SubPackages)):
+        if not isinstance(self._value, (str, SubPackage, SubPackages)):
             raise WizardTypeError(f"Cannot index variable of type {self._type}.")
         if not isinstance(index._value, (int)):
             raise WizardTypeError(f"Cannot index with variable of type {index._type}.")
@@ -290,6 +291,25 @@ class Value:
             return Value(self._value[index._value])
         except IndexError:
             raise WizardIndexError(index._value)
+
+    def slice(
+        self, start: Optional["Value"], end: Optional["Value"], step: Optional["Value"]
+    ) -> "Value":
+
+        if not isinstance(self._value, str):
+            raise WizardTypeError(
+                f"Cannot access slice of variable of type {self._type}."
+            )
+
+        for v in (start, end, step):
+            if v is not None and not isinstance(v.value, int):
+                raise WizardTypeError(f"Cannot index with variable of type {v.type}.")
+
+        return Value(
+            self._value[
+                slice(*(None if v is None else v.value for v in (start, end, step)))
+            ]
+        )
 
     def __iter__(self) -> Iterable["Value"]:
         if not isinstance(self._value, (SubPackage, SubPackages)):
@@ -400,28 +420,60 @@ class WizardExpressionVisitor:
 
         return self._functions[mname](values)
 
-    def visitLesser(self, ctx: wizardParser.LesserContext) -> Value:
-        op = Value.__le__
-        if ctx.Lesser():
-            op = Value.__lt__
-        return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
-
     def visitIn(self, ctx: wizardParser.InContext) -> Value:
         return self.visitExpr(ctx.expr(1)).contains(
             self.visitExpr(ctx.expr(0)), bool(ctx.Colon())
         )
 
+    def doCmp(
+        self,
+        op: Callable[[Value, Value], Value],
+        lhs: Value,
+        rhs: Value,
+        case_insensitive: bool = True,
+    ) -> Value:
+        if case_insensitive:
+            if not isinstance(lhs.value, str) or not isinstance(rhs.value, str):
+                raise WizardTypeError(
+                    "Cannot use case-insensitive comparison with values of type"
+                    f" {lhs.type}, {rhs.type}."
+                )
+            lhs = Value(lhs.value.lower())
+            rhs = Value(rhs.value.lower())
+        return op(lhs, rhs)
+
     def visitEqual(self, ctx: wizardParser.EqualContext) -> Value:
         op = Value.equals
         if ctx.NotEqual():
             op = Value.not_equals
-        return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
+        return self.doCmp(
+            op,
+            self.visitExpr(ctx.expr(0)),
+            self.visitExpr(ctx.expr(1)),
+            bool(ctx.Colon()),
+        )
+
+    def visitLesser(self, ctx: wizardParser.LesserContext) -> Value:
+        op = Value.__le__
+        if ctx.Lesser():
+            op = Value.__lt__
+        return self.doCmp(
+            op,
+            self.visitExpr(ctx.expr(0)),
+            self.visitExpr(ctx.expr(1)),
+            bool(ctx.Colon()),
+        )
 
     def visitGreater(self, ctx: wizardParser.GreaterContext) -> Value:
         op = Value.__ge__
         if ctx.Lesser():
             op = Value.__gt__
-        return op(self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1)))
+        return self.doCmp(
+            op,
+            self.visitExpr(ctx.expr(0)),
+            self.visitExpr(ctx.expr(1)),
+            bool(ctx.Colon()),
+        )
 
     def visitExponentiation(self, ctx: wizardParser.ExponentiationContext) -> Value:
         return self.visitExpr(ctx.expr(0)) ** self.visitExpr(ctx.expr(1))
@@ -467,7 +519,32 @@ class WizardExpressionVisitor:
         return self.visitExpr(ctx.expr())
 
     def visitSlice(self, ctx: wizardParser.SliceContext) -> Value:
-        raise WizardUnsupportedOperation("slicing")
+        # expr LeftBracket expr? Colon expr? (Colon expr?)? RightBracket
+        lhs = self.visitExpr(ctx.expr(0))
+
+        start: Optional[Value] = None
+        end: Optional[Value] = None
+        step: Optional[Value] = None
+
+        # Index of end expression in ctx.children (without start by
+        # default):
+        cidx: int = 3
+
+        # Is there a start?
+        if isinstance(ctx.children[2], wizardParser.ExprContext):
+            start = self.visitExpr(ctx.expr(1))
+            cidx = 4
+
+        # Is there and end?
+        if isinstance(ctx.children[cidx], wizardParser.ExprContext):
+            end = self.visitExpr(ctx.children[cidx])
+
+        # Is there a step?
+        if ctx.Colon(1) and isinstance(ctx.children[-2], wizardParser.ExprContext):
+            step = self.visitExpr(ctx.children[-2])
+
+        # We keep None and let python built-in slice() do the job for us.
+        return lhs.slice(start, end, step)
 
     def visitAnd(self, ctx: wizardParser.AndContext) -> Value:
         lhs, rhs = self.visitExpr(ctx.expr(0)), self.visitExpr(ctx.expr(1))
