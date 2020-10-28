@@ -38,6 +38,15 @@ class SelectOption:
 
 class ModManagerInterface:
 
+    # Development methods:
+
+    def warning(self, text: str):
+        """
+        Called when a warning is emitted by the interpreter, usually due
+        to an improper script.
+        """
+        ...
+
     # Choice methods:
 
     @abstractmethod

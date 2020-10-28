@@ -1,52 +1,14 @@
 # -*- encoding: utf-8 -*-
 
-# -*- encoding: utf-8 -*-
 
-import pytest
+import pytest  # noqa: F401
 
-from typing import List
+from wizard.expr import SubPackages, Value
 
-from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
-from wizard.antlr4.wizardLexer import wizardLexer
-from wizard.antlr4.wizardParser import wizardParser
-
-from wizard.interpreter import WizardInterpreter
-from wizard.expr import (
-    WizardExpressionVisitor,
-    SubPackage,
-    SubPackages,
-    Value,
-    VariableType,
-)
-from wizard.errors import (
-    WizardNameError,
-    WizardTypeError,
-    WizardIndexError,
-)
-
-
-class LoopContext:
-    def __init__(self):
-        pass
-
-
-class InterpreterChecker(WizardInterpreter):
-    def parse(self, expr: str):
-        input_stream = InputStream(expr)
-        lexer = wizardLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-        self.visit(parser.parseWizard())
-
-    def clear(self):
-        self._loops.clear()
-        self._variables.clear()
+from .test_utils import InterpreterChecker, MockSubPackage, MockManager
 
 
 def test_basic():
-
-    from .test_utils import MockSubPackage, MockManager
 
     c = InterpreterChecker(
         MockManager(),
@@ -109,8 +71,6 @@ EndFor
 
 def test_if():
 
-    from .test_utils import MockManager
-
     c = InterpreterChecker(MockManager(), SubPackages([]), {})
 
     s = """
@@ -165,8 +125,6 @@ EndIf
 
 
 def test_select():
-
-    from .test_utils import MockManager
 
     m = MockManager()
     c = InterpreterChecker(m, SubPackages([]), {})
@@ -238,8 +196,6 @@ EndSelect
 
 
 def test_default_functions():
-
-    from .test_utils import MockManager
 
     c = InterpreterChecker(MockManager(), SubPackages([]), {})
 

@@ -5,7 +5,7 @@ This file contains the implementation of the "basic" functions for BAIN Wizard,
 i.e. functions that do not require specific handling.
 """
 
-from .expr import SubPackage, SubPackages, Value
+from .expr import SubPackage, SubPackages, Value, Void
 
 
 class WizardFunctions:
@@ -13,12 +13,12 @@ class WizardFunctions:
         return Value(str(value.value))
 
     def int(self, value: Value) -> Value:
-        if isinstance(value.value, (SubPackage, SubPackages)):
+        if isinstance(value.value, (SubPackage, SubPackages, Void)):
             return Value(0)
         return Value(int(value.value))
 
     def float(self, value: Value) -> Value:
-        if isinstance(value.value, (SubPackage, SubPackages)):
+        if isinstance(value.value, (SubPackage, SubPackages, Void)):
             return Value(0.0)
         return Value(float(value.value))
 

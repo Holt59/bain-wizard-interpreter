@@ -1,9 +1,15 @@
 # -*- encoding: utf-8 -*-
 
-from typing import List, Optional, Union
+from typing import Any, List, MutableMapping, Union
 
+
+from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
+from wizard.antlr4.wizardLexer import wizardLexer
+from wizard.antlr4.wizardParser import wizardParser
+
+from wizard.expr import SubPackage, Value, WizardExpressionVisitor
+from wizard.interpreter import WizardInterpreter, ReturnFlow, CancelFlow
 from wizard.mmitf import ModManagerInterface, SelectOption
-from wizard.expr import SubPackage
 
 
 class MockSubPackage(SubPackage):
@@ -34,22 +40,22 @@ class MockManager(ModManagerInterface):
            right methods were called. This does not store calls to selectOne() or
            selectMany().
 
+        3. You can register return values for methods using setReturnValue(). The
+           return value is kept until the next call to setReturnValue().
+
     The format of the calls stored is "fn(a, b, c, ...)" where fn is the name of
     the method (e.g. selectPlugin) and a, b, c the repr() of the arguments.
-
-    Current issue:
-        This will not mimic returns value for method such as getFolder,
-        compareGameVersion, etc., so some scripts cannot be executed.
     """
 
     _next_opts: List[Union[str, List[str]]]
+    _returns: MutableMapping[str, Any]
     _calls: List[str]
 
     def __init__(self):
-        self._next_opts = []
-        self._calls = []
+        self.clear()
 
     def clear(self):
+        self._returns = {}
         self._next_opts = []
         self._calls = []
 
@@ -63,37 +69,21 @@ class MockManager(ModManagerInterface):
             def fn(*args):
                 self._calls.append("{}({})".format(item, ", ".join(map(repr, args))))
 
+                return self._returns.get(item)
+
             return fn
         return object.__getattribute__(self, item)
 
-    def selectOne(
-        self, description: str, options: List[SelectOption], default: SelectOption
-    ) -> SelectOption:
-        assert self._next_opts and isinstance(self._next_opts[0], str)
+    def setReturnValue(self, fn: str, value: Any):
+        """
+        Sets the value to return on the next calls of fn. The value is stored and
+        reused until a next call to setReturnValue() for the same function.
 
-        ret = default
-        for opt in options:
-            if opt.name == self._next_opts[0]:
-                ret = opt
-                break
-
-        self._next_opts.pop(0)
-
-        return ret
-
-    def selectMany(
-        self,
-        description: str,
-        options: List[SelectOption],
-        default: List[SelectOption] = [],
-    ) -> List[SelectOption]:
-        assert self._next_opts and isinstance(self._next_opts[0], list)
-        if not self._next_opts:
-            opts = default
-        else:
-            opts = [opt for opt in options if opt.name in self._next_opts[0]]
-        self._next_opts.pop(0)
-        return opts
+        Args:
+            fn: Name of the function.
+            value: Value to return on subsequent call to fn.
+        """
+        self._returns[fn] = value
 
     def onSelect(self, options: Union[str, List[str]]):
         """
@@ -115,3 +105,63 @@ class MockManager(ModManagerInterface):
             options: Options to return on the next select calls.
         """
         self._next_opts = options
+
+    def selectOne(
+        self, description: str, options: List[SelectOption], default: SelectOption
+    ) -> SelectOption:
+
+        if not self._next_opts:
+            return default
+
+        assert isinstance(self._next_opts[0], str)
+
+        name = self._next_opts.pop(0)
+
+        for opt in options:
+            if opt.name == name:
+                return opt
+
+        return default
+
+    def selectMany(
+        self,
+        description: str,
+        options: List[SelectOption],
+        default: List[SelectOption] = [],
+    ) -> List[SelectOption]:
+
+        if not self._next_opts:
+            return default
+
+        assert isinstance(self._next_opts[0], list)
+
+        opts = self._next_opts.pop(0)
+        return [opt for opt in options if opt.name in opts]
+
+
+class ExpressionChecker(WizardExpressionVisitor):
+    def parse(self, expr: str) -> Value:
+        input_stream = InputStream(expr)
+        lexer = wizardLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = wizardParser(stream)
+        parser._errHandler = BailErrorStrategy()
+        return self.visitExpr(parser.parseWizard().body().expr(0))
+
+
+class InterpreterChecker(WizardInterpreter):
+    def parse(self, expr: str):
+        input_stream = InputStream(expr)
+        lexer = wizardLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = wizardParser(stream)
+        parser._errHandler = BailErrorStrategy()
+
+        try:
+            self.visit(parser.parseWizard())
+        except (CancelFlow, ReturnFlow):
+            pass
+
+    def clear(self):
+        self._loops.clear()
+        self._variables.clear()

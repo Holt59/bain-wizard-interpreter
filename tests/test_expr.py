@@ -2,13 +2,7 @@
 
 import pytest
 
-from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
-from wizard.antlr4.wizardLexer import wizardLexer
-from wizard.antlr4.wizardParser import wizardParser
-
-
 from wizard.expr import (
-    WizardExpressionVisitor,
     SubPackages,
     Value,
     VariableType,
@@ -19,15 +13,7 @@ from wizard.errors import (
     WizardIndexError,
 )
 
-
-class ExpressionChecker(WizardExpressionVisitor):
-    def parse(self, expr: str) -> Value:
-        input_stream = InputStream(expr)
-        lexer = wizardLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-        return self.visitExpr(parser.parseWizard().body().expr(0))
+from .test_utils import ExpressionChecker, MockSubPackage
 
 
 def test_constant():
@@ -128,7 +114,6 @@ def test_increment_decrement():
 
 
 def test_containers():
-    from .test_utils import MockSubPackage
 
     subpackages = SubPackages(
         [

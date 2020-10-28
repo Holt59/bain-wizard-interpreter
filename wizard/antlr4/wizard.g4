@@ -89,7 +89,7 @@ selectStmt: (selectOne | selectMany) 'EndSelect';
 // semantic analysis. Note that we check whether or not the selectCaseList is valid and all these
 // expr's resolve to strings during semantic analysis. A trailing comma is allowed here - it's
 // simply ignored.
-selectCaseList: (caseStmt 'Break')* (defaultStmt 'Break')?;
+selectCaseList: (caseStmt)* (defaultStmt)?;
 optionTuple: expr Comma expr Comma expr;
 selectOne:
 	'SelectOne' expr (Comma optionTuple)* Comma? selectCaseList;
@@ -225,6 +225,8 @@ Keyword:
 	| 'RequireVersions'
 	| 'ResetPluginName'
 	| 'ResetEspmName'
+	| 'ResetAllEspmNames'
+	| 'ResetAllPlugins'
 	| 'SelectAll'
 	| 'SelectAllPlugins'
 	| 'SelectAllEspms'

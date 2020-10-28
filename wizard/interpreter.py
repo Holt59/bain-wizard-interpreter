@@ -7,6 +7,7 @@ from typing import (
     List,
     Mapping,
     MutableMapping,
+    Optional,
     Tuple,
     Union,
 )
@@ -15,7 +16,15 @@ from .antlr4.wizardParser import wizardParser
 
 from .basic_functions import WizardFunctions
 from .errors import WizardNameError, WizardParseError, WizardTypeError
-from .expr import SubPackage, SubPackages, Value, Void, WizardExpressionVisitor
+from .expr import (
+    AbstractWizardInterpreter,
+    SubPackage,
+    SubPackages,
+    Value,
+    VariableType,
+    Void,
+    WizardExpressionVisitor,
+)
 from .mmitf import SelectOption, ModManagerInterface
 
 
@@ -72,6 +81,30 @@ class LoopContext:
         self._break = False
 
 
+class CaseContext(LoopContext):
+
+    """
+    Subclass of LoopContext that forbis Continue.
+    """
+
+    # The "top" loop to forward the 'Continue' to (if any):
+    _loop: Optional[LoopContext]
+
+    def __init__(self, loop: Optional[LoopContext]):
+        """
+        Args:
+            loop: The enclosing loop (or case) of the case, if any.
+        """
+        super().__init__()
+        self._loop = loop
+
+    def do_continue(self):
+        if self._loop:
+            return self._loop.do_continue()
+
+        raise WizardParseError("Unexpected keyword 'Continue'.")
+
+
 class CancelFlow(Exception):
 
     """
@@ -94,13 +127,16 @@ class ReturnFlow(Exception):
     pass
 
 
-class WizardInterpreter:
+class WizardInterpreter(AbstractWizardInterpreter):
 
     """
     The WizardInterpreter is the main interpreter for Wizard scripts. It contains
     most control and flow operations (visitXXX function), and uses an expression
     visitor to parse expression.
     """
+
+    # Strict mode:
+    _strict: bool
 
     # The Mod Manager interface contains function that are MM-specific, e.g.
     # check if a file exists, or install a subpackage, etc.
@@ -127,6 +163,7 @@ class WizardInterpreter:
         manager: ModManagerInterface,
         subpackages: SubPackages,
         extra_functions: Mapping[str, Callable[[List[Value]], Value]] = {},
+        strict: bool = False,
     ):
         """
         Args:
@@ -135,7 +172,10 @@ class WizardInterpreter:
             subpackages: The list of SubPackages in the archive.
             functions: List of extra functions to made available to the script.
                 Can override default functions.
+            strict: Enable strict mode.
         """
+        self._strict = strict
+
         self._manager = manager
         self._wizard_fns = WizardFunctions()
 
@@ -143,15 +183,35 @@ class WizardInterpreter:
         self._subpackages = subpackages
         self._functions = {}
 
-        self._evisitor = WizardExpressionVisitor(
-            self._variables, self._subpackages, self._functions
-        )
+        self._evisitor = WizardExpressionVisitor(self)
 
         self._loops = []
 
         self._functions.update(self.manager_functions(manager))
         self._functions.update(self.basic_functions(self._wizard_fns))
         self._functions.update(extra_functions)
+
+    # AbstractWizardInterpreter interface:
+
+    @property
+    def subpackages(self) -> SubPackages:
+        return self._subpackages
+
+    @property
+    def variables(self) -> MutableMapping[str, Value]:
+        return self._variables
+
+    @property
+    def functions(self) -> Mapping[str, Callable[[List[Value]], Value]]:
+        return self._functions
+
+    def is_strict(self) -> bool:
+        return self._strict
+
+    def warning(self, text: str):
+        self._manager.warning(text)
+
+    # Functions:
 
     def basic_functions(
         self, wf: WizardFunctions
@@ -203,7 +263,7 @@ class WizardInterpreter:
             t: type
 
             def __init__(self, t: type):
-                self.t = type
+                self.t = t
 
         def wrap_method(
             name: str, method, *args: Union[optional, type], varargs: bool = False
@@ -231,7 +291,8 @@ class WizardInterpreter:
                     if not isinstance(vs[iarg].value, tp):
                         raise WizardTypeError(
                             f"Argument at position {iarg} has incorrect type for"
-                            f" {name}."
+                            f" {name}, expected {VariableType.from_pytype(tp)} got"
+                            f" {vs[iarg].type}."
                         )
 
                     pargs.append(vs[iarg].value)
@@ -254,6 +315,7 @@ class WizardInterpreter:
             ("CompareWBVersion", manager.compareWBVersion, str),
             ("GetPluginLoadOrder", manager.getPluginLoadOrder, str, optional(int)),
             ("GetPluginStatus", manager.getPluginStatus, str),
+            ("GetEspmStatus", manager.getPluginStatus, str),
             ("DisableINILine", manager.disableINILine, str, str, str),
             ("EditINI", manager.editINI, str, str, str, Any, optional(str)),
             ("GetFilename", manager.getFilename, str),
@@ -265,7 +327,6 @@ class WizardInterpreter:
             ("DeSelectPlugin", manager.deselectPlugin, str),
             ("DeSelectEspm", manager.deselectPlugin, str),
             ("DeSelectSubPackage", manager.deselectSubPackage, str),
-            ("Note", manager.note, str),
             ("RenamePlugin", manager.renamePlugin, str, str),
             ("RenameEspm", manager.renamePlugin, str, str),
             (
@@ -279,7 +340,7 @@ class WizardInterpreter:
             ("ResetPluginName", manager.resetPluginName, str),
             ("ResetEspmName", manager.resetPluginName, str),
             ("ResetAllPluginNames", manager.resetAllPluginNames),
-            ("ResetAllEpsmNames", manager.resetAllPluginNames),
+            ("ResetAllEspmNames", manager.resetAllPluginNames),
             ("SelectAll", manager.selectAll),
             ("SelectAllPlugins", manager.selectAllPlugins),
             ("SelectAllEspms", manager.selectAllPlugins),
@@ -293,6 +354,13 @@ class WizardInterpreter:
         fns["DataFileExists"] = wrap_method(
             "DataFileExists", manager.dataFileExists, str, varargs=True
         )
+
+        # Any type?
+        if self.is_strict():
+            fns["Note"] = wrap_method("Note", manager.note, str)
+        else:
+            # In non-strict mode, we convert the value to a string:
+            fns["Note"] = wrap_method("Note", lambda x: manager.note(str(x)), object)
 
         return fns
 
@@ -437,6 +505,9 @@ class WizardInterpreter:
 
         name: str = ctx.Identifier().getText()
 
+        # Set the variable to avoid issue with empty range:
+        self._variables[name] = Value(Void())
+
         for value in rng:
 
             # Reset the "loop" context:
@@ -556,9 +627,15 @@ class WizardInterpreter:
         sopts: List[SelectOption] = []
         if one:
             if len(defs) > 1:
-                raise WizardTypeError(
-                    "Cannot have multiple default values with SelectOne."
-                )
+                if self.is_strict():
+                    raise WizardTypeError(
+                        "Cannot have multiple default values with SelectOne."
+                    )
+                else:
+                    self.warning(
+                        "SelectOne statement should have a single default, using the"
+                        " first one."
+                    )
             sopts = [
                 self._manager.selectOne(desc.value, opts, defs[0] if defs else opts[0])
             ]
@@ -575,8 +652,17 @@ class WizardInterpreter:
                 )
 
             if any(sopt.name == target.value for sopt in sopts):
+                # For the sake of simplicity, we are going to consider 'Case'
+                # as one-loop loops:
+
+                self._loops.append(
+                    CaseContext(self._loops[-1] if self._loops else None)
+                )
+
                 found = True
                 self.visitBody(case.body())
+
+                self._loops.pop()
 
         if not found and ctxx.selectCaseList().defaultStmt():
             self.visitBody(ctxx.selectCaseList().defaultStmt().body())

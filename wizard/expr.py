@@ -1,349 +1,72 @@
 # -*- encoding: utf-8 -*-
 
-from abc import abstractproperty
-from enum import Enum, auto
+from abc import abstractproperty, abstractmethod
 from typing import (
     Callable,
     List,
-    Iterable,
     Mapping,
     MutableMapping,
     Optional,
-    Type,
-    Union,
 )
 
 from wizard.antlr4.wizardParser import wizardParser
 
 from .errors import (
     WizardTypeError,
-    WizardIndexError,
     WizardNameError,
 )
 
+from .value import SubPackage, SubPackages, Value, VariableType, Void  # noqa: F401
 
-class Void:
+
+class AbstractWizardInterpreter:
 
     """
-    Simple class representing the result of a function call without a return
-    value.
+    Abstract wizard interpreter used by the expression visitor.
     """
-
-    pass
-
-
-class SubPackage(str):
-    def __new__(cls, *args, **kwargs):
-        return str.__new__(cls, *args, **kwargs)
 
     @abstractproperty
-    def files(self) -> Iterable[str]:
-        pass
-
-
-class SubPackages(List[SubPackage]):
-
-    """
-    Class to wrap the 'SubPackages' variable.
-    """
-
-    def __init__(self, subpackages: List[SubPackage]):
-        super().__init__(subpackages)
-
-
-class VariableType(Enum):
-
-    BOOL = auto()
-    INTEGER = auto()
-    FLOAT = auto()
-    STRING = auto()
-
-    VOID = auto()
-
-    # Note: This is used only for SubPackages and item in SubPackages.
-    LIST_SUBPACKAGES = auto()
-    SUBPACKAGE = auto()
-
-    @staticmethod
-    def from_pytype(pytype: Type) -> "VariableType":
-        if pytype is Void:
-            return VariableType.VOID
-        if issubclass(pytype, SubPackages):
-            return VariableType.LIST_SUBPACKAGES
-        if issubclass(pytype, SubPackage):
-            return VariableType.SUBPACKAGE
-        if pytype is bool:
-            return VariableType.BOOL
-        if pytype is int:
-            return VariableType.INTEGER
-        if pytype is float:
-            return VariableType.FLOAT
-        if pytype is str:
-            return VariableType.STRING
-        raise ValueError(f"Unknow type: {pytype}.")
-
-    def __str__(self) -> str:
-        if self is VariableType.LIST_SUBPACKAGES:
-            return "SubPackage[]"
-
-        if self is VariableType.SUBPACKAGE:
-            return "SubPackage"
-
-        return super().__str__().lower().split(".")[-1]
-
-
-# Union of possible type for Wizard value:
-WizardValueType = Union[bool, int, float, str, SubPackage, SubPackages]
-
-
-class Value:
-
-    """
-    Represent a value of a given type, that can be a constant or the reuslt of
-    a complex expression.
-
-    Value expose operators from the BAIN Wizard specification with proper type
-    checking so you can use them directly.
-    """
-
-    _value: WizardValueType
-
-    def __init__(self, value: WizardValueType):
-        self._type = VariableType.from_pytype(type(value))
-        self._value = value
-
-    @property
-    def type(self) -> VariableType:
+    def subpackages(self) -> SubPackages:
         """
         Returns:
-            The type of the variable.
+            The list of SubPackages in the BAIN installer.
         """
-        return self._type
+        ...
 
-    def is_void(self) -> bool:
-        """
-        Returns:
-            True if this value represent the "void" value.
-        """
-        return self._type == VariableType.VOID
-
-    @property
-    def value(self) -> WizardValueType:
+    @abstractproperty
+    def variables(self) -> MutableMapping[str, Value]:
         """
         Returns:
-            The value of this constant.
+            The list of variables.
         """
-        return self._value
+        ...
 
-    def __pos__(self) -> "Value":
-        if not isinstance(self._value, (int, float)):
-            raise WizardTypeError(
-                f"Cannot use plus operator on variable of type {self._type}."
-            )
-        return Value(self._value)
+    @abstractproperty
+    def functions(self) -> Mapping[str, Callable[[List[Value]], Value]]:
+        """
+        Returns:
+            The list of functions (mapping from function name to actually
+            callable objects).
+        """
+        ...
 
-    def __neg__(self) -> "Value":
-        if not isinstance(self._value, (int, float)):
-            raise WizardTypeError(
-                f"Cannot use minus operator on variable of type {self._type}."
-            )
-        return Value(-self._value)
+    @abstractmethod
+    def is_strict(self) -> bool:
+        """
+        Returns:
+            True if this interpreter is in "strict" mode.
+        """
+        ...
 
-    def __add__(self, other: "Value") -> "Value":
-        if (
-            not isinstance(self._value, (int, float, str))
-            or not isinstance(other._value, (int, float, str))
-            or isinstance(self._value, str) != isinstance(other._value, str)
-        ):
-            raise WizardTypeError(
-                f"Cannot add values of types {self._type}, {other._type}."
-            )
-        return Value(self._value + other._value)  # type: ignore
+    @abstractmethod
+    def warning(self, text: str):
+        """
+        Display a warning.
 
-    def __sub__(self, other: "Value") -> "Value":
-        if not isinstance(self._value, (int, float)) or not isinstance(
-            other._value, (int, float)
-        ):
-            raise WizardTypeError("Cannot substract non-numeric values.")
-        return Value(self._value - other._value)
-
-    def __mul__(self, other: "Value") -> "Value":
-        if not isinstance(self._value, (int, float)) or not isinstance(
-            other._value, (int, float)
-        ):
-            raise WizardTypeError("Cannot multiply non-numeric values.")
-        return Value(self._value * other._value)
-
-    def __div__(self, other: "Value") -> "Value":
-        if not isinstance(self._value, (int, float)) or not isinstance(
-            other._value, (int, float)
-        ):
-            raise WizardTypeError("Cannot divide non-numeric values.")
-        return Value(self._value / other._value)
-
-    def __pow__(self, other: "Value") -> "Value":
-        if not isinstance(self._value, (int, float)) or not isinstance(
-            other._value, (int, float)
-        ):
-            raise WizardTypeError("Cannot raise non-numeric values.")
-        return Value(self._value ** other._value)
-
-    def __mod__(self, other: "Value") -> "Value":
-        if not isinstance(self._value, (int, float)) or not isinstance(
-            other._value, (int, float)
-        ):
-            raise WizardTypeError("Cannot modulo non-numeric values.")
-        return Value(self._value % other._value)
-
-    def logical_not(self) -> "Value":
-        return Value(not self._value)
-
-    def equals(self, other: "Value") -> "Value":
-        return Value(self._value == other._value)
-
-    def not_equals(self, other: "Value") -> "Value":
-        return Value(self._value != other._value)
-
-    def __or__(self, other: "Value") -> "Value":
-        return Value(self._value or other._value)
-
-    def __and__(self, other: "Value") -> "Value":
-        return Value(self._value and other._value)
-
-    def __gt__(self, other: "Value") -> "Value":
-        if isinstance(self._value, (int, float)) and isinstance(
-            other._value, (int, float)
-        ):
-            return Value(self._value > other._value)
-        if isinstance(self._value, str) and isinstance(other._value, str):
-            return Value(self._value > other._value)
-        raise WizardTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
-
-    def __ge__(self, other: "Value") -> "Value":
-        if isinstance(self._value, (int, float)) and isinstance(
-            other._value, (int, float)
-        ):
-            return Value(self._value >= other._value)
-        if isinstance(self._value, str) and isinstance(other._value, str):
-            return Value(self._value >= other._value)
-        raise WizardTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
-
-    def __lt__(self, other: "Value") -> "Value":
-        if isinstance(self._value, (int, float)) and isinstance(
-            other._value, (int, float)
-        ):
-            return Value(self._value < other._value)
-        if isinstance(self._value, str) and isinstance(other._value, str):
-            return Value(self._value < other._value)
-        raise WizardTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
-
-    def __le__(self, other: "Value") -> "Value":
-        if isinstance(self._value, (int, float)) and isinstance(
-            other._value, (int, float)
-        ):
-            return Value(self._value <= other._value)
-        if isinstance(self._value, str) and isinstance(other._value, str):
-            return Value(self._value <= other._value)
-        raise WizardTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
-
-    def contains(self, item: "Value", case_insensitive: bool = False) -> "Value":
-        if not isinstance(self._value, (SubPackage, SubPackages)):
-            raise WizardTypeError(f"Cannot iterate variable of type {self._type}.")
-
-        if not isinstance(item._value, (str, SubPackage)):
-            raise WizardTypeError(
-                f"Cannot check presence of variable of type {self._type}."
-            )
-
-        if case_insensitive:
-            item = Value(item._value.lower())
-
-        it: Iterable[str]
-        if isinstance(self._value, SubPackages):
-            it = iter(self._value)
-        else:
-            it = self._value.files
-
-        for istr in it:
-            if case_insensitive:
-                istr = istr.lower()
-            if item._value == istr:
-                return Value(True)
-
-        return Value(False)
-
-    def __getitem__(self, index: "Value") -> "Value":
-        if not isinstance(self._value, (str, SubPackage, SubPackages)):
-            raise WizardTypeError(f"Cannot index variable of type {self._type}.")
-        if not isinstance(index._value, (int)):
-            raise WizardTypeError(f"Cannot index with variable of type {index._type}.")
-
-        try:
-            return Value(self._value[index._value])
-        except IndexError:
-            raise WizardIndexError(index._value)
-
-    def slice(
-        self, start: Optional["Value"], end: Optional["Value"], step: Optional["Value"]
-    ) -> "Value":
-
-        if not isinstance(self._value, str):
-            raise WizardTypeError(
-                f"Cannot access slice of variable of type {self._type}."
-            )
-
-        for v in (start, end, step):
-            if v is not None and not isinstance(v.value, int):
-                raise WizardTypeError(f"Cannot index with variable of type {v.type}.")
-
-        return Value(
-            self._value[
-                slice(*(None if v is None else v.value for v in (start, end, step)))
-            ]
-        )
-
-    def __iter__(self) -> Iterable["Value"]:
-        if not isinstance(self._value, (SubPackage, SubPackages)):
-            raise WizardTypeError(f"Cannot iterate variable of type {self._type}.")
-
-        it: Iterable[str]
-        if isinstance(self._value, SubPackages):
-            it = iter(self._value)
-        else:
-            it = self._value.files
-
-        return (Value(x) for x in it)
-
-    # Those operations are not "Wizardly", i.e. they make sense in Python:
-
-    def __eq__(self, other: object) -> bool:
-        value: Value
-        if not isinstance(other, Value):
-            value = Value(other)  # type: ignore
-        else:
-            value = other
-
-        if self.is_void() and value.is_void():
-            return True
-
-        return value._type == self._type and value._value == self._value
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __bool__(self) -> bool:
-        return bool(self._value)
-
-    def __repr__(self) -> str:
-        return "{}({})".format(self.type, self.value)
+        Args:
+            text: The warning text.
+        """
+        ...
 
 
 class WizardExpressionVisitor:
@@ -354,28 +77,16 @@ class WizardExpressionVisitor:
     which takes an expression context and returns a `Value`.
     """
 
-    _subpackages: SubPackages
-    _variables: MutableMapping[str, Value]
-    _functions: Mapping[str, Callable[[List[Value]], Value]]
+    _intp: AbstractWizardInterpreter
 
     def __init__(
-        self,
-        variables: MutableMapping[str, Value],
-        subpackages: SubPackages,
-        functions: Mapping[str, Callable[[List[Value]], Value]],
+        self, interpreter: AbstractWizardInterpreter,
     ):
         """
         Args:
-            variables: List of variables. The expression visitor can modify
-                the value of the variables but not add / remove variables.
-            subpackages: The subpackages object.
-            functions: List of functions. For method, function name should
-                be "type.name" where type() is the name of the VariableType
-                (e.g. string or integer).
+            interpreter: The interpreter to use with this expression visitor.
         """
-        self._variables = variables
-        self._subpackages = subpackages
-        self._functions = functions
+        self._intp = interpreter
 
     def visitTimesDivideModulo(
         self, ctx: wizardParser.TimesDivideModuloContext
@@ -399,26 +110,26 @@ class WizardExpressionVisitor:
     def visitFunctionCall(self, ctx: wizardParser.FunctionCallContext) -> Value:
 
         name = ctx.Identifier().getText()
-        if name not in self._functions:
+        if name not in self._intp.functions:
             raise WizardNameError(name)
 
         values: List[Value] = []
         for ex in ctx.argList().expr():
             values.append(self.visitExpr(ex))
 
-        return self._functions[name](values)
+        return self._intp.functions[name](values)
 
     def visitDotFunctionCall(self, ctx: wizardParser.DotFunctionCallContext) -> Value:
         values: List[Value] = [self.visitExpr(ctx.expr())]
 
         mname = "{}.{}".format(values[0].type, ctx.Identifier().getText())
-        if mname not in self._functions:
+        if mname not in self._intp.functions:
             raise WizardNameError(mname)
 
         for ex in ctx.argList().expr():
             values.append(self.visitExpr(ex))
 
-        return self._functions[mname](values)
+        return self._intp.functions[mname](values)
 
     def visitIn(self, ctx: wizardParser.InContext) -> Value:
         return self.visitExpr(ctx.expr(1)).contains(
@@ -466,7 +177,7 @@ class WizardExpressionVisitor:
 
     def visitGreater(self, ctx: wizardParser.GreaterContext) -> Value:
         op = Value.__ge__
-        if ctx.Lesser():
+        if ctx.Greater():
             op = Value.__gt__
         return self.doCmp(
             op,
@@ -483,31 +194,31 @@ class WizardExpressionVisitor:
 
     def visitPreDecrement(self, ctx: wizardParser.PreDecrementContext) -> Value:
         name = ctx.Identifier().getText()
-        if name not in self._variables:
+        if name not in self._intp.variables:
             raise WizardNameError(name)
-        self._variables[ctx.Identifier().getText()] -= Value(1)
-        return self._variables[ctx.Identifier().getText()]
+        self._intp.variables[ctx.Identifier().getText()] -= Value(1)
+        return self._intp.variables[ctx.Identifier().getText()]
 
     def visitPreIncrement(self, ctx: wizardParser.PreIncrementContext) -> Value:
         name = ctx.Identifier().getText()
-        if name not in self._variables:
+        if name not in self._intp.variables:
             raise WizardNameError(name)
-        self._variables[ctx.Identifier().getText()] += Value(1)
-        return self._variables[ctx.Identifier().getText()]
+        self._intp.variables[ctx.Identifier().getText()] += Value(1)
+        return self._intp.variables[ctx.Identifier().getText()]
 
     def visitPostIncrement(self, ctx: wizardParser.PostIncrementContext) -> Value:
         name = ctx.Identifier().getText()
-        if name not in self._variables:
+        if name not in self._intp.variables:
             raise WizardNameError(name)
-        self._variables[ctx.Identifier().getText()] += Value(1)
-        return self._variables[ctx.Identifier().getText()]
+        self._intp.variables[ctx.Identifier().getText()] += Value(1)
+        return self._intp.variables[ctx.Identifier().getText()]
 
     def visitPostDecrement(self, ctx: wizardParser.PostDecrementContext) -> Value:
         name = ctx.Identifier().getText()
-        if name not in self._variables:
+        if name not in self._intp.variables:
             raise WizardNameError(name)
-        self._variables[ctx.Identifier().getText()] -= Value(1)
-        return self._variables[ctx.Identifier().getText()]
+        self._intp.variables[ctx.Identifier().getText()] -= Value(1)
+        return self._intp.variables[ctx.Identifier().getText()]
 
     def visitNegative(self, ctx: wizardParser.NegativeContext) -> Value:
         return -self.visitExpr(ctx.expr())
@@ -561,10 +272,16 @@ class WizardExpressionVisitor:
             return self.visitString(ctx.string())
         if ctx.Identifier():
             name = ctx.Identifier().getText()
-            if name not in self._variables:
-                raise WizardNameError(name)
-
-            return self._variables[ctx.Identifier().getText()]
+            if name not in self._intp.variables:
+                if self._intp.is_strict():
+                    raise WizardNameError(name)
+                else:
+                    self._intp.warning(
+                        f"Variable {name} used before being set, default to 0."
+                    )
+                    return Value(0)
+            else:
+                return self._intp.variables[ctx.Identifier().getText()]
 
         raise WizardNameError(ctx.getText())
 
@@ -574,7 +291,7 @@ class WizardExpressionVisitor:
         elif ctx.getText() == "True":
             return Value(True)
         else:
-            return Value(self._subpackages)
+            return Value(self._intp.subpackages)
 
     def visitInteger(self, ctx: wizardParser.IntegerContext) -> Value:
         return Value(int(ctx.getText()))
