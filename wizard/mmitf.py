@@ -78,7 +78,7 @@ class ModManagerInterface:
         ...
 
     # Function methods:
-
+    @abstractmethod
     def compareGameVersion(self, version: str) -> int:
         """
         Used to test the installed version of the game against the specified version.
@@ -92,6 +92,7 @@ class ModManagerInterface:
         """
         pass
 
+    @abstractmethod
     def compareSEVersion(self, version: str) -> int:
         """
         Used to test the installed version of the script extender against the
@@ -106,6 +107,7 @@ class ModManagerInterface:
         """
         pass
 
+    @abstractmethod
     def compareGEVersion(self, version: str) -> int:
         """
         Used to test the installed version of the graphics extender against the
@@ -120,6 +122,7 @@ class ModManagerInterface:
         """
         pass
 
+    @abstractmethod
     def compareWBVersion(self, version: str) -> int:
         """
         Used to test the installed version Wrye Bash against the
@@ -134,6 +137,7 @@ class ModManagerInterface:
         """
         pass
 
+    @abstractmethod
     def dataFileExists(self, *filepaths: str) -> bool:
         """
         Tests for the existence of a file in the Data directory. If the file you are
@@ -148,6 +152,7 @@ class ModManagerInterface:
         """
         ...
 
+    @abstractmethod
     def getPluginLoadOrder(self, filename: str, fallback: int = -1) -> int:
         """
         Returns the current load order index of a plugin in the Data directory.
@@ -162,6 +167,7 @@ class ModManagerInterface:
         """
         ...
 
+    @abstractmethod
     def getPluginStatus(self, filename) -> int:
         """
         Returns the status of a plugin in the Data directory.
@@ -178,6 +184,7 @@ class ModManagerInterface:
         """
         ...
 
+    @abstractmethod
     def disableINILine(self, filename: str, section: str, setting: str):
         """
         Create an INI tweak file that disables the specified setting by commenting it
@@ -190,6 +197,7 @@ class ModManagerInterface:
         """
         ...
 
+    @abstractmethod
     def editINI(
         self,
         filename: str,
@@ -213,6 +221,7 @@ class ModManagerInterface:
         """
         ...
 
+    @abstractmethod
     def getFilename(self, path: str) -> str:
         """
         Retrieve the filename in a path (actually from the system).
@@ -227,6 +236,7 @@ class ModManagerInterface:
         """
         ...
 
+    @abstractmethod
     def getFolder(self, path: str) -> str:
         """
         Retrieve the folder in a path (actually from the system).

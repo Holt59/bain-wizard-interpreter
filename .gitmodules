@@ -1,0 +1,3 @@
+[submodule ".\\vendor\\wizparse"]
+	path = .\\vendor\\wizparse
+	url = https://github.com/wrye-bash/wizparse.git
