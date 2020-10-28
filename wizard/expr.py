@@ -15,7 +15,7 @@ from .errors import (
     WizardTypeError,
     WizardNameError,
 )
-
+from .severity import Issue, SeverityContext
 from .value import SubPackage, SubPackages, Value, VariableType, Void  # noqa: F401
 
 
@@ -51,20 +51,20 @@ class AbstractWizardInterpreter:
         ...
 
     @abstractmethod
-    def is_strict(self) -> bool:
-        """
-        Returns:
-            True if this interpreter is in "strict" mode.
-        """
-        ...
-
-    @abstractmethod
     def warning(self, text: str):
         """
         Display a warning.
 
         Args:
             text: The warning text.
+        """
+        ...
+
+    @abstractproperty
+    def severity(self) -> SeverityContext:
+        """
+        Returns:
+            The severity context of the interpreter.
         """
         ...
 
@@ -273,13 +273,13 @@ class WizardExpressionVisitor:
         if ctx.Identifier():
             name = ctx.Identifier().getText()
             if name not in self._intp.variables:
-                if self._intp.is_strict():
-                    raise WizardNameError(name)
-                else:
-                    self._intp.warning(
-                        f"Variable {name} used before being set, default to 0."
-                    )
-                    return Value(0)
+                # Severity check:
+                self._intp.severity.raise_or_warn(
+                    Issue.USAGE_OF_NOTSET_VARIABLES,
+                    WizardNameError(name),
+                    f"Variable {name} used before being set, default to 0.",
+                )
+                return Value(0)
             else:
                 return self._intp.variables[ctx.Identifier().getText()]
 

@@ -26,6 +26,7 @@ from .expr import (
     WizardExpressionVisitor,
 )
 from .mmitf import SelectOption, ModManagerInterface
+from .severity import Issue, SeverityContext
 
 
 class LoopContext:
@@ -127,16 +128,13 @@ class ReturnFlow(Exception):
     pass
 
 
-class WizardInterpreter(AbstractWizardInterpreter):
+class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
 
     """
     The WizardInterpreter is the main interpreter for Wizard scripts. It contains
     most control and flow operations (visitXXX function), and uses an expression
     visitor to parse expression.
     """
-
-    # Strict mode:
-    _strict: bool
 
     # The Mod Manager interface contains function that are MM-specific, e.g.
     # check if a file exists, or install a subpackage, etc.
@@ -163,7 +161,6 @@ class WizardInterpreter(AbstractWizardInterpreter):
         manager: ModManagerInterface,
         subpackages: SubPackages,
         extra_functions: Mapping[str, Callable[[List[Value]], Value]] = {},
-        strict: bool = False,
     ):
         """
         Args:
@@ -172,9 +169,8 @@ class WizardInterpreter(AbstractWizardInterpreter):
             subpackages: The list of SubPackages in the archive.
             functions: List of extra functions to made available to the script.
                 Can override default functions.
-            strict: Enable strict mode.
         """
-        self._strict = strict
+        SeverityContext.__init__(self)
 
         self._manager = manager
         self._wizard_fns = WizardFunctions()
@@ -205,8 +201,9 @@ class WizardInterpreter(AbstractWizardInterpreter):
     def functions(self) -> Mapping[str, Callable[[List[Value]], Value]]:
         return self._functions
 
-    def is_strict(self) -> bool:
-        return self._strict
+    @property
+    def severity(self) -> SeverityContext:
+        return self
 
     def warning(self, text: str):
         self._manager.warning(text)
@@ -356,11 +353,19 @@ class WizardInterpreter(AbstractWizardInterpreter):
         )
 
         # Any type?
-        if self.is_strict():
-            fns["Note"] = wrap_method("Note", manager.note, str)
-        else:
-            # In non-strict mode, we convert the value to a string:
-            fns["Note"] = wrap_method("Note", lambda x: manager.note(str(x)), object)
+        def note(x: object):
+            self.raise_or_warn(
+                Issue.USAGE_OF_ANYTHING_IN_NOTE,
+                WizardTypeError(
+                    "'Note' keyword expected string, found"
+                    f" {VariableType.from_pytype(type(x))}."
+                ),
+                "'Note' keyword expected string, found"
+                f" {VariableType.from_pytype(type(x))}.",
+            )
+            return manager.note(str(x))
+
+        fns["Note"] = wrap_method("Note", note, object)
 
         return fns
 
@@ -627,15 +632,14 @@ class WizardInterpreter(AbstractWizardInterpreter):
         sopts: List[SelectOption] = []
         if one:
             if len(defs) > 1:
-                if self.is_strict():
-                    raise WizardTypeError(
+                self.raise_or_warn(
+                    Issue.MULTIPLE_DEFAULTS_IN_SELECT_ON,
+                    WizardTypeError(
                         "Cannot have multiple default values with SelectOne."
-                    )
-                else:
-                    self.warning(
-                        "SelectOne statement should have a single default, using the"
-                        " first one."
-                    )
+                    ),
+                    "SelectOne statement should have a single default, using the"
+                    " first one.",
+                )
             sopts = [
                 self._manager.selectOne(desc.value, opts, defs[0] if defs else opts[0])
             ]
@@ -643,6 +647,7 @@ class WizardInterpreter(AbstractWizardInterpreter):
             sopts = self._manager.selectMany(desc.value, opts, defs)
 
         found: bool = False
+        fallthrough: bool = False
 
         for case in ctxx.selectCaseList().caseStmt():
             target = self._evisitor.visitExpr(case.expr())
@@ -651,18 +656,33 @@ class WizardInterpreter(AbstractWizardInterpreter):
                     f"Case label should be string, not {target.type}."
                 )
 
-            if any(sopt.name == target.value for sopt in sopts):
-                # For the sake of simplicity, we are going to consider 'Case'
-                # as one-loop loops:
+            if fallthrough or any(sopt.name == target.value for sopt in sopts):
 
-                self._loops.append(
-                    CaseContext(self._loops[-1] if self._loops else None)
-                )
+                # For the sake of simplicity, we are going to consider 'Case'
+                # as one-loop loops (let visitBody() handle the 'Break'):
+                lctx = CaseContext(self._loops[-1] if self._loops else None)
+
+                self._loops.append(lctx)
 
                 found = True
                 self.visitBody(case.body())
 
                 self._loops.pop()
 
+                # We found a Break (should be the last statement), we stop
+                # checking other cases if SelectOne:
+                if lctx.is_break():
+                    fallthrough = False
+                    if one:
+                        break
+                # No Break, we fall through (accept Next Case):
+                else:
+                    fallthrough = True
+
         if not found and ctxx.selectCaseList().defaultStmt():
+            self._loops.append(CaseContext(self._loops[-1] if self._loops else None))
             self.visitBody(ctxx.selectCaseList().defaultStmt().body())
+
+            # Theoretically, we should fall-through here... But, eh.
+
+            self._loops.pop()

@@ -172,12 +172,14 @@ Case "O1"
 Case "O2"
     x += 3
     Break
+Default
+    x += 15
 EndSelect
 """
     m.onSelect([])
     c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(1)}
+    assert c._variables == {"x": Value(16)}
 
     m.onSelect(["O1"])
     c.clear()
@@ -193,6 +195,53 @@ EndSelect
     c.clear()
     c.parse(s)
     assert c._variables == {"x": Value(6)}
+
+    # No Case for selected:
+    s = r"""
+x = 1
+SelectOne "The Description",
+    "O1", "Description O1", "ImgO1", \
+    "O2", "Description O2", "ImgO2"
+Case "O2"
+    x = 3
+    Break
+Default
+    x = 4
+    Break
+EndSelect
+"""
+    m.onSelect("O1")
+    c.clear()
+    c.parse(s)
+    assert c._variables == {"x": Value(4)}
+
+    m.onSelect("O2")
+    c.clear()
+    c.parse(s)
+    assert c._variables == {"x": Value(3)}
+
+    # Fallthrough
+    s = r"""
+x = 1
+SelectOne "The Description",
+    "O1", "Description O1", "ImgO1", \
+    "O2", "Description O2", "ImgO2"
+Case "O1"
+    x += 2
+Case "O2"
+    x += 3
+    Break
+EndSelect
+"""
+    m.onSelect("O1")
+    c.clear()
+    c.parse(s)
+    assert c._variables == {"x": Value(6)}
+
+    m.onSelect("O2")
+    c.clear()
+    c.parse(s)
+    assert c._variables == {"x": Value(4)}
 
 
 def test_default_functions():
