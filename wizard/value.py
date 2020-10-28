@@ -6,6 +6,7 @@ from typing import (
     List,
     Iterable,
     Optional,
+    Sequence,
     Type,
     Union,
 )
@@ -42,7 +43,7 @@ class SubPackages(List[SubPackage]):
     Class to wrap the 'SubPackages' variable.
     """
 
-    def __init__(self, subpackages: List[SubPackage]):
+    def __init__(self, subpackages: Sequence[SubPackage]):
         super().__init__(subpackages)
 
 
