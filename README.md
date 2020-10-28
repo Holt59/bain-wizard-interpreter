@@ -40,6 +40,6 @@ Exceptions:
 - The code in [`wizard/antlr4`](wizard/antlr4) is generated from
   the [`wizparse`](https://github.com/wrye-bash/wizparse) repository, so the `wizparse`
   LICENSE applies to it.
-- The code in [`vendor/wizparse`] is under the `wizparse` LICENSE.
-- The files in [`vendor/wizparse/tests`] have their own accompanying license. See the
+- The code in [`vendor/wizparse`](vendor/wizparse) is under the `wizparse` LICENSE.
+- The files in [`vendor/wizparse/tests`](vendor/wizparse/tests) have their own accompanying license. See the
   [`wizparse`](https://github.com/wrye-bash/wizparse) repository for more details.
