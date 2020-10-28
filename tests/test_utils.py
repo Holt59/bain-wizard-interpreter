@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 
-from typing import Any, List, MutableMapping, Union
+import json
+
+from typing import Any, Callable, List, MutableMapping, Optional, Union
 
 
 from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
@@ -21,6 +23,7 @@ class MockSubPackage(SubPackage):
         value._files = files
         return value
 
+    @property
     def files(self):
         return iter(self._files)
 
@@ -48,7 +51,7 @@ class MockManager(ModManagerInterface):
     """
 
     _next_opts: List[Union[str, List[str]]]
-    _returns: MutableMapping[str, Any]
+    _returns: MutableMapping[str, Callable]
     _calls: List[str]
 
     def __init__(self):
@@ -64,24 +67,49 @@ class MockManager(ModManagerInterface):
         return self._calls
 
     def __getattribute__(self, item):
-        if item in ModManagerInterface.__dict__ and item not in MockManager.__dict__:
+
+        fn = object.__getattribute__(self, item)
+
+        if (
+            hasattr(fn, "__func__")
+            and hasattr(ModManagerInterface, item)
+            and fn.__func__ is getattr(ModManagerInterface, item)
+        ):
 
             def fn(*args):
-                self._calls.append("{}({})".format(item, ", ".join(map(repr, args))))
 
-                return self._returns.get(item)
+                # Note using str() otherwise we would loose quote around strings, and
+                # not use repr() because the quote (" or ') is inconsistent. JSON is
+                # consistent:
+                self._calls.append(
+                    "{}({})".format(item, ", ".join(map(json.dumps, args)))
+                )
 
-            return fn
-        return object.__getattribute__(self, item)
+                if item in self._returns:
+                    return self._returns[item](*args)
+
+        return fn
 
     def setReturnValue(self, fn: str, value: Any):
         """
         Sets the value to return on the next calls of fn. The value is stored and
-        reused until a next call to setReturnValue() for the same function.
+        reused until a next call to setReturnValue() for the same function. This
+        replaces a previous call to setReturnFunction.
 
         Args:
             fn: Name of the function.
             value: Value to return on subsequent call to fn.
+        """
+        self._returns[fn] = lambda *args: value
+
+    def setReturnFunction(self, fn: str, value: Callable):
+        """
+        Sets a function to use in place of the specified one. This replace a previous
+        call to setReturnValue.
+
+        Args:
+            fn: Name of the function to 'replace'.
+            value: The function to call instead of the current one.
         """
         self._returns[fn] = value
 
@@ -113,7 +141,10 @@ class MockManager(ModManagerInterface):
         if not self._next_opts:
             return default
 
-        assert isinstance(self._next_opts[0], str)
+        if not isinstance(self._next_opts[0], str):
+            raise ValueError(
+                f"Next option for selectOne() is not a string (desc. = {description})."
+            )
 
         name = self._next_opts.pop(0)
 
@@ -133,7 +164,10 @@ class MockManager(ModManagerInterface):
         if not self._next_opts:
             return default
 
-        assert isinstance(self._next_opts[0], list)
+        if not isinstance(self._next_opts[0], list):
+            raise ValueError(
+                f"Next option for selectMany() is not a list (desc. = {description})."
+            )
 
         opts = self._next_opts.pop(0)
         return [opt for opt in options if opt.name in opts]
@@ -150,7 +184,7 @@ class ExpressionChecker(WizardExpressionVisitor):
 
 
 class InterpreterChecker(WizardInterpreter):
-    def parse(self, expr: str):
+    def parse(self, expr: str) -> Optional[Union[CancelFlow, ReturnFlow]]:
         input_stream = InputStream(expr)
         lexer = wizardLexer(input_stream)
         stream = CommonTokenStream(lexer)
@@ -159,8 +193,10 @@ class InterpreterChecker(WizardInterpreter):
 
         try:
             self.visit(parser.parseWizard())
-        except (CancelFlow, ReturnFlow):
-            pass
+        except (CancelFlow, ReturnFlow) as ex:
+            return ex
+
+        return None
 
     def clear(self):
         self._loops.clear()
