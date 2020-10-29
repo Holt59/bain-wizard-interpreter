@@ -277,3 +277,26 @@ Otherwise, right-click the installer again and choose Install""",
     assert m.notes == notes
     assert m.subpackages == packages
     assert m.plugins == plugins
+
+    # Second test (different choice) - The note does not change.
+    m.clear()
+    m.onSelects(
+        ["Welcome", "Begin Installation", ["Landscape Textures"], ["SMIM"],]
+    )
+
+    packages = [
+        "00 Majestic Mountains",
+        "10 Complementary Landscape Texture Pack",
+        "21 SMIM Patch Milestone",
+    ]
+
+    plugins = sorted(["MajesticMountains.esp"])
+
+    c.parse(script)
+
+    for ex in expected:
+        assert ex in m.calls
+
+    assert m.notes == notes
+    assert m.subpackages == packages
+    assert m.plugins == plugins
