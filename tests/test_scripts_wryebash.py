@@ -217,3 +217,63 @@ def test_better_cities():
     assert m.notes == notes
     assert m.subpackages == packages
     assert m.plugins == plugins
+
+
+def test_majestic_mountains():
+
+    # You can get this one Nexus: https://www.nexusmods.com/skyrim/mods/86292
+    folder = Path("tests/data/Majestic Mountains Main-86292-1-4")
+
+    # Read the script:
+    with open(folder.joinpath("wizard.txt"), "r") as fp:
+        script = fp.read()
+
+    # Read the subpackages:
+    subpackages = read_subpackages(folder.joinpath("files.txt"))
+
+    # Create the manager and interpreter:
+    m = MockManagerPlus(subpackages)
+    c = InterpreterChecker(m, subpackages)
+
+    # I had these installed, so I use them to check:
+    m.setReturnFunction(
+        "dataFileExists", lambda s: s in ["Knights.esp", "All Natural.esp"]
+    )
+
+    # First run:
+    m.onSelects(
+        ["Welcome", "Begin Installation", ["Landscape Textures", "Moss Rocks"], [],]
+    )
+
+    expected = []
+
+    # Note: Added extra \\ because these are found in the file.
+    notes = [
+        """If you are manually sorting your load order, make sure that \
+MajesticMountains.esp is loaded before other plugins in the mod, or sort with LOOT.
+
+Confirm your selections above - if you are not happy with the selection use the BACK \
+button below.
+When ready, tick 'Apply these selections' Below, and then click the 'Finish' button.
+
+If You Have Auto-Anneal/Install Wizards set in Wrye Bash preferences, the Wizard will \
+install your selections after clicking Finish
+Otherwise, right-click the installer again and choose Install""",
+    ]
+
+    packages = [
+        "00 Majestic Mountains",
+        "01 Moss",
+        "10 Complementary Landscape Texture Pack",
+    ]
+
+    plugins = sorted(["MajesticMountains.esp", "MajesticMountains_Moss.esp"])
+
+    c.parse(script)
+
+    for ex in expected:
+        assert ex in m.calls
+
+    assert m.notes == notes
+    assert m.subpackages == packages
+    assert m.plugins == plugins
