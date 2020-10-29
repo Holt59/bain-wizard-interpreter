@@ -235,11 +235,6 @@ def test_majestic_mountains():
     m = MockManagerPlus(subpackages)
     c = InterpreterChecker(m, subpackages)
 
-    # I had these installed, so I use them to check:
-    m.setReturnFunction(
-        "dataFileExists", lambda s: s in ["Knights.esp", "All Natural.esp"]
-    )
-
     # First run:
     m.onSelects(
         ["Welcome", "Begin Installation", ["Landscape Textures", "Moss Rocks"], [],]
@@ -300,3 +295,84 @@ Otherwise, right-click the installer again and choose Install""",
     assert m.notes == notes
     assert m.subpackages == packages
     assert m.plugins == plugins
+
+
+def test_book_covers():
+
+    # Language Pack (testing both LE and SE):
+    for name in [
+        "Language Pack - Book Covers Skyrim SE.7z-901-4-2",
+        "Language Pack - Book Covers Skyrim 3_5 Legendary-35399-3-6",
+    ]:
+
+        folder = Path("tests/data").joinpath(name)
+
+        # Read the script:
+        with open(folder.joinpath("wizard.txt"), "r") as fp:
+            script = fp.read()
+
+        # Read the subpackages:
+        subpackages = read_subpackages(folder.joinpath("files.txt"))
+
+        # Create the manager and interpreter:
+        m = MockManagerPlus(subpackages)
+        c = InterpreterChecker(m, subpackages)
+
+        # Same for all options (LE also contains CZ, but... ):
+        options = [
+            ("English", "01 Skyrim ESP EN"),
+            ("French", "01 Skyrim ESP FR"),
+            ("German", "01 Skyrim ESP DE"),
+            ("Italian", "01 Skyrim ESP IT"),
+            ("Polish", "01 Skyrim ESP PO"),
+            ("Spanish", "01 Skyrim ESP ES"),
+            ("Russian", "01 Skyrim ESP RU"),
+        ]
+
+        for opt, sub in options:
+            m.onSelect(opt)
+            c.parse(script)
+            assert m.notes == []
+            assert m.subpackages == [sub]
+            assert m.plugins == ["Book Covers Skyrim.esp"]
+
+    # Optional Paper Textures:
+    folder = Path("tests/data/Optional Paper Textures-35399-2-2")
+
+    # Read the script:
+    with open(folder.joinpath("wizard.txt"), "r") as fp:
+        script = fp.read()
+
+    # Read the subpackages:
+    subpackages = read_subpackages(folder.joinpath("files.txt"))
+
+    # Create the manager and interpreter:
+    m = MockManagerPlus(subpackages)
+    c = InterpreterChecker(m, subpackages)
+
+    m.onSelects([[]])
+    c.parse(script)
+    assert m.notes == []
+    assert m.subpackages == []
+    assert m.plugins == []
+
+    m.onSelects([["World"]])
+    c.parse(script)
+    assert m.notes == []
+    assert m.subpackages == ["01 BCS Optional Paper World"]
+    assert m.plugins == []
+
+    m.onSelects([["Inventory"]])
+    c.parse(script)
+    assert m.notes == []
+    assert m.subpackages == ["01 BCS Optional Paper Inventory"]
+    assert m.plugins == []
+
+    m.onSelects([["World", "Inventory"]])
+    c.parse(script)
+    assert m.notes == []
+    assert m.subpackages == [
+        "01 BCS Optional Paper Inventory",
+        "01 BCS Optional Paper World",
+    ]
+    assert m.plugins == []
