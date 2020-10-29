@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import codecs
+import re
 
 from abc import abstractproperty, abstractmethod
 from typing import (
@@ -79,6 +80,8 @@ class WizardExpressionVisitor:
     which takes an expression context and returns a `Value`.
     """
 
+    BAD_ESCAPE_SEQUENCE = re.compile(r"(?<=[^\\])\\(?=[^abfnrtuUx0-9\\])")
+
     _intp: AbstractWizardInterpreter
 
     def __init__(
@@ -89,7 +92,6 @@ class WizardExpressionVisitor:
             interpreter: The interpreter to use with this expression visitor.
         """
         self._intp = interpreter
-        self._decoder = codecs.getdecoder("unicode_escape")
 
     def visitTimesDivideModulo(
         self, ctx: wizardParser.TimesDivideModuloContext
@@ -303,7 +305,16 @@ class WizardExpressionVisitor:
         return Value(float(ctx.getText()))
 
     def visitString(self, ctx: wizardParser.StringContext) -> Value:
-        return Value(self._decoder(ctx.getText()[1:-1])[0])
+        # Remove the quotation marks:
+        txt = ctx.getText()[1:-1]
+
+        # Remove bad escape sequences:
+        txt = self.BAD_ESCAPE_SEQUENCE.sub("", txt)
+
+        # Replace escape sequences by Python escape sequences:
+        txt = codecs.decode(txt, "unicode_escape")
+
+        return Value(txt)
 
     def visitExpr(self, ctx: wizardParser.ExprContext) -> Value:
         return getattr(self, "visit" + type(ctx).__name__[:-7])(ctx)  # type: ignore
