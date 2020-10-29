@@ -1,0 +1,279 @@
+
+00 Majestic Mountains\Majestic Mountains Readme.txt
+00 Majestic Mountains\MajesticMountains.esp
+00 Majestic Mountains\meshes\architecture\markarth\mosscube.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliff01.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliff02.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliff03.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliff04.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliffcrevasse.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliffslope.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaincliffsm01.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountainpeak01.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountainpeak02.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountainridge01.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountainridge02.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountainridge03.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrim01.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrim01wet.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrim02.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrim02wet.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrim03.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrim03wet.nif
+00 Majestic Mountains\meshes\Landscape\Mountains\mountaintrimslab.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairn01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairn02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairn03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairn04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairnbanner01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairnbanner02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairnevil01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairnevil02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairnevil03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\cairns\rockcairnevil04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockanimalden01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcaveentrance01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcaveentrance02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff05.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff06.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff07.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliff08.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliffmineentrance.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockcliffmineentrance02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockl01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockl02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockl03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockl04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockl05.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockm01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockm02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockm03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockm04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilel01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilel02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilel02tundra.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilel03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilel03moss.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilel04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilem01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilem01tundra.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilem02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilem02tundra.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpilem03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpiles01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpiles02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpiles03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockpiles04.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rocks01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rocks02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rocks03.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockshelf01.nif
+00 Majestic Mountains\meshes\Landscape\rocks\rockshelf02.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockl01wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockl02wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockl03wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockl04wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockl05wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockm01wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockm02wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockm03wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockm04wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockpilel01wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockpilel02wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockpilel03wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockpilem01wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockpilem02wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockpilem03wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rocks01wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rocks02wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rocks03wet.nif
+00 Majestic Mountains\meshes\Landscape\rocks\wetrocks\rockshelf01wet.nif
+00 Majestic Mountains\meshes\Landscape\snowmatshader.nif
+00 Majestic Mountains\meshes\Landscape\tundra\rocktundraland02.nif
+00 Majestic Mountains\meshes\Landscape\tundra\rocktundraland03.nif
+00 Majestic Mountains\meshes\Landscape\unique\hhmountainridge01.nif
+00 Majestic Mountains\meshes\Landscape\unique\markarthcliff04.nif
+00 Majestic Mountains\meshes\Landscape\unique\markarthcrag.nif
+00 Majestic Mountains\meshes\Landscape\unique\solituderockarch01.nif
+00 Majestic Mountains\meshes\Landscape\unique\solituderockarch02.nif
+00 Majestic Mountains\meshes\Landscape\unique\solituderockarch03.nif
+00 Majestic Mountains\meshes\Landscape\unique\solituderockarch03int.nif
+00 Majestic Mountains\meshes\Landscape\unique\winterholdspire.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff01_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff01_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff02_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff02_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff03_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff03_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff04_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliff04_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliffsm01_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaincliffsm01_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainpeak01_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainpeak01_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainpeak02_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainpeak02_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainridge01_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainridge01_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainridge02_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainridge02_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainridge03_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountainridge03_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaintrimslab_lod_0h.nif
+00 Majestic Mountains\meshes\lod\mountains\mountaintrimslab_lod_0l.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\hhmountainridge01_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\markarthcliff01_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\markarthcliff02_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\markarthcliff03_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\markarthcliff04_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\solituderockarch01_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\solituderockarch02_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\solituderockarch03_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\solituderockarch04_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\sovmountainbase01_lod_0.nif
+00 Majestic Mountains\meshes\lod\mountains\unique\winterholdspire_lod_0.nif
+00 Majestic Mountains\meshes\shadertests\tundramossshader.nif
+00 Majestic Mountains\textures\Landscape\mountains\mountainslab01.dds
+00 Majestic Mountains\textures\Landscape\mountains\mountainslab01_n.dds
+00 Majestic Mountains\textures\Landscape\mountains\mountainslab02.dds
+00 Majestic Mountains\textures\Landscape\mountains\mountainslab02_n.dds
+00 Majestic Mountains\textures\Landscape\TundraMoss01.dds
+00 Majestic Mountains\textures\shadertests\moss.dds
+00 Majestic Mountains\textures\terrain\tamriel\objects\tamriel.objects.dds
+00 Majestic Mountains\textures\terrain\tamriel\objects\tamriel.objects_n.DDS
+00 Majestic Mountains\textures\_byoh\clutter\resources\stonequarry01.dds
+00 Majestic Mountains\textures\_byoh\clutter\resources\stonequarry01_n.DDS
+01 Moss\MajesticMountains_Moss.esp
+10 Complementary Landscape Texture Pack\textures\landscape\cavebaseground01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\cavebaseground01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastbeach01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastbeach01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastbeach02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastbeach02_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastbeachgrass01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastbeachgrass01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastoceanfloor01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\coastoceanfloor01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirt01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirt01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirt02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirt02_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtcliffs\dirtcliffs01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtcliffs\dirtcliffs01mask.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtcliffs\dirtcliffs01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtpath01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtpath01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtsnowpath01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\dirtsnowpath01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestdirt01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestdirt01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestgrass01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestgrass01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestleaves01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestleaves01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestrocks01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fallforestrocks01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fieldgrass01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fieldgrass01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fieldgrass02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\fieldgrass02_n.DDS
+10 Complementary Landscape Texture Pack\textures\landscape\grasssnow01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\grasssnow01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\pineforest01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\pineforest01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\pineforest02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\pineforest02_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachdirt01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachdirt01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachgrass01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachgrass01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachmoss01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachmoss01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachmossyrocks01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\reachmossyrocks01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\riverbededge.dds
+10 Complementary Landscape Texture Pack\textures\landscape\riverbededge_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\riverbottom.dds
+10 Complementary Landscape Texture Pack\textures\landscape\riverbottom_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\roads\road01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\roads\road01fallforest01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\roads\road01fallforest01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\roads\road01reach01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\roads\road01reach01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\roads\road01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\rocks01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\rocks01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\rocksedgetrim01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\rocksedgetrim01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\rockset_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow01alta.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow01landscape.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow02landscape.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snow02_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snowrocks01.alt.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snowrocks01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\snowrocks01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\tundra01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\Tundra01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\tundra02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\tundra02_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\tundrarocks01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\tundrarocks01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundradirt01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundradirt01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundradirt02.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundradirt02_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundragravel01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundragravel01_n.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundrarocks01.dds
+10 Complementary Landscape Texture Pack\textures\landscape\volcanictundrarocks01_n.dds
+21 SMIM Patch Milestone\meshes\architecture\whiterun\wrterrain\wrterwind01.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystall01.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystall02.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystall03.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystall04.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystall05.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalm01.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalm02.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalm03.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalm04.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalpiles02.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalpiles03.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystalpiles04.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystals02.nif
+21 SMIM Patch Milestone\meshes\clutter\blackreach\blackreachcrystals03.nif
+21 SMIM Patch Milestone\meshes\effects\fxcreekflatlong01.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockl01.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockl02.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockl03.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockl04.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockl05.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockm01.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockm02.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockm03.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockm04.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpilel01.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpilem02.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpilem02tundra.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpiles01.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpiles02.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpiles03.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rockpiles04.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rocks01.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rocks02.nif
+21 SMIM Patch Milestone\meshes\landscape\rocks\rocks03.nif
+fomod\Info.xml
+fomod\ModuleConfig.xml
+images\default.png
+images\landscapes.png
+images\logo.png
+images\moss.jpg
+images\snow_shader.png
+Wizard.txt

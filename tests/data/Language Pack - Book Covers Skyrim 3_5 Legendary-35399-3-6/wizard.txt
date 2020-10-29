@@ -1,0 +1,117 @@
+; ##############################################################################
+; ### Wizard Installer for Book Covers Skyrim by Malinoric (and updated by William Imm)
+; ### Created for ease of installation.
+; ###
+; ### HISTORY
+; ### DATE      AUTHOR              DESCRIPTION
+; ### --------  ------------------- --------------------------------------------
+; ### 05/27/13  Malinoric            Initial creation
+; ### 06/21/13  William Imm          Updated w/ fixes and better descriptions
+; ### 06/29/13  DanielCoffey         Restructured for efficiency and v2.0
+; ### 07/17/13  DanielCoffey         Added options for Compatibility ESPs
+; ### 08/13/13  DanielCoffey         Compatibility ESP is now standard. Removed Vanilla Sorting ESPs
+; ### 08/17/13  DanielCoffey         Swapped 02 and 03 prefixes for HF/DG folders
+; ### 08/24/13  DanielCoffey         Added Strings folders for SK/DG/HF
+; ### 08/24/13  DanielCoffey         Removed merged ESP
+; ### 09/01/13  DanielCoffey         Added Dragonborn books
+; ### 11/23/13  DanielCoffey         Removed Border-only Notes
+; ### 01/15/14  DanielCoffey         Removed No Notes option
+; ### 01/19/14  DanielCoffey         Updated for All-In-One Legendary ESP
+; ### 05/26/14  DanielCoffey         Updated for Book Covers Skyrim 2.9 recalculated OBND Object Bounds
+; ##############################################################################
+
+RequireVersions "", "", "", "303" ; Skyrim version, SKSE, (SKGE doesn't exist yet), Wrye Bash 
+
+DeSelectAll
+
+
+; ##############################################################################
+; # Choose your Language
+
+bEN = False
+bCZ = False
+bDE = False
+bES = False
+bFR = False
+bIT = False
+bPO = False
+bRU = False
+
+SelectOne "Choose the language that the Books, Journals and Notes should be displayed in. The mod is no longer Localized but now contains unique ESP files for each of the supported languages. You are free to choose the language you want to see.",\
+	"|English", "Displays Books, Journals and Notes in English.", "",\
+	"Czech", "Displays the Books, Journals and Notes in Czech.", "",\
+	"French", "Displays the Books, Journals and Notes in French.", "",\
+	"German", "Displays the Books, Journals and Notes in German.", "",\
+	"Italian", "Displays the Books, Journals and Notes in Italian.", "",\
+	"Polish", "Displays the Books, Journals and Notes in Polish.", "",\
+	"Spanish", "Displays the Books, Journals and Notes in Spanish.", "",\
+	"Russian", "Displays the Books, Journals and Notes in Russian.", ""
+
+	Case "English"
+		bEN = True
+		Break
+	Case "Czech"
+		bCZ = True
+		Break
+	Case "French"
+		bFR = True
+		Break
+	Case "German"
+		bDE = True
+		Break
+	Case "Italian"
+		bIT = True
+		Break
+	Case "Polish"
+		bPO = True
+		Break
+	Case "Spanish"
+		bES = True
+		Break
+	Case "Russian"
+		bRU = True
+		Break
+EndSelect
+
+
+; ##############################################################################
+; # Sort out the ESPs that we need
+
+If bEN
+	SelectSubPackage "01 Skyrim ESP EN"
+EndIf
+
+If bCZ
+	SelectSubPackage "01 Skyrim ESP CZ"
+EndIf
+
+If bFR
+	SelectSubPackage "01 Skyrim ESP FR"
+EndIf
+
+If bDE
+	SelectSubPackage "01 Skyrim ESP DE"
+EndIf
+
+If bIT
+	SelectSubPackage "01 Skyrim ESP IT"
+EndIf
+
+If bPO
+	SelectSubPackage "01 Skyrim ESP PO"
+EndIf
+
+If bES
+	SelectSubPackage "01 Skyrim ESP ES"
+EndIf
+
+If bRU
+	SelectSubPackage "01 Skyrim ESP RU"
+EndIf
+
+
+; ##############################################################################
+; How about some classical music to go along with your reading? For instance, http://www.youtube.com/watch?feature=player_detailpage&v=U5iVwPCxsGk#t=15s. 
+; Wait, it's from 2004? Well, it's entirely on piano... Still, for what Beatmania is, it's a bizarre fit.
+; Of course, you go to your local club to hear a piano concerto. And that was a complete lie.
+; (Just don't go "WAH! MOY IU DA!" spontaneously and leap out of a window. For your own safety)

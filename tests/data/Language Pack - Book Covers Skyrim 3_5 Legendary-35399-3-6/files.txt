@@ -1,0 +1,13 @@
+
+fomod\info.xml
+fomod\ModuleConfig.xml
+Book Covers Skyrim Change Log.txt
+wizard.txt
+01 Skyrim ESP DE\Book Covers Skyrim.esp
+01 Skyrim ESP IT\Book Covers Skyrim.esp
+01 Skyrim ESP PO\Book Covers Skyrim.esp
+01 Skyrim ESP ES\Book Covers Skyrim.esp
+01 Skyrim ESP FR\Book Covers Skyrim.esp
+01 Skyrim ESP RU\Book Covers Skyrim.esp
+01 Skyrim ESP CZ\Book Covers Skyrim.esp
+01 Skyrim ESP EN\Book Covers Skyrim.esp
