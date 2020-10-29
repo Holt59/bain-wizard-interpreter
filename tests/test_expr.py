@@ -78,6 +78,8 @@ def test_constant():
     assert c.parse('""') == Value("")
     assert c.parse("''") == Value("")
     assert c.parse('"hello world"') == Value("hello world")
+    assert c.parse('"hello\\nworld"') == Value("hello\nworld")
+    assert c.parse('"hello\\"world"') == Value('hello"world')
 
 
 def test_add_sub():
