@@ -80,7 +80,7 @@ class WizardExpressionVisitor:
     which takes an expression context and returns a `Value`.
     """
 
-    BAD_ESCAPE_SEQUENCE = re.compile(r"(?<=[^\\])\\(?=[^abfnrtuUx0-9\\])")
+    BAD_ESCAPE_SEQUENCE = re.compile(r"(^|(?<=[^\\]))\\(?=[^abfnrtuUx0-9\\])")
 
     _intp: AbstractWizardInterpreter
 
