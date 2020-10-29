@@ -18,6 +18,17 @@ from .errors import (
 )
 
 
+# Some Python operations are only made to raise TypeError or IndexError, typically
+# the arithmetic operators / index operators, so we need "hybrid" errors to be clean
+# (e.g. pytest is a mess if __iter__ throw something other than a TypeError).
+class HybridTypeError(WizardTypeError, TypeError):
+    pass
+
+
+class HybridIndexError(WizardIndexError, IndexError):
+    pass
+
+
 class Void:
 
     """
@@ -133,14 +144,14 @@ class Value:
 
     def __pos__(self) -> "Value":
         if not isinstance(self._value, (int, float)):
-            raise WizardTypeError(
+            raise HybridTypeError(
                 f"Cannot use plus operator on variable of type {self._type}."
             )
         return Value(self._value)
 
     def __neg__(self) -> "Value":
         if not isinstance(self._value, (int, float)):
-            raise WizardTypeError(
+            raise HybridTypeError(
                 f"Cannot use minus operator on variable of type {self._type}."
             )
         return Value(-self._value)
@@ -151,7 +162,7 @@ class Value:
             or not isinstance(other._value, (int, float, str))
             or isinstance(self._value, str) != isinstance(other._value, str)
         ):
-            raise WizardTypeError(
+            raise HybridTypeError(
                 f"Cannot add values of types {self._type}, {other._type}."
             )
         return Value(self._value + other._value)  # type: ignore
@@ -160,35 +171,35 @@ class Value:
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise WizardTypeError("Cannot substract non-numeric values.")
+            raise HybridTypeError("Cannot substract non-numeric values.")
         return Value(self._value - other._value)
 
     def __mul__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise WizardTypeError("Cannot multiply non-numeric values.")
+            raise HybridTypeError("Cannot multiply non-numeric values.")
         return Value(self._value * other._value)
 
     def __div__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise WizardTypeError("Cannot divide non-numeric values.")
+            raise HybridTypeError("Cannot divide non-numeric values.")
         return Value(self._value / other._value)
 
     def __pow__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise WizardTypeError("Cannot raise non-numeric values.")
+            raise HybridTypeError("Cannot raise non-numeric values.")
         return Value(self._value ** other._value)
 
     def __mod__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise WizardTypeError("Cannot modulo non-numeric values.")
+            raise HybridTypeError("Cannot modulo non-numeric values.")
         return Value(self._value % other._value)
 
     def logical_not(self) -> "Value":
@@ -213,7 +224,7 @@ class Value:
             return Value(self._value > other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value > other._value)
-        raise WizardTypeError(
+        raise HybridTypeError(
             f"Cannot compare values of types {self._type}, {other._type}."
         )
 
@@ -224,7 +235,7 @@ class Value:
             return Value(self._value >= other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value >= other._value)
-        raise WizardTypeError(
+        raise HybridTypeError(
             f"Cannot compare values of types {self._type}, {other._type}."
         )
 
@@ -235,7 +246,7 @@ class Value:
             return Value(self._value < other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value < other._value)
-        raise WizardTypeError(
+        raise HybridTypeError(
             f"Cannot compare values of types {self._type}, {other._type}."
         )
 
@@ -246,7 +257,7 @@ class Value:
             return Value(self._value <= other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value <= other._value)
-        raise WizardTypeError(
+        raise HybridTypeError(
             f"Cannot compare values of types {self._type}, {other._type}."
         )
 
@@ -278,14 +289,14 @@ class Value:
 
     def __getitem__(self, index: "Value") -> "Value":
         if not isinstance(self._value, (str, SubPackage, SubPackages)):
-            raise WizardTypeError(f"Cannot index variable of type {self._type}.")
+            raise HybridTypeError(f"Cannot index variable of type {self._type}.")
         if not isinstance(index._value, (int)):
-            raise WizardTypeError(f"Cannot index with variable of type {index._type}.")
+            raise HybridTypeError(f"Cannot index with variable of type {index._type}.")
 
         try:
             return Value(self._value[index._value])
         except IndexError:
-            raise WizardIndexError(index._value)
+            raise HybridIndexError(index._value)
 
     def slice(
         self, start: Optional["Value"], end: Optional["Value"], step: Optional["Value"]
@@ -308,7 +319,7 @@ class Value:
 
     def __iter__(self) -> Iterable["Value"]:
         if not isinstance(self._value, (SubPackage, SubPackages)):
-            raise WizardTypeError(f"Cannot iterate variable of type {self._type}.")
+            raise HybridTypeError(f"Cannot iterate variable of type {self._type}.")
 
         it: Iterable[str]
         if isinstance(self._value, SubPackages):
