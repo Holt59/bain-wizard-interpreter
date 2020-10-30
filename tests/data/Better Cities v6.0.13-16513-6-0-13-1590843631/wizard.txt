@@ -1,0 +1,1035 @@
+;Better Cities BAIN Wizard Installation Script
+
+RequireVersions "1.2.0.416","0.0.18.6","","294"
+
+DeSelectAll
+
+bFull = False
+bICFull = False
+bArboretum = False
+bUniversity = False
+bArena = False
+bGardens = False
+bMarket = False
+bPalace = False
+bPrison = False
+bTalos = False
+bTemple = False
+bWaterfront = False
+bAnvil = False
+bBravil = False
+bBruma = False
+bChorrol = False
+bCheydinhal = False
+bLeyawiin = False
+bSkingrad = False
+bOCR = False
+bBloodMud = False
+bICII = False
+bTBloodMud = False
+bTCUO = False
+bTVanilla = False
+
+SelectSubPackage "00 Core"
+;=============================================================================================
+If DataFileExists ("Blood&Mud.esp")
+	bBloodMud = True
+EndIf
+
+SelectOne "Do you plan to use Arthmoor's mod Open Cities Reborn with Better Cities?", \
+	"Yes", "This will install the Open Cities Reborn compatible version of Better Cities - note that this does not include any new content added to Better Cities since version 6.0.0.", "--- Screenshots ---\\OpenCitiesReborn.jpg", \
+	"|No", "This will install Better Cities with its normal options.", "--- Screenshots ---\\BravilBC.jpg"
+	Case "Yes"
+		SelectSubPackage "01 Open Cities Reborn"
+		If bBloodMud
+			Note "Blood & Mud detected, compatibility patch for Open Cities Reborn will also be installed."
+			SelectSubPackage "08 Open Cities Reborn Blood and Mud"
+		EndIf
+		bOCR = True
+		SelectOne "Do you want to install Better Imperial City?", \
+			"|Yes", "This will install the merged file for the Imperial City, containing all districts. Do not choose this if you are using Arthmoor's Open Cities Outer Districts.", "--- Screenshots ---\\BetterImperialCity.jpg", \
+			"Separate Districts", "This will give you the option of picking which IC districts you wish to install individually. Choose this if you are using Arthmoor's Open Cities Outer Districts or if you only want some districts.", "--- Screenshots ---\\TalosPlazaDistrict.jpg", \
+			"No", "Better Imperial City will not be installed at all.", "--- Screenshots ---\\ImperialCity.jpg"
+			Case "Yes"
+				SelectSubPackage "02 Better Imperial City Full"
+
+				bICFull = True
+			Break
+
+			Case "Separate Districts"
+				SelectSubPackage "02 Better Imperial Districts"
+				DeSelectEspm "Better Cities IC Waterfront.esp"
+				DeSelectEspm "Better Cities IC Temple.esp"
+				DeSelectEspm "Better Cities IC Talos Plaza.esp"
+				DeSelectEspm "Better Cities IC Prison.esp"
+				DeSelectEspm "Better Cities IC Market.esp"
+				DeSelectEspm "Better Cities IC Green Emperor Way.esp"
+				DeSelectEspm "Better Cities IC Elven Gardens.esp"
+				DeSelectEspm "Better Cities IC Arena.esp"
+				DeSelectEspm "Better Cities IC Arcane University.esp"
+				DeSelectEspm "Better Cities IC Arboretum.esp"
+
+				SelectMany "Choose which Imperial City districts to install.", \
+					"IC Arboretum", "Arboretum District", "--- Screenshots ---\\ArboretumDistrict.jpg", \
+					"IC Arcane University", "Arcane University", "--- Screenshots ---\\ArcaneUniversityDistrict.jpg", \
+					"IC Arena", "Arena District", "--- Screenshots ---\\ArenaDistrict.jpg", \
+					"IC Elven Gardens", "Elven Gardens District - also gives access to the Aristocratic District", "--- Screenshots ---\\ElvenGardensAristocraticDistricts.jpg", \
+					"IC Green Emperor Way", "Green Emperor Way District", "", \
+					"IC Market", "Market District - also gives access to the Waterfront Tunnel", "--- Screenshots ---\\MarketDistrict.jpg", \
+					"IC Prison", "Prison District", "--- Screenshots ---\\PrisonDistrict.jpg", \
+					"IC Talos Plaza", "Talos Plaza District", "--- Screenshots ---\\TalosPlazaDistrict.jpg", \
+					"IC Temple", "Temple District - also gives access to the Waterfront Tunnel", "--- Screenshots ---\\TempleDistrict.jpg", \
+					"IC Waterfront", "Waterfront District", "--- Screenshots ---\\Waterfront.jpg"
+					Case "IC Arboretum"
+						SelectEspm "Better Cities IC Arboretum.esp"
+						bArboretum = True
+					Break
+					Case "IC Arcane University"
+						SelectEspm "Better Cities IC Arcane University.esp"
+						bUniversity = True
+					Break
+					Case "IC Arena"
+						SelectEspm "Better Cities IC Arena.esp"
+						bArena = True
+					Break
+					Case "IC Elven Gardens"
+						SelectEspm "Better Cities IC Elven Gardens.esp"
+						bGardens = True
+					Break
+					Case "IC Green Emperor Way"
+						SelectEspm "Better Cities IC Green Emperor Way.esp"
+						bPalace = True
+					Break
+					Case "IC Market"
+						SelectEspm "Better Cities IC Market.esp"
+						bMarket = True
+					Break
+					Case "IC Prison"
+						SelectEspm "Better Cities IC Prison.esp"
+						bPrison = True
+					Break
+					Case "IC Talos Plaza"
+						SelectEspm "Better Cities IC Talos Plaza.esp"
+						bTalos = True
+					Break
+					Case "IC Temple"
+						SelectEspm "Better Cities IC Temple.esp"
+						bTemple = True
+					Break
+					Case "IC Waterfront"
+						SelectEspm "Better Cities IC Waterfront.esp"
+						bWaterfront = True
+					Break
+				EndSelect
+			Break
+
+			Case "No"
+				Note "No part of Better Imperial City will be installed."
+
+			Break
+		EndSelect
+	Break
+
+	Case "No"
+		SelectOne "Do you want to install every city and all of the Imperial City or do you want to select only some cities or some districts?", \
+			"|Everything", "This will install the merged files for all the cities and the Imperial City.", "--- Screenshots ---\\BC-Banner.jpg", \
+			"Separate Cities/Districts", "This will give you the option of picking which cities and IC Districts you wish to install individually.", "--- Screenshots ---\\BC-Banner-Selective.jpg"
+			Case "Everything"
+				SelectSubPackage "01 Better Cities Full"
+				SelectSubPackage "02 Better Imperial City Full"
+
+				bFull = True
+				bICFull = True
+			Break
+			Case "Separate Cities/Districts"
+				SelectMany "Choose files to install.", \
+					"Better Cities", "Choose which city/cities to install", "--- Screenshots ---\\BC-Thumbnails.jpg", \
+					"Imperial City", "Choose which district(s) to install", "--- Screenshots ---\\BetterImperialCity.jpg"
+					Case "Better Cities"
+						SelectOne "Do you want to install every city (this does not include the Imperial City which can be selected later)?", \
+							"|Yes", "This will install the merged file for all the cities except the Imperial City.", "--- Screenshots ---\\BC-Thumbnails.jpg", \
+							"No", "This will give you the option of picking which cities you wish to install individually.", "--- Screenshots ---\\BC-Banner-Selective.jpg"
+							Case "Yes"
+								SelectSubPackage "01 Better Cities Full"
+								bFull = True
+							Break
+							Case "No"
+								SelectSubPackage "01 Better Cities"
+								DeSelectEspm "Better Cities ANVIL.esp"
+								DeSelectEspm "Better Cities BRAVIL.esp"
+								DeSelectEspm "Better Cities BRUMA.esp"
+								DeSelectEspm "Better Cities CHEYDINHAL.esp"
+								DeSelectEspm "Better Cities CHORROL.esp"
+								DeSelectEspm "Better Cities LEYAWIIN.esp"
+								DeSelectEspm "Better Cities SKINGRAD.esp"
+								SelectMany "Choose which cities to install.", \
+									"Anvil", "Better Cities ANVIL", "--- Screenshots ---\\AnvilBC.jpg", \
+									"Bravil", "Better Cities BRAVIL", "--- Screenshots ---\\BravilBC.jpg", \
+									"Bruma", "Better Cities BRUMA", "--- Screenshots ---\\BrumaBC.jpg", \
+									"Cheydinhal", "Better Cities CHEYDINHAL", "--- Screenshots ---\\CheydinhalBC.jpg", \
+									"Chorrol", "Better Cities CHORROL", "--- Screenshots ---\\ChorrolBC.jpg", \
+									"Leyawiin", "Better Cities LEYAWIIN", "--- Screenshots ---\\LeyawiinBC.jpg", \
+									"Skingrad", "Better Cities SKINGRAD", "--- Screenshots ---\\SkingradBC.jpg"
+									Case "Anvil"
+										SelectEspm "Better Cities ANVIL.esp"
+										bAnvil = True
+									Break
+									Case "Bravil"
+										SelectEspm "Better Cities BRAVIL.esp"
+										bBravil = True
+									Break
+									Case "Bruma"
+										SelectEspm "Better Cities BRUMA.esp"
+										bBruma = True
+									Break
+									Case "Cheydinhal"
+										SelectEspm "Better Cities CHEYDINHAL.esp"
+										bCheydinhal = True
+									Break
+									Case "Chorrol"
+										SelectEspm "Better Cities CHORROL.esp"
+										bChorrol = True
+									Break
+									Case "Leyawiin"
+										SelectEspm "Better Cities LEYAWIIN.esp"
+										bLeyawiin = True
+									Break
+									Case "Skingrad"
+										SelectEspm "Better Cities SKINGRAD.esp"
+										bSkingrad = True
+									Break
+								EndSelect
+							Break
+						EndSelect
+							
+					Case "Imperial City"
+						SelectOne "Do you want to install every District in the Imperial City?", \
+							"|Yes", "This will install the merged file for all the Districts.", "--- Screenshots ---\\BetterImperialCity.jpg", \
+							"No", "This will give you the option of picking which Districts you wish to install individually.", "--- Screenshots ---\\ICSelection.jpg"
+							Case "Yes"
+								SelectSubPackage "02 Better Imperial City Full"
+								bICFull = True
+							Break
+							Case "No"
+								SelectSubPackage "02 Better Imperial Districts"
+								DeSelectEspm "Better Cities IC Waterfront.esp"
+								DeSelectEspm "Better Cities IC Temple.esp"
+								DeSelectEspm "Better Cities IC Talos Plaza.esp"
+								DeSelectEspm "Better Cities IC Prison.esp"
+								DeSelectEspm "Better Cities IC Market.esp"
+								DeSelectEspm "Better Cities IC Green Emperor Way.esp"
+								DeSelectEspm "Better Cities IC Elven Gardens.esp"
+								DeSelectEspm "Better Cities IC Arena.esp"
+								DeSelectEspm "Better Cities IC Arcane University.esp"
+								DeSelectEspm "Better Cities IC Arboretum.esp"
+
+								SelectMany "Choose which Imperial City districts to install.", \
+									"IC Arboretum", "Imperial City Arboretum District", "--- Screenshots ---\\ArboretumDistrict.jpg", \
+									"IC Arcane University", "Imperial City Arcane University", "--- Screenshots ---\\ArcaneUniversityDistrict.jpg", \
+									"IC Arena", "Imperial City Arena District", "--- Screenshots ---\\ArenaDistrict.jpg", \
+									"IC Elven Gardens", "Imperial City Elven Gardens District - also gives access to the Aristocratic District", "--- Screenshots ---\\ElvenGardensAristocraticDistricts.jpg", \
+									"IC Green Emperor Way", "Imperial City Green Emperor Way District", "", \
+									"IC Market", "Imperial City Market District - also gives access to the Waterfront Tunnel", "--- Screenshots ---\\MarketDistrict.jpg", \
+									"IC Prison", "Imperial City Prison", "--- Screenshots ---\\PrisonDistrict.jpg", \
+									"IC Talos Plaza", "Imperial City Talos Plaza District", "--- Screenshots ---\\TalosPlazaDistrict.jpg", \
+									"IC Temple", "Imperial City Temple District - also gives access to the Waterfront Tunnel", "--- Screenshots ---\\TempleDistrict.jpg", \
+									"IC Waterfront", "Imperial City Waterfront District", "--- Screenshots ---\\Waterfront.jpg"
+									Case "IC Arboretum"
+										SelectEspm "Better Cities IC Arboretum.esp"
+										bArboretum = True
+									Break
+									Case "IC Arcane University"
+										SelectEspm "Better Cities IC Arcane University.esp"
+										bUniversity = True
+									Break
+									Case "IC Arena"
+										SelectEspm "Better Cities IC Arena.esp"
+										bArena = True
+									Break
+									Case "IC Elven Gardens"
+										SelectEspm "Better Cities IC Elven Gardens.esp"
+										bGardens = True
+									Break
+									Case "IC Green Emperor Way"
+										SelectEspm "Better Cities IC Green Emperor Way.esp"
+									Break
+									Case "IC Market"
+										SelectEspm "Better Cities IC Market.esp"
+										bMarket = True
+									Break
+									Case "IC Prison"
+										SelectEspm "Better Cities IC Prison.esp"
+										bPrison = True
+									Break
+									Case "IC Talos Plaza"
+										SelectEspm "Better Cities IC Talos Plaza.esp"
+										bTalos = True
+									Break
+									Case "IC Temple"
+										SelectEspm "Better Cities IC Temple.esp"
+										bTemple = True
+									Break
+									Case "IC Waterfront"
+										SelectEspm "Better Cities IC Waterfront.esp"
+										bWaterfront = True
+									Break
+								EndSelect
+							Break
+						EndSelect
+					Break
+				EndSelect
+			Break
+		EndSelect
+	Break
+EndSelect
+;=============================================================================================
+
+; Bravil Texture Packs
+;=====================
+If bFull | bBravil
+	SelectOne "Which textures would you prefer for Bravil?", \
+		"Blood and Mud", "You want the full Blood & Mud experience. (does not require Blood & Mud)", "--- Screenshots ---\\BravilBandM.jpg", \
+		"CUO Bravil", "You want the dirtier, grimier textures from CUO Bravil (does not require the mod CUO Bravil).", "--- Screenshots ---\\BravilCUO.jpg", \
+		"|Vanilla", "You prefer to keep Bravil with its vanilla textures.", "--- Screenshots ---\\BravilVanilla.jpg"
+		Case "Blood and Mud"
+			SelectSubPackage "40 Bravil Blood and Mud"
+			bBloodMud = True
+		Break
+		Case "CUO Bravil"
+			SelectSubPackage "40 Bravil CUO"
+			bCUO = True
+		Break
+		Case "Vanilla"
+			SelectSubPackage "40 Bravil Vanilla"
+			bVanilla = True
+		Break
+	EndSelect
+EndIf
+;=============================================================================================
+
+;FPS Patches
+;===========
+If bICFull | bWaterfront
+	SelectOne "Do you want to install the FPS Patch for the Imperial City Waterfront? This will remove some of the new content to try to improve framerates.", \
+	    "Yes", "An FPS patch will be installed which removes some clutter from the Waterfront in an attempt to improve FPS. Not everybody will need this, others might use this and still have low FPS in the Waterfront.", "", \
+	    "|No", "The FPS patch will not be installed. Choose this if you don't think you need this, or if you would rather have the full Better Cities Waterfront experience in spite of a reduction in FPS.", ""
+	    Case "Yes"
+	        If bICFull
+	            SelectSubPackage "06 FPS Patches"
+	            DeSelectEspm "Better Cities IC Waterfront FPS Patch.esp"
+		Else
+	            SelectSubPackage "06 FPS Patches"
+	            DeSelectEspm "Better Imperial City FPS Patch.esp"
+	        EndIf
+	    Break
+	    Case "No"
+	        Note "No FPS Patch will be installed."
+	    Break
+	EndSelect
+EndIf
+;=============================================================================================
+
+;Imperial Isle
+;=============
+If bICFull | bGardens
+	SelectOne "Do you want to be able to see the outer walls of the new Aristocratic District, the extended walls of the Arena District and the aqueduct when outside the city? This will conflict with mods such as Unique Landscapes: Imperial Isle and others which edit the Imperial Isle near the Arena and Elven Gardens Districts.", \
+	    "Yes", "The walls of the Aristocratic District and the bridge connecting it to the Elven Gardens District, along with the extended walls of the Arena District and the aqueduct will appear in-game.", "--- Screenshots ---\\BetterImperialCity.jpg", \
+	    "|No", "The Aristocratic District will not appear in-game when outside the city, and the Arena District walls will appear the same as they do in the original game when outside the city, and there will be no aqueduct outside the city.", "--- Screenshots ---\\ImperialCity.jpg"
+	    Case "Yes"
+	        SelectSubPackage "07 IC Imperial Isle"
+		bICII = True
+	    Break
+	    Case "No"
+	        Note "You won't see the Aristocratic District or the extended Arena District walls when outside the city."
+	    Break
+	EndSelect
+EndIf
+;=============================================================================================
+
+;Visible When Distant
+;====================
+If bICFull
+	SelectOne "Do you want to be able to see buildings of the Imperial City from a distance when outside the city? (Heavily affects FPS, not really recommended).", \
+	    "Yes", "If you have RAEVWD installed, then after completing the installation of Better Cities run TES4LODGen to make this work.", "--- Screenshots ---\\ICVWD.jpg", \
+	    "|No", "If you do not have RAEVWD installed, or you do not want to lose more FPS than needed, select this option.", "--- Screenshots ---\\ICNoVWD.jpg"
+	    Case "Yes"
+	        SelectSubPackage "04 View When Distant IC"
+	    Break
+	    Case "No"
+	        Note "You won't see Better Cities VWD items of the IC."
+	    Break
+	EndSelect
+EndIf
+;=============================================================================================
+
+;Leyawiin Flood
+;==============
+If bFull | bLeyawiin
+    SelectOne "Do you want Leyawiin to be partially flooded?", \
+        "Yes", "The water height in Leyawiin will be raised, as Bananasplit designed it. Boardwalks will allow people to keep their feet dry.", "--- Screenshots ---\\LeyawiinFlooded.jpg", \
+        "|No", "The water height will remain low in the poor quarter and in front of the castle.", "--- Screenshots ---\\LeyawiinNotFlooded.jpg"
+        Case "Yes"
+            SelectSubPackage "03 Leyawiin Flooded"
+        Break
+        Case "No"
+            Note "The water height in Leyawiin will remain low as in the original game."
+        Break
+    EndSelect
+EndIf
+;=============================================================================================
+
+;Open Better Cities
+;==================
+If bFull | bAnvil | bBravil | bBruma | bCheydinhal | bChorrol | bLeyawiin | bSkingrad
+	SelectOne "Do you plan to use the Open Better Cities option?", \
+	    "Yes", "This will install 'Better Cities - Open Better Cities.esp' which ensures all city NPCs from the original game will correctly switch to the open cities if their city gets toggled open in-game. You will still need to toggle the Open Better Cities option in-game.", "--- Screenshots ---\\OpenBetterCities.jpg", \
+	    "|No", "The 'Better Cities - Open Better Cities.esp' file will NOT be installed - do not toggle the Open Better Cities option in-game if you choose this, as no NPCs from the original game will switch to the open cities.", "--- Screenshots ---\\ClosedBetterCities.jpg"
+	    Case 'Yes'
+	        SelectSubPackage "05 Open Better Cities"
+			If bFull | bAnvil
+				If DataFileExists ("Knights.esp")
+					SelectSubPackage "30 Knights of the Nine Anvil Open"
+					Note "Knights of the Nine detected, compatibility patch for Open Better Cities Anvil will also be installed."
+				EndIf
+			EndIf
+	    Break
+	    Case "No"
+	        Note "Open Better Cities ESP not installed. Toggling the Open Better Cities option in-game will not work correctly."
+	    Break
+	EndSelect
+EndIf
+;=============================================================================================
+
+;Cobl Drinkable Wells & Ingredients
+;==================================
+If DataFileExists ("COBL Main.esm")
+        SelectOne "Cobl detected. Do you want to use the Cobl integration file? This is entirely optional, there is no conflict between BC and Cobl.", \
+                "|Yes", "The wells added by BC to each city can be used as a source of drinking water if you use the survival parts of Cobl, and the various ingredients added by BC will be treated as other Cobl ingredients.", "--- Screenshots ---\\Cobl.jpg", \
+                "No", "This is an integration file, not a patch, and is NOT required if you use Cobl, so if you do not want to use wells for survival or to have BC ingredients treated like Cobl ingredients, choose this option.", ""
+                Case "Yes"
+                    SelectSubPackage "10 Cobl"
+                Break
+                Case "No"
+                    Note "The Cobl integration patch will not be installed."
+                Break
+        EndSelect
+EndIf
+;=============================================================================================
+
+;Enhanced Economy
+;================
+If DataFileExists ("Enhanced Economy - House prices.esp")
+        SelectOne "Enhanced Economy - House Prices detected. Do you want to use the Enhanced Economy integration file? This is entirely optional, there is no conflict between BC and Enhanced Economy.", \
+                "|Yes", "The cost to purchase any buyable houses from Better Cities will be increased to match whichever version of Enhanced Economy - House Prices you have installed.", "--- Screenshots ---\\EnhancedEconomy.jpg", \
+                "No", "This is an integration file, not a patch, and is NOT required if you use Enhanced Economy - House Prices. If you don't want buyable homes from Better Cities to have increased prices, then choose no.", ""
+                Case "Yes"
+                        SelectSubPackage "10 Enhanced Economy"
+                Break
+                Case "No"
+                        Note "The Enhanced Economy integration patch will not be installed."
+                Break
+        EndSelect
+EndIf
+;=============================================================================================
+
+;MOBS
+;====
+If DataFileExists ("MOBS.esp") | DataFileExists ("MOBS SI.esp")
+        SelectOne "MOBS detected. Do you want to use the MOBS integration file? This is entirely optional, there is no conflict between BC and MOBS.", \
+                "|Yes", "Weapons from Better Cities will have their stats adjusted to match the changes found in MOBS.", "", \
+                "No", "This is an integration file, not a patch, and is NOT required if you use MOBS. If you don't want BC weapon stats to be altered to match MOBS, then choose no.", ""
+                Case "Yes"
+                        SelectSubPackage "10 MOBS"
+                Break
+                Case "No"
+                        Note "The MOBS integration patch will not be installed."
+                Break
+        EndSelect
+EndIf
+;=============================================================================================
+
+;Storms & Sound
+;==============
+If DataFileExists ("Storms & Sound.esp")
+        SelectOne "Storms and Sound detected. Do you want to use the Storms and Sound integration file? This is entirely optional, there is no conflict between BC and Storms and Sound.", \
+                "|Yes", "The interiors from Better Cities will benefit from Storms & Sound features like any other interior affected by this mod.", "--- Screenshots ---\\StormsSound.jpg", \
+                "No", "This is an integration file, not a patch, and is NOT required if you use Storm and Sound. If you don't want Storms & Sound to affect BC interiors, then choose no.", ""
+                Case "Yes"
+                        SelectSubPackage "10 Storms and Sound"
+                Break
+                Case "No"
+                        Note "The Storms & Sound integration patch will not be installed."
+                Break
+        EndSelect
+EndIf
+;=============================================================================================
+
+;TIE Restricted Areas
+;====================
+If DataFileExists ("TIE.esp")
+        SelectOne "TIE detected. Do you want to use the TIE integration file? This is entirely optional, there is no conflict between BC and TIE.", \
+                "|Yes", "Some areas within interiors from Better Cities will be restricted as they are for TIE, meaning that you won't be authorized to go into them if an NPC is around.", "--- Screenshots ---\\TIE.jpg", \
+                "No", "This is an integration file, not a patch, and is NOT required if you use TIE. If you don't want BC NPCs complaining that you are trespassing just because you are behind a shop counter, then choose no.", ""
+                Case "Yes"
+                        SelectSubPackage "10 TIE"
+                Break
+                Case "No"
+                        Note "The TIE integration patch will not be installed."
+                Break
+        EndSelect
+EndIf
+;=============================================================================================
+
+;Grumblepunk's Shipyard
+;======================
+	SelectOne "Do you use GrumblePunk's Shipyard Mod which retextures ships? (requires GrumblePunk's Shipyard)", \
+		"Yes", "You are using the Shipyard mod.", "--- Screenshots ---\\GrumblepunkShipyard.jpg", \
+		"|No", "You are not using this mod.", "--- Screenshots ---\\GrumblepunkShipyardNo.jpg"
+		Case "Yes"
+			SelectSubPackage "41 Shipyard - Grumblepunk Compatibility"
+			Break
+		Case "No"
+			Note "Ships added by Better Cities will use vanilla textures."
+			Break
+	EndSelect
+;=============================================================================================
+
+;Roberts Body
+;============
+	SelectOne "Do you use Roberts Body mods? (requires Roberts Body mods)", \
+		"Yes", "Choose which body you use or both", "", \
+		"|No", "You don't use Roberts Body mods at all", ""
+		Case "Yes"
+			SelectMany "Select your body mod or both", \
+				"Male", "This will install the meshes for the armors and clothes of the male body.", "--- Screenshots ---\\RobertsMaleBodyMod.jpg", \
+				"Female", "This will install the meshes for the armors and clothes of the female body.", "--- Screenshots ---\\RobertsFemaleBodyMod.jpg"
+				Case "Male"
+					SelectSubPackage "43 Roberts Male"
+				Break
+				Case "Female"
+					SelectSubPackage "42 Roberts Female"
+				Break
+			EndSelect
+		Break
+		Case "No"
+			Note "You won't have the meshes for Roberts Body mods installed."
+		Break
+	EndSelect
+;=============================================================================================
+
+;Replacer Plugins
+;================
+SelectMany "Replacer plugins to fix compatibility:", \
+    "Against the Zealots of the Nine", "Resolves a conflict in Cheydinhal. Also compatible with Better Cities: Open Cities Reborn. You need to download and install the resources from the original mod but do not use the original ESP.", "--- Screenshots ---\\AgainstZealotsNine.jpg", \
+    "Clocks of Cyrodiil", "Resolves conflicts in every city and IC district. You need to download and install the resources from the original mod but do not use the original ESP.", "--- Screenshots ---\\ClocksOfCyrodiil.jpg", \
+    "IC Expanded", "Resolves conflicts in most Imperial City districts. You need to download and install the resources from the original mod but do not use the original ESP.", "--- Screenshots ---\\ICExpand.jpg", \
+    "Mystery of the Dulan Cult", "Resolves a conflict in Imperial City: Market District. You need to download and install the resources from the original mod but do not use the original ESP.", "--- Screenshots ---\\MysteryDulanCult.jpg", \
+    "Old Crow Inn","Resolves a conflict in Imperial City: Market District. As there are no resource files for this mod, you don't need to download the original mod.", "--- Screenshots ---\\OldCrowInn.jpg", \
+    "Scribe Supplies", "Resolves a conflict in Imperial City: Market District. Choose between the 2 plugins for the Scribe Supplies after clicking OK. Standard version adds things for sale to book merchants. Intense version also places things in various NPC homes and Guild Halls. As there are no resource files for this mod you don't need to download the original mod.", "", \
+    "Slof's Goth Shop 1 & 2", "Resolves a conflict in Chorrol. Also compatible with Better Cities: Open Cities Reborn. You need to download and install the resources from the original mods but do not use the original ESPs.", "--- Screenshots ---\\SlofGothShop.jpg", \
+    "Vaults Of Cyrodiil", "Resolves a conflict in Leyawiin. Also compatible with Better Cities: Open Cities Reborn. As there are no resource files for this mod you don't need to download the original mod.", "--- Screenshots ---\\VaultsCyrodiil.jpg"
+;==========================================================
+
+    Case "Against the Zealots of the Nine"
+	If bFull | bCheydinhal | bOCR
+		SelectSubPackage "20 Against the Zealots of the Nine"
+		Note "Do not forget to download and install the resources for Against the Zealots of the Nine."
+	Else
+		Note "You previously chose not to install any part of Better Cities which touches Cheydinhal, so you do not need our replacer for Against the Zealots of the Nine."
+	EndIf
+    Break
+;==========================================================
+
+    Case "Clocks of Cyrodiil"
+        SelectSubPackage "20 Clocks of Cyrodiil"
+        Note "Do not forget to download and install the resources for Clocks of Cyrodiil."
+    Break
+;==========================================================
+
+    Case "IC Expanded"
+	If bICFull | bArboretum | bArena | bGardens | bMarket | bTalos | bTemple | bWaterfront
+		SelectSubPackage "21 ICExpand"
+		Note "Do not forget to download and install the resources for IC Expanded."
+	Else
+		Note "You previously chose not to install any part of Better Cities Imperial City which conflicts with IC Expanded, so you do not need our replacer."
+	EndIf
+    Break
+;==========================================================
+
+    Case "Mystery of the Dulan Cult"
+        If bICFull | bMarket
+            SelectSubPackage "21 Mystery of the Dulan Cult"
+            Note "Do not forget to download and install the resources for the Mystery of the Dulan Cult mod."
+        Else
+            SelectOne "You previously chose not to install any part of Better Cities which touches the IC Market District, so you do not need our replacer for Mystery of the Dulan Cult. However, our replacer also fixes some potentially game-breaking bugs in Mystery of the Dulan Cult and can be used without our Market District, so you may still want to install it anyway.", \
+                "|Yes", "Install the replacer.", "", \
+                "No", "Do not install the replacer.", ""
+                Case "Yes"
+                        SelectSubPackage "21 Mystery of the Dulan Cult"
+                Break
+                Case "No"
+                        Note "The Mystery of the Dulan Cult replacer will not be installed."
+                Break
+            EndSelect
+        EndIf
+    Break
+;==========================================================
+
+    Case "Old Crow Inn"
+        If bICFull | bMarket
+            SelectSubPackage "21 Old Crow Inn"
+        Else
+            Note "You previously chose not to install any part of Better Cities which touches the IC Market District, so you do not need our replacer for Old Crow Inn."
+        EndIf
+    Break
+;==========================================================
+
+    Case "Scribe Supplies"
+        If bICFull | bMarket
+            SelectOne "Do you want the standard or intensive version of the Scribe Supplies (intensive alters many cells from the original game)?", \
+                "|Standard", "Adds things for sale to book merchants", "", \
+                "Intensive", "Adds things for sale to book merchants PLUS places things in various NPC homes and Guild Halls", ""
+                Case "Standard"
+                    SelectSubPackage "21 Scribe Supplies"
+                    DeSelectEspm "00RBScribeSupplies Intensive.esp"
+                Break
+                Case "Intensive"
+                    SelectSubPackage "21 Scribe Supplies"
+                    DeSelectEspm "00RBScribeSupplies02, read summary.esp"
+                Break
+            EndSelect
+        Else
+            Note "You previously chose not to install any part of Better Cities which touches the IC Market District, so you do not need our replacer for Scribe Supplies."
+        EndIf
+    Break
+;==========================================================
+
+    Case "Slof's Goth Shop 1 & 2"
+ 		If bFull | bChorrol | bOCR
+			SelectSubPackage "20 Slofs Goth Shop"
+			Note "Do not forget to download and install the resources for Slof's Goth Shop 1 and Slof's Goth Shop 2."
+		Else
+			Note "Skipped Slof's Goth Shop - you previously chose not to install any part of Better Cities which touches Chorrol, so you do not need our replacer."
+		EndIf
+    Break
+;==========================================================
+
+    Case "Vaults Of Cyrodiil"
+ 		If bFull | bLeyawiin | bOCR
+			SelectSubPackage "20 Vaults Of Cyrodiil"
+		Else
+			Note "Skipped Vaults of Cyrodiil - you previously chose not to install any part of Better Cities which touches Leyawiin, so you do not need our replacer."
+		EndIf
+    Break
+;==========================================================
+EndSelect
+
+;=============================================================================================
+
+;All Natural
+;==========
+If DataFileExists ("All Natural.esp")
+	If bFull | bBruma | bChorrol | bSkingrad
+		SelectSubPackage "30 All Natural"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Alternative Start Arrive by Ship
+;==========
+If DataFileExists ("Alternative Start by Robert Evrae.esp")
+	If bFull | bLeyawiin
+		SelectSubPackage "30 Alternative Start Arrive by Ship"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Blood and Mud
+;==========
+If bBloodMud
+	If bFull | bBravil
+		Note "You are using Blood & Mud which must be uninstalled, as Blood & Mud is already included in Better Cities. Using both together will cause serious glitches in-game."
+	Else
+		If bICFull | bWaterfront
+			SelectSubPackage "31 Blood & Mud"
+		EndIf
+	EndIf
+EndIf
+;=============================================================================================
+
+;CUO Bravil Patch
+;================
+If DataFileExists ("CUO_Bravil.esp")
+	If bFull | bBravil
+		SelectSubPackage "30 CUO Bravil"
+	EndIf
+EndIf
+;=============================================================================================
+
+;CUO Bruma Patch
+;================
+If DataFileExists ("CUO_Bruma.esp")
+	If bFull | bBruma
+		SelectSubPackage "30 CUO Bruma"
+	EndIf
+EndIf
+;=============================================================================================
+
+;CUO Chorrol Patch
+;=================
+If DataFileExists ("CUO_Chorrol.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 CUO Chorrol"
+	EndIf
+EndIf
+;=============================================================================================
+
+;CUO Leyawiin Patch
+;==================
+If DataFileExists ("CUO_Leyawiin.esp")
+ 	If bFull | bLeyawiin
+		SelectSubPackage "30 CUO Leyawiin"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Dalls Skyrim Nords
+;==================
+If DataFileExists ("Dalls_SkyrimNords.esp")
+	If bICFull | bWaterfront
+		SelectSubPackage "31 Skyrim Nords"
+	EndIf
+EndIf
+;=============================================================================================
+
+; Dark Brotherhood Chronicles
+;============================
+If DataFileExists ("DarkBrotherhoodChronicles.esp")
+	If bFull | bAnvil | bChorrol
+		SelectSubPackage "30 Dark Brotherhood Chronicles"
+	EndIf
+EndIf
+;=============================================================================================
+
+; FCOM Bravil
+;============
+If DataFileExists ("FCOM_Convergence.esm")
+	If bFull | bBravil
+		SelectSubPackage "30 FCOM Bravil"
+	EndIf
+EndIf
+;=============================================================================================
+
+; Halcyon Island
+;===============
+If DataFileExists ("Halcyon Island.esp")
+	If bFull | bAnvil
+		SelectSubPackage "30 Halcyon Island"
+	EndIf
+EndIf
+;=============================================================================================
+
+; Heart of the Dead
+;==================
+If DataFileExists ("HeartOftheDead.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Heart of the Dead"
+	EndIf
+EndIf
+;=============================================================================================
+
+; Immersive Interiors
+;====================
+If DataFileExists ("Immersive Interiors.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Immersive Interiors"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Knightly Armory
+;===============
+If DataFileExists ("KnightlyArmory.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Knightly Armory"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Knights of the Nine
+;===================
+If DataFileExists ("Knights.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Knights of the Nine Chorrol"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Kragenir's Death Quest
+;======================
+If DataFileExists ("Kragenir's Death Quest.esp")
+	If bICFull | bArboretum
+		SelectSubPackage "31 Kragenirs Death Quest Arboretum"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Nic-V's Better Beggars
+;======================
+If DataFileExists ("NBB.esp")
+	If bFull | bBravil
+		SelectSubPackage "30 NicVs Better Beggars"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Oblivifall - Losing my Religion
+;===============================
+SelectSubPackage "30 Oblivifall"
+DeSelectEspm "Better Cities Chorrol - Oblivifall Losing My Religion.esp"
+DeSelectEspm "Better Cities Skingrad - Oblivifall Losing My Religion.esp"
+DeSelectEspm "Oblivifall - Losing My Religion BC Bravil.esp"
+DeSelectEspm "Oblivifall - Losing My Religion BC Bruma.esp"
+If DataFileExists ("Oblivifall - Losing my religion.esp")
+	If bFull | bBravil
+		SelectEspm "Oblivifall - Losing My Religion BC Bravil.esp"
+	EndIf
+	If bFull | bBruma
+		SelectEspm "Oblivifall - Losing My Religion BC Bruma.esp"
+	EndIf
+	If bFull | bChorrol
+		SelectEspm "Better Cities Chorrol - Oblivifall Losing My Religion.esp"
+	EndIf
+	If bFull | bSkingrad
+		SelectEspm "Better Cities Skingrad - Oblivifall Losing My Religion.esp"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Oblivion Collectible Cards
+;==========================
+If DataFileExists ("Oblivion Collectible Cards.esp")
+	If bFull | bCheydinhal | bChorrol
+		SelectSubPackage "30 Oblivion Collectible Cards"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Oblivion Uncut
+;==============
+If DataFileExists ("Oblivion Uncut.esp")
+	If bICFull | bMarket
+		SelectSubPackage "31 Oblivion Uncut"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Order of the Dragon
+;===================
+If DataFileExists ("Orden des Drachen.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Order of the Dragon"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Origin of the Mages Guild
+;==========================
+If DataFileExists ("Origin of the Mages Guild.esp")
+	If bICFull | bUniversity
+		SelectSubPackage "31 Origin of the Mages Guild"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Oscuro's Oblivion Overhaul
+;==========================
+SelectSubPackage "30 OOO"
+DeSelectEspm "Better Cities Anvil - OOO.esp"
+DeSelectEspm "Better Cities Bravil - OOO.esp"
+DeSelectEspm "Better Cities Bruma - OOO.esp"
+DeSelectEspm "Better Cities Cheydinhal - OOO.esp"
+DeSelectEspm "Better Cities Leyawiin - OOO.esp"
+DeSelectEspm "Better Cities Skingrad - OOO.esp"
+If DataFileExists ("Oscuro's_Oblivion_Overhaul.esp")
+	If bAnvil
+		SelectEspm "Better Cities Anvil - OOO.esp"
+	EndIf
+	If bBravil
+		SelectEspm "Better Cities Bravil - OOO.esp"
+	EndIf
+	If bBruma
+		SelectEspm "Better Cities Bruma - OOO.esp"
+	EndIf
+	If bCheydinhal
+		SelectEspm "Better Cities Cheydinhal - OOO.esp"
+	EndIf
+	If bLeyawiin
+		SelectEspm "Better Cities Leyawiin - OOO.esp"
+	EndIf
+	If bSkingrad
+		SelectEspm "Better Cities Skingrad - OOO.esp"
+	EndIf
+	If bFull
+		SelectSubPackage "30 OOO BC Full"
+	EndIf
+EndIf
+SelectSubPackage "31 OOO"
+DeSelectEspm "Better Cities IC Arboretum - OOO.esp"
+DeSelectEspm "Better Cities IC Market - OOO.esp"
+If DataFileExists ("Oscuro's_Oblivion_Overhaul.esp")
+	If bArboretum
+		SelectEspm "Better Cities IC Arboretum - OOO.esp"
+	EndIf
+	If bMarket
+		SelectEspm "Better Cities IC Market - OOO.esp"
+	EndIf
+	If bICFull
+		SelectSubPackage "31 OOO BC IC Full"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Reclaiming Sancre Tor
+;=====================
+If DataFileExists ("ReclaimSancreTor.esp")
+	If bICFull | bArena
+		SelectSubPackage "31 Reclaiming Sancre Tor IC Arena"
+	EndIf
+	If bFull | bChorrol
+		SelectSubPackage "30 Reclaiming Sancre Tor Chorrol"
+	EndIf
+	If bFull | bSkingrad
+		SelectSubPackage "30 Reclaiming Sancre Tor Skingrad"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Roads of Cyrodiil
+;=================
+If DataFileExists ("Roads of Cyrodiil.esp")
+	If bFull | bSkingrad
+		SelectSubPackage "30 Roads of Cyrodiil Skingrad"
+	EndIf
+	If bICII
+		SelectSubPackage "31 Roads of Cyrodiil"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Ruined Tail's Tale
+;==================
+If DataFileExists ("RTT.esp")
+	If bFull | bAnvil | bCheydinhal | bICFull | bMarket
+		SelectSubPackage "30 Ruined Tails Tale"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Sexlivion
+;=========
+If DataFileExists ("Sexlivion.esp")
+	If bICFull | bMarket
+		SelectSubPackage "31 Sexlivion"
+		DeSelectEspm "Better Cities - Sexlivion_0.4a_Full_English_v1.esp"
+	EndIf
+EndIf
+
+If DataFileExists ("Sexlivion_0.4a_Full_English_v1.esp")
+	If bICFull | bMarket
+		SelectSubPackage "31 Sexlivion"
+		DeSelectEspm "Better Cities - Sexlivion.esp"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Skingrad Outer District
+;==================
+If DataFileExists ("Skingrad outer district.esp")
+	If bFull | bSkingrad
+		SelectSubPackage "30 Skingrad Outer District"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Tears of the Fiend
+;==================
+If DataFileExists ("TOTF.esp")
+	If bFull | bCheydinhal
+		SelectSubPackage "30 Tears of the Fiend"
+	EndIf
+EndIf
+;=============================================================================================
+
+;The Elder Council
+;=================
+If DataFileExists ("TheElderCouncil.esp")
+	If bFull | bBruma
+		SelectSubPackage "30 The Elder Council"
+	EndIf
+EndIf
+;=============================================================================================
+
+;The Lost Spires
+;===============
+If DataFileExists ("The Lost Spires.esp")
+	If bFull | bCheydinhal | bLeyawiin
+		SelectSubPackage "30 The Lost Spires"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Thievery in the Imperial City
+;=============================
+If DataFileExists ("Thievery.esp")
+	If bICFull | bMarket
+		SelectSubPackage "31 Thievery in the Imperial City"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Valley View Estate
+;==================
+If DataFileExists ("Valley_View_Estate.esp")
+	If bFull | bCheydinhal
+	        SelectSubPackage "30 Valley View Estate"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Verona House Bloodlines
+;=======================
+If DataFileExists ("VHBloodlines 1.2.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Verona House Bloodlines"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Vvardenfell Imports
+;===================
+If DataFileExists ("Vvardenfell_Imports.esp")
+	If bFull | bCheydinhal
+		SelectSubPackage "30 Vvardenfell Imports"
+	EndIf
+EndIf
+;=============================================================================================
+
+;WAC Gladiator
+;===================
+If DataFileExists ("WAC - Gladiator.esp")
+	If bICFull | bArena
+		SelectSubPackage "31 WAC Gladiator"
+	EndIf
+EndIf
+;=============================================================================================
+
+;Werewolf Legends
+;================
+If DataFileExists ("Werewolf-Legends.esp")
+	If bFull | bChorrol
+		SelectSubPackage "30 Werewolf Legends"
+	EndIf
+EndIf
+;=============================================================================================
+;End of Script

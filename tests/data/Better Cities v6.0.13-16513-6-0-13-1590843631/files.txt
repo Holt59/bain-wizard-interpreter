@@ -1,0 +1,361 @@
+
+--- Screenshots ---\AgainstZealotsNine.jpg
+--- Screenshots ---\AnvilBC.jpg
+--- Screenshots ---\ArboretumDistrict.jpg
+--- Screenshots ---\ArcaneUniversityDistrict.jpg
+--- Screenshots ---\ArenaDistrict.jpg
+--- Screenshots ---\BC-Banner-Selective.jpg
+--- Screenshots ---\BC-Banner.jpg
+--- Screenshots ---\BC-Thumbnails.jpg
+--- Screenshots ---\BetterImperialCity.jpg
+--- Screenshots ---\BravilBandM.jpg
+--- Screenshots ---\BravilBC.jpg
+--- Screenshots ---\BravilCUO.jpg
+--- Screenshots ---\BravilVanilla.jpg
+--- Screenshots ---\BrumaBC.jpg
+--- Screenshots ---\CheydinhalBC.jpg
+--- Screenshots ---\ChorrolBC.jpg
+--- Screenshots ---\ClocksOfCyrodiil.jpg
+--- Screenshots ---\ClosedBetterCities.jpg
+--- Screenshots ---\Cobl.jpg
+--- Screenshots ---\ElvenGardensAristocraticDistricts.jpg
+--- Screenshots ---\EnhancedEconomy.jpg
+--- Screenshots ---\GrumblepunkShipyard.jpg
+--- Screenshots ---\GrumblePunkShipyardNo.jpg
+--- Screenshots ---\ICExpand.jpg
+--- Screenshots ---\ICNoVWD.jpg
+--- Screenshots ---\ICSelection.jpg
+--- Screenshots ---\ICVWD.jpg
+--- Screenshots ---\ImperialCity.jpg
+--- Screenshots ---\LeyawiinBC.jpg
+--- Screenshots ---\LeyawiinFlooded.jpg
+--- Screenshots ---\LeyawiinNotFlooded.jpg
+--- Screenshots ---\MarketDistrict.jpg
+--- Screenshots ---\MysteryDulanCult.jpg
+--- Screenshots ---\OblivionReloadedRamDisk.jpg
+--- Screenshots ---\OldCrowInn.jpg
+--- Screenshots ---\OpenBetterCities.jpg
+--- Screenshots ---\OpenCitiesReborn.jpg
+--- Screenshots ---\PrisonDistrict.jpg
+--- Screenshots ---\RobertsBodyMods.jpg
+--- Screenshots ---\RobertsFemaleBodyMod.jpg
+--- Screenshots ---\RobertsMaleBodyMod.jpg
+--- Screenshots ---\SkingradBC.jpg
+--- Screenshots ---\SlofGothShop.jpg
+--- Screenshots ---\StormsSound.jpg
+--- Screenshots ---\TalosPlazaDistrict.jpg
+--- Screenshots ---\TempleDistrict.jpg
+--- Screenshots ---\TIE.jpg
+--- Screenshots ---\VaultsCyrodiil.jpg
+--- Screenshots ---\Waterfront.jpg
+00 Core\Better Cities - Meshes.bsa
+00 Core\Better Cities - Sounds EV.bsa
+00 Core\Better Cities - Textures.bsa
+00 Core\Better Cities .esp
+00 Core\Better Cities Resources.esm
+00 Core\Docs\Better Cities\Changelog.txt
+00 Core\Docs\Better Cities\Credits.txt
+00 Core\Docs\Better Cities\Readmes for Better Cities Patches or Replacers\Readme - Better Cities MOBS.txt
+00 Core\Docs\Better Cities\Readmes for Better Cities Patches or Replacers\Readme - Clocks of Cyrodiil Compatibility.txt
+00 Core\Docs\Better Cities\Readmes for Better Cities Patches or Replacers\Readme - ICEXPAND.txt
+00 Core\Docs\Better Cities\Readmes for Better Cities Patches or Replacers\Readme - Scribe Supplies 1.0.txt
+00 Core\Docs\Better Cities\Readmes for Better Cities Patches or Replacers\Readme - Vaults of Cyrodiil.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Anvil Bay Expansion v1.2.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Bank of Cyrodiil - 1.11.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Blood & Mud.rtf
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Bravil River Shack and Village v1.2.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Cyrodiil Rebuild II.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Elder Scrolls Book Club - Oblivion v1.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Imperial City Waterfront Tunnel Entrance v2.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Let the People Drink!.rtf
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Leyawiin Port Alpha Stage 1.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Lynges Thieves Highway.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Old Crow Inn.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Reaper's Waterfront.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - TESFU Book Collection v2.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Waterfront Market.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\Readme - Working gates.txt
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\ReadmeRU - Cyrodiil Rebuild II.pdf
+00 Core\Docs\Better Cities\Readmes of Mods merged with Better Cities\ReadmeRU - Cyrodiil Rebuild.txt
+00 Core\Docs\Better Cities\What Does Each File Do.rtf
+00 Core\Meshes\OE\Fun-Skelett.nif
+00 Core\OBSE\Plugins\Better Cities Helper.ini
+00 Core\video\Ruun.bik
+01 Better Cities Full\Better Cities Full.esp
+01 Better Cities\Better Cities ANVIL.esp
+01 Better Cities\Better Cities BRAVIL.esp
+01 Better Cities\Better Cities BRUMA.esp
+01 Better Cities\Better Cities CHEYDINHAL.esp
+01 Better Cities\Better Cities CHORROL.esp
+01 Better Cities\Better Cities LEYAWIIN.esp
+01 Better Cities\Better Cities SKINGRAD.esp
+01 Open Cities Reborn\Better Cities - Open Cities Reborn.esp
+02 Better Imperial City Full\Better Imperial City.esp
+02 Better Imperial Districts\Better Cities IC Arboretum.esp
+02 Better Imperial Districts\Better Cities IC Arcane University.esp
+02 Better Imperial Districts\Better Cities IC Arena.esp
+02 Better Imperial Districts\Better Cities IC Elven Gardens.esp
+02 Better Imperial Districts\Better Cities IC Green Emperor Way.esp
+02 Better Imperial Districts\Better Cities IC Market.esp
+02 Better Imperial Districts\Better Cities IC Prison.esp
+02 Better Imperial Districts\Better Cities IC Talos Plaza.esp
+02 Better Imperial Districts\Better Cities IC Temple.esp
+02 Better Imperial Districts\Better Cities IC Waterfront.esp
+03 Leyawiin Flooded\Better Cities - Leyawiin Flooded.esp
+04 View When Distant IC\Better Cities - VWD of the IC.esp
+05 Open Better Cities\Better Cities - Open Better Cities.esp
+06 FPS Patches\Better Cities IC Waterfront FPS Patch.esp
+06 FPS Patches\Better Imperial City FPS Patch.esp
+07 IC Imperial Isle\Better Cities - IC Imperial Isle.esp
+08 Open Cities Reborn Blood and Mud\Better Cities - Open Cities Reborn B&M Compatibility.esp
+10 Cobl\Better Cities - COBL.esp
+10 Enhanced Economy\Better Cities - House Price Patch.esp
+10 MOBS\Better Cities - MOBS.esp
+10 Storms and Sound\Better Cities - Storms & Sound.esp
+10 TIE\Better Cities - TIE Restricted Area.esp
+20 Against the Zealots of the Nine\JolardHome.esp
+20 Clocks of Cyrodiil\ClocksOfCyrodiil.esp
+20 Slofs Goth Shop\Slof's Oblivion Goth Shop.esp
+20 Vaults Of Cyrodiil\VaultsofCyrodiil.esp
+21 ICExpand\ICEXPAND.esp
+21 Mystery of the Dulan Cult\The Mystery of the Dulan Cult.esp
+21 Old Crow Inn\OldCrowInn.esp
+21 Scribe Supplies\00RBScribeSupplies Intensive.esp
+21 Scribe Supplies\00RBScribeSupplies02, read summary.esp
+30 All Natural\Better Cities - All Natural.esp
+30 All Natural\Meshes\Architecture\BetterCitiesResources\Cathedral\darkercathedralstendarr01_an.nif
+30 All Natural\Meshes\Architecture\BetterCitiesResources\Cathedral\darkercathedralstenintback01.nif
+30 All Natural\Meshes\Architecture\BetterCitiesResources\Cathedral\darkercathedralstenintentrance01.nif
+30 All Natural\Meshes\Architecture\BetterCitiesResources\Cathedral\darkercathedralstenintfrontwin01.nif
+30 All Natural\Meshes\Architecture\BetterCitiesResources\Cathedral\darkercathedralstenintside01.nif
+30 All Natural\Meshes\Architecture\BetterCitiesResources\Cathedral\darkercathedralstenintside02.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntAkatosh.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntArkay.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntDibella.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntJulianos.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntJulianosAlt.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntKynareth.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntMara.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntStendarr.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntTalos.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\BigGlassWindowIntZenithar.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\Cathedral01IntApsisCircleWindows.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\Cathedral01IntApsisUpperWindows.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\Cathedral01IntDomeUpperWindows.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\Cathedral01IntEntrance01aUpperWindows.nif
+30 All Natural\Meshes\Architecture\CoTR\mr_siika\Cathedral\GlassWindows\Int\Cathedral01IntMid01aUpperWindows.nif
+30 All Natural\Meshes\Architecture\CoTR\Orden\Buildinghall01interiorwindows.nif
+30 All Natural\Textures\Oblivifall\Losing My Religion\Architecture\Cathedrals\ClearGlassStainedWindow2.dds
+30 Alternative Start Arrive by Ship\Better Cities - Alternative Start Arrive by Ship.esp
+30 CUO Bravil\Better Cities - CUO Bravil Patch.esp
+30 CUO Bruma\Better Cities - CUO Bruma Patch.esp
+30 CUO Chorrol\Better Cities - CUO Chorrol Patch.esp
+30 CUO Leyawiin\Better Cities - CUO Leyawiin Patch.esp
+30 Dark Brotherhood Chronicles\Better Cities - Dark Brotherhood Chronicles.esp
+30 FCOM Bravil\FCOM_BetterCities-Bravil.esp
+30 Halcyon Island\Better Cities - Halcyon Island.esp
+30 Heart of the Dead\Better Cities Chorrol - Heart of the Dead.esp
+30 Immersive Interiors\Better Cities Chorrol - Immersive Interiors.esp
+30 Knightly Armory\Better Cities - Knightly Armory.esp
+30 Knights of the Nine Anvil Open\Better Cities Anvil Open - Knights of the Nine.esp
+30 Knights of the Nine Chorrol\Better Cities Chorrol - Knights of the Nine.esp
+30 NicVs Better Beggars\Better Cities - Nic-V's Better Beggars.esp
+30 Oblivifall\Better Cities Chorrol - Oblivifall Losing My Religion.esp
+30 Oblivifall\Better Cities Skingrad - Oblivifall Losing My Religion.esp
+30 Oblivifall\Oblivifall - Losing My Religion BC Bravil.esp
+30 Oblivifall\Oblivifall - Losing My Religion BC Bruma.esp
+30 Oblivion Collectible Cards\Better Cities - Oblivion Collectible Cards.esp
+30 OOO BC Full\Better Cities Full - OOO.esp
+30 OOO\Better Cities Anvil - OOO.esp
+30 OOO\Better Cities Bravil - OOO.esp
+30 OOO\Better Cities Bruma - OOO.esp
+30 OOO\Better Cities Cheydinhal - OOO.esp
+30 OOO\Better Cities Leyawiin - OOO.esp
+30 OOO\Better Cities Skingrad - OOO.esp
+30 Order of the Dragon\Better Cities Chorrol - ODD patch.esp
+30 Reclaiming Sancre Tor Chorrol\Better Cities Chorrol - Reclaiming Sancre Tor.esp
+30 Reclaiming Sancre Tor Skingrad\Better Cities Skingrad - Reclaiming Sancre Tor.esp
+30 Roads of Cyrodiil Skingrad\Better Cities Skingrad - Roads of Cyrodiil.esp
+30 Ruined Tails Tale\Better Cities - Ruined Tail's Tale.esp
+30 Skingrad Outer District\Better Cities - Skingrad Outer District.esp
+30 Tears of the Fiend\Better Cities - Tears of the Fiend.esp
+30 The Elder Council\Better Cities Bruma - The Elder Council.esp
+30 The Lost Spires\Better Cities - The Lost Spires.esp
+30 Valley View Estate\Better Cities - Valley View Estate.esp
+30 Verona House Bloodlines\Better Cities - VHBloodlines.esp
+30 Vvardenfell Imports\Better Cities - Vvardenfell Imports.esp
+30 Werewolf Legends\Better Cities - Werewolf-Legends.esp
+31 Blood and Mud\Better Imperial City - Blood & Mud patch.esp
+31 Kragenirs Death Quest Arboretum\Better Cities IC Arboretum - Kragenir's Death Quest.esp
+31 Oblivion Uncut\Better Cities Market District - Oblivion Uncut.esp
+31 OOO BC IC Full\Better Imperial City - OOO.esp
+31 OOO\Better Cities IC Arboretum - OOO.esp
+31 OOO\Better Cities IC Market - OOO.esp
+31 Origin of the Mages Guild\Better Cities - Origin of the Mages Guild.esp
+31 Reclaiming Sancre Tor IC Arena\Better Cities IC Arena - Reclaiming Sancre Tor.esp
+31 Roads of Cyrodiil\Better Cities IC Imperial Isle - Roads of Cyrodiil.esp
+31 Sexlivion\Better Cities - Sexlivion.esp
+31 Sexlivion\Better Cities - Sexlivion_0.4a_Full_English_v1.esp
+31 Skyrim Nords\Better Cities - Skyrim Nords.esp
+31 Thievery in the Imperial City\Better Cities - Thievery.esp
+31 WAC Gladiator\Better Cities IC Arena - WAC Gladiator.esp
+40 Bravil Blood and Mud\Better Cities - Bravil Blood and Mud.bsa
+40 Bravil CUO\Better Cities - Bravil CUO.bsa
+40 Bravil Vanilla\Better Cities - Bravil Vanilla.bsa
+41 Shipyard - Grumblepunk Compatibility\Meshes\Architecture\BetterCitiesResources\AnvilBayExp\PirateCabin01.nif
+41 Shipyard - Grumblepunk Compatibility\Meshes\Architecture\BetterCitiesResources\Leyawiin\BANShipCupboardDoor01.nif
+41 Shipyard - Grumblepunk Compatibility\Meshes\Architecture\BetterCitiesResources\Ships\PirateNightsScreamCabin.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\bravilscump\f\bravilguardgreaves_01.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\bravilscump\f\bravil_greaves.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\bravilscump\f\bravil_shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\bravilscump\f\brav_mercuirass.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\comit\mavine\f\mmcuirass.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\comit\mavine\f\mmgreaves.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\comit\mavine\mmboots.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\comit\mavine\mmmask.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\dogskull\f\boots_dogskull.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\dogskull\f\cuirass_dogskull.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\dogskull\f\gauntlets.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\dogskull\f\greaves_dogskull.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\samurai\f\bracer01sroninf.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\samurai\f\hana.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\samurai\f\kimonogirlronin.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\samurai\f\yasashii.nif
+42 Roberts Female\meshes\bettercitiesresources\armor\samurai\f\yukaina.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\armourclothes\f\greaves.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\bakerapron\mtcbakershirtf.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\butcherapron\mtcbutchershirtf.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\leatherpants\f\mcpants.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\leatherpants\f\pants.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\f\pants.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\f\pantsred.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\f\shirtred.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\suspenders\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\leathervest\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\mvest\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\mvest\f\shirtriding.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\mvest\f\shirtridingdark.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\quiltedvest\f\shirtthief.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\stitchedvest\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\stitchedvest\f\shirtcaptain.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\vests\stitchedvest\f\shirtred.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\wfshirt\f\pants.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\00mtcclothes\wfshirt\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilclothes\f\bravilpants01.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilclothes\f\bravilpants05.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilclothes\f\bravilpants06.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilclothes\f\stoutskirt1.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilclothes\f\stoutskirt2.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilmara\f\pantsf.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\bravilmara\f\shirtf.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\huntervest\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\huntervest\f\shirtcaptain.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\middleredshirt\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\sailorpants\sailorpantsf.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\sailorshirt\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\dark02\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\finery\f\finery.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\finery\f\finerygold.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\finery\f\finerygreen.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\finery\f\shoes.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\finery\f\shoesglass.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\gold05\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperclass\livery05\f\shirt.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperridingvests\f\shirtriding.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\mtc\upperridingvests\f\shirtridingrose.nif
+42 Roberts Female\meshes\bettercitiesresources\clothes\pregnantdress.nif
+42 Roberts Female\meshes\bettercitiesresources\MTCMeshes\mtcbakershirtf.nif
+42 Roberts Female\meshes\bettercitiesresources\MTCMeshes\mtcbutchershirtf.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilbattlerobe.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilchainrobe.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilguardboots_01.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilguardgreaves_01.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilguardgreaves_02.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilguard_01.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravilguard_02.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\bravil_cuirass.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\brav_bone_boots.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\brav_bone_cuirass.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\brav_bone_gauntlets.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\brav_bone_greaves.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\brav_templer.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\bravilscump\brav_templerboot.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\comit\mavine\m\mmcuirass.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\comit\mavine\m\mmgreaves.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\darkmythril\boots.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\darkmythril\cuirass.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\darkmythril\gauntlets.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\darkmythril\greaves.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\dogskull\m\boots_dogskull.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\dogskull\m\cuirass_dogskull.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\dogskull\m\gauntlets.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\dogskull\m\greaves_dogskull.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\boots.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\bracer01roninm.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\cuirass.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\gauntlets.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\greaves.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\kimono01.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\kimono02.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\kimonoronincamisa.nif
+43 Roberts Male\meshes\bettercitiesresources\armor\samurai\m\kimonoroninfalda.nif
+43 Roberts Male\meshes\bettercitiesresources\armour_shield\m\cuirass.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\armourclothes\boots\boots.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\armourclothes\m\gauntlets.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\armourclothes\m\gauntletsspriggan.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\armourclothes\m\greaves.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\bakerapron\mtcbakershirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\blackshoes.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\butcherapron\mtcbutchershirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\leatherpants\m\mcpants.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\leatherpants\m\pants.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\leatherpants\m\pantsbrown.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\leatherpants\m\pantsbrowndark.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\m\pants.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\m\pantsred.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\lowmed\m\shirtred.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\greenlow\robelc02m.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\grey\robelcgreym.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\grey\robelcgreymdark.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\lc01\robelc01m.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\red\robem.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\robetopm.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\ropetop\robetopmfur.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\suspenders\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\leathervest\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\mvest\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\mvest\m\shirtriding.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\mvest\m\shirtridingdark.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\quiltedvest\m\shirtthief.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\stitchedvest\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\stitchedvest\m\shirtcaptain.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\vests\stitchedvest\m\shirtred.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\WFshirt\m\pants.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\00mtcclothes\WFshirt\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\bravilclothes\bravilpants01.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\bravilclothes\bravilpants04.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\bravilclothes\bravilpants05.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\bravilclothes\bravilpants06.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\bravilclothes\stoutskirt1.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\armourclothes\boots\fancyboots.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\armourclothes\m\fancygauntlets.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\huntervest\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\leatherboots.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\middleredshirt\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\sailorpants\sailorpants.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\sailorshirt\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\upperclass\dark02\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\upperclass\finery\m\finery.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\upperclass\gold05\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\upperclass\livery05\m\shirt.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\upperridingvests\m\shirtriding.nif
+43 Roberts Male\meshes\bettercitiesresources\clothes\mtc\upperridingvests\m\shirtridingrose.nif
+43 Roberts Male\meshes\bettercitiesresources\MTCMeshes\mtcbakershirt.nif
+43 Roberts Male\meshes\bettercitiesresources\MTCMeshes\mtcbutchershirt.nif
+Better Cities_readme.rtf
+FOMod\ModuleConfig.xml
+omod conversion data\script.txt
+wizard.txt
+00 Core\OBSE\Plugins\Better Cities Helper.dll
