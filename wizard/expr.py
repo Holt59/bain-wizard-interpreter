@@ -3,73 +3,13 @@
 import codecs
 import re
 
-from abc import abstractproperty, abstractmethod
-from typing import (
-    Callable,
-    List,
-    Mapping,
-    MutableMapping,
-    Optional,
-)
+from typing import Callable, List, Optional
 
-from wizard.antlr4.wizardParser import wizardParser
-
-from .errors import (
-    WizardTypeError,
-    WizardNameError,
-)
-from .severity import Issue, SeverityContext
+from .antlr4.wizardParser import wizardParser
+from .errors import WizardTypeError, WizardNameError
+from .abstract_interpreter import AbstractWizardInterpreter
+from .severity import Issue
 from .value import SubPackage, SubPackages, Value, VariableType, Void  # noqa: F401
-
-
-class AbstractWizardInterpreter:
-
-    """
-    Abstract wizard interpreter used by the expression visitor.
-    """
-
-    @abstractproperty
-    def subpackages(self) -> SubPackages:
-        """
-        Returns:
-            The list of SubPackages in the BAIN installer.
-        """
-        ...
-
-    @abstractproperty
-    def variables(self) -> MutableMapping[str, Value]:
-        """
-        Returns:
-            The list of variables.
-        """
-        ...
-
-    @abstractproperty
-    def functions(self) -> Mapping[str, Callable[[List[Value]], Value]]:
-        """
-        Returns:
-            The list of functions (mapping from function name to actually
-            callable objects).
-        """
-        ...
-
-    @abstractmethod
-    def warning(self, text: str):
-        """
-        Display a warning.
-
-        Args:
-            text: The warning text.
-        """
-        ...
-
-    @abstractproperty
-    def severity(self) -> SeverityContext:
-        """
-        Returns:
-            The severity context of the interpreter.
-        """
-        ...
 
 
 class WizardExpressionVisitor:

@@ -2,15 +2,14 @@
 
 import json
 
-from typing import Any, Callable, List, MutableMapping, Optional, Union
-
+from typing import Any, Callable, List, MutableMapping, Union
 
 from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
 
 from wizard.expr import SubPackage, Value, WizardExpressionVisitor
-from wizard.interpreter import WizardInterpreter, ReturnFlow, CancelFlow
+from wizard.interpreter import WizardInterpreter, WizardInterpreterResult
 from wizard.mmitf import ModManagerInterface, SelectOption
 
 
@@ -184,20 +183,14 @@ class ExpressionChecker(WizardExpressionVisitor):
 
 
 class InterpreterChecker(WizardInterpreter):
-    def parse(self, expr: str) -> Optional[Union[CancelFlow, ReturnFlow]]:
+    def parse(self, expr: str) -> WizardInterpreterResult:
         input_stream = InputStream(expr)
         lexer = wizardLexer(input_stream)
         stream = CommonTokenStream(lexer)
         parser = wizardParser(stream)
         parser._errHandler = BailErrorStrategy()
 
-        try:
-            self.visit(parser.parseWizard())
-        except (CancelFlow, ReturnFlow) as ex:
-            return ex
-
-        return None
+        return self.visit(parser.parseWizard())
 
     def clear(self):
-        self._loops.clear()
         self._variables.clear()
