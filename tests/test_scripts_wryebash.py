@@ -237,7 +237,7 @@ def test_majestic_mountains():
 
     # First run:
     m.onSelects(
-        ["Welcome", "Begin Installation", ["Landscape Textures", "Moss Rocks"], [],]
+        ["Welcome", "Begin Installation", ["Landscape Textures", "Moss Rocks"], []]
     )
 
     expected = []
@@ -275,9 +275,7 @@ Otherwise, right-click the installer again and choose Install""",
 
     # Second test (different choice) - The note does not change.
     m.clear()
-    m.onSelects(
-        ["Welcome", "Begin Installation", ["Landscape Textures"], ["SMIM"],]
-    )
+    m.onSelects(["Welcome", "Begin Installation", ["Landscape Textures"], ["SMIM"]])
 
     packages = [
         "00 Majestic Mountains",

@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-
-import pytest  #  noqa: F401
+import pytest  # noqa: F401
 
 from wizard.expr import SubPackages, Value
 
