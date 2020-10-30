@@ -21,7 +21,6 @@ from .contexts import (
     WizardCancelContext,
     WizardReturnContext,
 )
-from .errors import WizardTypeError
 from .expr import (
     AbstractWizardInterpreter,
     SubPackages,
@@ -238,7 +237,7 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
         def note(x: object):
             self.raise_or_warn(
                 Issue.USAGE_OF_ANYTHING_IN_NOTE,
-                WizardTypeError(
+                TypeError(
                     "'Note' keyword expected string, found"
                     f" {VariableType.from_pytype(type(x))}."
                 ),

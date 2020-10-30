@@ -4,8 +4,6 @@ from abc import abstractmethod
 from enum import Enum, auto
 from typing import MutableMapping
 
-from .errors import WizardError
-
 
 class Severity(Enum):
 
@@ -66,7 +64,7 @@ class SeverityContext:
         """
         self._context[issue] = severity
 
-    def raise_or_warn(self, issue: Issue, exc: WizardError, warn: str):
+    def raise_or_warn(self, issue: Issue, exc: Exception, warn: str):
         """
         Check the severity of the given issue and eventually raise the given exception
         or warn the user with the given message. May do nothing if the severity is

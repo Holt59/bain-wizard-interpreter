@@ -2,7 +2,6 @@
 
 from typing import Callable, List, Union
 
-from .errors import WizardTypeError
 from .expr import Value, VariableType, Void
 
 
@@ -39,13 +38,11 @@ def wrap_function(
         pargs: List = []
 
         if not varargs and len(vs) > len(args):
-            raise WizardTypeError(f"{name}: too many arguments.")
+            raise TypeError(f"{name}: too many arguments.")
 
         for iarg, arg in enumerate(args):
             if iarg >= len(vs) and not isinstance(arg, optional):
-                raise WizardTypeError(
-                    f"{name}: missing required positional argument(s)."
-                )
+                raise TypeError(f"{name}: missing required positional argument(s).")
 
             tp: type
             if isinstance(arg, optional):
@@ -54,7 +51,7 @@ def wrap_function(
                 tp = arg
 
             if not isinstance(vs[iarg].value, tp):
-                raise WizardTypeError(
+                raise TypeError(
                     f"Argument at position {iarg} has incorrect type for"
                     f" {name}, expected {VariableType.from_pytype(tp)} got"
                     f" {vs[iarg].type}."

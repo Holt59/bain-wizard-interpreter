@@ -6,7 +6,7 @@ import re
 from typing import Callable, List, Optional
 
 from .antlr4.wizardParser import wizardParser
-from .errors import WizardTypeError, WizardNameError
+from .errors import WizardTypeError, WizardIndexError, WizardNameError
 from .abstract_interpreter import AbstractWizardInterpreter
 from .severity import Issue
 from .value import SubPackage, SubPackages, Value, VariableType, Void  # noqa: F401
@@ -56,7 +56,7 @@ class WizardExpressionVisitor:
 
         name = ctx.Identifier().getText()
         if name not in self._intp.functions:
-            raise WizardNameError(name)
+            raise WizardNameError(ctx.Identifier(), name)
 
         values: List[Value] = []
         for ex in ctx.argList().expr():
@@ -69,7 +69,7 @@ class WizardExpressionVisitor:
 
         mname = "{}.{}".format(values[0].type, ctx.Identifier().getText())
         if mname not in self._intp.functions:
-            raise WizardNameError(mname)
+            raise WizardNameError(ctx.Identifier(), mname)
 
         for ex in ctx.argList().expr():
             values.append(self.visitExpr(ex))
@@ -140,28 +140,28 @@ class WizardExpressionVisitor:
     def visitPreDecrement(self, ctx: wizardParser.PreDecrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._intp.variables:
-            raise WizardNameError(name)
+            raise WizardNameError(ctx.Identifier(), name)
         self._intp.variables[ctx.Identifier().getText()] -= Value(1)
         return self._intp.variables[ctx.Identifier().getText()]
 
     def visitPreIncrement(self, ctx: wizardParser.PreIncrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._intp.variables:
-            raise WizardNameError(name)
+            raise WizardNameError(ctx.Identifier(), name)
         self._intp.variables[ctx.Identifier().getText()] += Value(1)
         return self._intp.variables[ctx.Identifier().getText()]
 
     def visitPostIncrement(self, ctx: wizardParser.PostIncrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._intp.variables:
-            raise WizardNameError(name)
+            raise WizardNameError(ctx.Identifier(), name)
         self._intp.variables[ctx.Identifier().getText()] += Value(1)
         return self._intp.variables[ctx.Identifier().getText()]
 
     def visitPostDecrement(self, ctx: wizardParser.PostDecrementContext) -> Value:
         name = ctx.Identifier().getText()
         if name not in self._intp.variables:
-            raise WizardNameError(name)
+            raise WizardNameError(ctx.Identifier(), name)
         self._intp.variables[ctx.Identifier().getText()] -= Value(1)
         return self._intp.variables[ctx.Identifier().getText()]
 
@@ -221,14 +221,14 @@ class WizardExpressionVisitor:
                 # Severity check:
                 self._intp.severity.raise_or_warn(
                     Issue.USAGE_OF_NOTSET_VARIABLES,
-                    WizardNameError(name),
+                    WizardNameError(ctx.Identifier(), name),
                     f"Variable {name} used before being set, default to 0.",
                 )
                 return Value(0)
             else:
                 return self._intp.variables[ctx.Identifier().getText()]
 
-        raise WizardNameError(ctx.getText())
+        raise WizardNameError(ctx, ctx.getText())
 
     def visitConstant(self, ctx: wizardParser.ConstantContext) -> Value:
         if ctx.getText() == "False":
@@ -257,4 +257,9 @@ class WizardExpressionVisitor:
         return Value(txt)
 
     def visitExpr(self, ctx: wizardParser.ExprContext) -> Value:
-        return getattr(self, "visit" + type(ctx).__name__[:-7])(ctx)  # type: ignore
+        try:
+            return getattr(self, "visit" + type(ctx).__name__[:-7])(ctx)  # type: ignore
+        except TypeError as te:
+            raise WizardTypeError(ctx, *te.args)
+        except IndexError as ie:
+            raise WizardIndexError(ctx, *ie.args)

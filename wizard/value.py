@@ -12,23 +12,6 @@ from typing import (
 )
 
 
-from .errors import (
-    WizardTypeError,
-    WizardIndexError,
-)
-
-
-# Some Python operations are only made to raise TypeError or IndexError, typically
-# the arithmetic operators / index operators, so we need "hybrid" errors to be clean
-# (e.g. pytest is a mess if __iter__ throw something other than a TypeError).
-class HybridTypeError(WizardTypeError, TypeError):
-    pass
-
-
-class HybridIndexError(WizardIndexError, IndexError):
-    pass
-
-
 class Void:
 
     """
@@ -144,14 +127,14 @@ class Value:
 
     def __pos__(self) -> "Value":
         if not isinstance(self._value, (int, float)):
-            raise HybridTypeError(
+            raise TypeError(
                 f"Cannot use plus operator on variable of type {self._type}."
             )
         return Value(self._value)
 
     def __neg__(self) -> "Value":
         if not isinstance(self._value, (int, float)):
-            raise HybridTypeError(
+            raise TypeError(
                 f"Cannot use minus operator on variable of type {self._type}."
             )
         return Value(-self._value)
@@ -162,44 +145,42 @@ class Value:
             or not isinstance(other._value, (int, float, str))
             or isinstance(self._value, str) != isinstance(other._value, str)
         ):
-            raise HybridTypeError(
-                f"Cannot add values of types {self._type}, {other._type}."
-            )
+            raise TypeError(f"Cannot add values of types {self._type}, {other._type}.")
         return Value(self._value + other._value)  # type: ignore
 
     def __sub__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise HybridTypeError("Cannot substract non-numeric values.")
+            raise TypeError("Cannot substract non-numeric values.")
         return Value(self._value - other._value)
 
     def __mul__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise HybridTypeError("Cannot multiply non-numeric values.")
+            raise TypeError("Cannot multiply non-numeric values.")
         return Value(self._value * other._value)
 
     def __div__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise HybridTypeError("Cannot divide non-numeric values.")
+            raise TypeError("Cannot divide non-numeric values.")
         return Value(self._value / other._value)
 
     def __pow__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise HybridTypeError("Cannot raise non-numeric values.")
+            raise TypeError("Cannot raise non-numeric values.")
         return Value(self._value ** other._value)
 
     def __mod__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
-            raise HybridTypeError("Cannot modulo non-numeric values.")
+            raise TypeError("Cannot modulo non-numeric values.")
         return Value(self._value % other._value)
 
     def logical_not(self) -> "Value":
@@ -224,9 +205,7 @@ class Value:
             return Value(self._value > other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value > other._value)
-        raise HybridTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
+        raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
     def __ge__(self, other: "Value") -> "Value":
         if isinstance(self._value, (int, float)) and isinstance(
@@ -235,9 +214,7 @@ class Value:
             return Value(self._value >= other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value >= other._value)
-        raise HybridTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
+        raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
     def __lt__(self, other: "Value") -> "Value":
         if isinstance(self._value, (int, float)) and isinstance(
@@ -246,9 +223,7 @@ class Value:
             return Value(self._value < other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value < other._value)
-        raise HybridTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
+        raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
     def __le__(self, other: "Value") -> "Value":
         if isinstance(self._value, (int, float)) and isinstance(
@@ -257,18 +232,14 @@ class Value:
             return Value(self._value <= other._value)
         if isinstance(self._value, str) and isinstance(other._value, str):
             return Value(self._value <= other._value)
-        raise HybridTypeError(
-            f"Cannot compare values of types {self._type}, {other._type}."
-        )
+        raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
     def contains(self, item: "Value", case_insensitive: bool = False) -> "Value":
         if not isinstance(self._value, (SubPackage, SubPackages)):
-            raise WizardTypeError(f"Cannot iterate variable of type {self._type}.")
+            raise TypeError(f"Cannot iterate variable of type {self._type}.")
 
         if not isinstance(item._value, (str, SubPackage)):
-            raise WizardTypeError(
-                f"Cannot check presence of variable of type {self._type}."
-            )
+            raise TypeError(f"Cannot check presence of variable of type {self._type}.")
 
         if case_insensitive:
             item = Value(item._value.lower())
@@ -289,27 +260,25 @@ class Value:
 
     def __getitem__(self, index: "Value") -> "Value":
         if not isinstance(self._value, (str, SubPackage, SubPackages)):
-            raise HybridTypeError(f"Cannot index variable of type {self._type}.")
+            raise TypeError(f"Cannot index variable of type {self._type}.")
         if not isinstance(index._value, (int)):
-            raise HybridTypeError(f"Cannot index with variable of type {index._type}.")
+            raise TypeError(f"Cannot index with variable of type {index._type}.")
 
         try:
             return Value(self._value[index._value])
         except IndexError:
-            raise HybridIndexError(index._value)
+            raise IndexError(index._value)
 
     def slice(
         self, start: Optional["Value"], end: Optional["Value"], step: Optional["Value"]
     ) -> "Value":
 
         if not isinstance(self._value, str):
-            raise WizardTypeError(
-                f"Cannot access slice of variable of type {self._type}."
-            )
+            raise TypeError(f"Cannot access slice of variable of type {self._type}.")
 
         for v in (start, end, step):
             if v is not None and not isinstance(v.value, int):
-                raise WizardTypeError(f"Cannot index with variable of type {v.type}.")
+                raise TypeError(f"Cannot index with variable of type {v.type}.")
 
         return Value(
             self._value[
@@ -319,7 +288,7 @@ class Value:
 
     def __iter__(self) -> Iterable["Value"]:
         if not isinstance(self._value, (SubPackage, SubPackages)):
-            raise HybridTypeError(f"Cannot iterate variable of type {self._type}.")
+            raise TypeError(f"Cannot iterate variable of type {self._type}.")
 
         it: Iterable[str]
         if isinstance(self._value, SubPackages):

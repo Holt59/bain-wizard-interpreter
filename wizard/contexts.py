@@ -193,7 +193,7 @@ class WizardBodyContext(WizardInterpreterContext[wizardParser.BodyContext]):
                     self._interpreter, self._evisitor, child.keywordStmt(), self
                 )
 
-        raise WizardParseError(f"Unknow context in body: {child}.")
+        raise WizardParseError(child, f"Unknow context in body: {child}.")
 
     def _visitControlFlowStmt(
         self, ctx: wizardParser.ControlFlowStmtContext
@@ -220,7 +220,7 @@ class WizardBodyContext(WizardInterpreterContext[wizardParser.BodyContext]):
         elif isinstance(ctx, wizardParser.ReturnContext):
             return make(WizardReturnContext, ctx)
 
-        raise WizardParseError(f"Unknown control flow statement: {ctx}.")
+        raise WizardParseError(ctx, f"Unknown control flow statement: {ctx}.")
 
 
 class WizardBreakContext(WizardInterpreterContext[wizardParser.BreakContext]):
@@ -235,7 +235,9 @@ class WizardBreakContext(WizardInterpreterContext[wizardParser.BreakContext]):
             loop_or_case = loop_or_case.parent
 
         if loop_or_case is None:
-            raise WizardParseError("Invalid 'Break' statement encountered.")
+            raise WizardParseError(
+                self.context, "Invalid 'Break' statement encountered."
+            )
 
         return loop_or_case.break_()
 
@@ -250,7 +252,9 @@ class WizardContinueContext(WizardInterpreterContext[wizardParser.ContinueContex
             loop = loop.parent
 
         if loop is None:
-            raise WizardParseError("Invalid 'Continue' statement encountered.")
+            raise WizardParseError(
+                self.context, "Invalid 'Continue' statement encountered."
+            )
 
         return loop.continue_()
 
@@ -330,7 +334,7 @@ class WizardForLoopContext(
         ):
             return [Value(i) for i in range(start.value, end.value + 1, by.value)]
 
-        raise WizardTypeError("Cannot create range from non-integer values.")
+        raise WizardTypeError(ctx, "Cannot create range from non-integer values.")
 
     def _visitForInHeader(
         self, ctx: wizardParser.ForInHeaderContext
@@ -345,7 +349,9 @@ class WizardForLoopContext(
             # TODO: Allow?
             return [Value(s) for s in value.value]
         else:
-            raise WizardTypeError(f"Cannot iterable over value of type {value.type}.")
+            raise WizardTypeError(
+                ctx, f"Cannot iterable over value of type {value.type}."
+            )
 
     def exec(self) -> Optional["WizardInterpreterContext"]:
 
@@ -398,7 +404,7 @@ class WizardKeywordContext(WizardInterpreterContext[wizardParser.KeywordStmtCont
 
         name: str = self.context.Keyword().getText()
         if name not in self._interpreter.functions:
-            raise WizardNameError(name)
+            raise WizardNameError(self.context.Keyword(), name)
 
         self._interpreter.functions[name](
             [self._evisitor.visitExpr(ex) for ex in self.context.argList().expr()]
@@ -422,7 +428,7 @@ class WizardAssignmentContext(
 
         if isinstance(self.context, wizardParser.CompoundAssignmentContext):
             if name not in self._interpreter.variables:
-                raise WizardNameError(name)
+                raise WizardNameError(self.context.Identifier(), name)
 
             op: Callable[[Value, Value], Value]
             if self.context.CompoundExp():
@@ -438,9 +444,14 @@ class WizardAssignmentContext(
             elif self.context.CompoundSub():
                 op = Value.__sub__
             else:
-                raise WizardParseError(f"Unknown compouned operation: {self.context}.")
+                raise WizardParseError(
+                    self.context, f"Unknown compouned operation: {self.context}."
+                )
 
-            value = op(self._interpreter.variables[name], value)
+            try:
+                value = op(self._interpreter.variables[name], value)
+            except TypeError as te:
+                raise WizardTypeError(self.context, str(te))
 
         self._interpreter.variables[name] = value
 
@@ -471,7 +482,7 @@ class WizardSelectContext(WizardInterpreterContext[wizardParser.SelectStmtContex
         # Parse the description and option:
         desc = self._evisitor.visitExpr(ctxx.expr())
         if not isinstance(desc.value, str):
-            raise WizardTypeError("Description should be a string.")
+            raise WizardTypeError(ctxx.expr(), "Description should be a string.")
 
         opts: List[SelectOption] = []
         defs: List[SelectOption] = []
@@ -487,7 +498,7 @@ class WizardSelectContext(WizardInterpreterContext[wizardParser.SelectStmtContex
                 or not isinstance(b.value, str)
                 or not isinstance(c.value, str)
             ):
-                raise WizardTypeError("Invalid option for select statement.")
+                raise WizardTypeError(opt, "Invalid option for select statement.")
 
             name = a.value
             isdef = False
@@ -510,7 +521,8 @@ class WizardSelectContext(WizardInterpreterContext[wizardParser.SelectStmtContex
                 self._interpreter.severity.raise_or_warn(
                     Issue.MULTIPLE_DEFAULTS_IN_SELECT_ON,
                     WizardTypeError(
-                        "Cannot have multiple default values with SelectOne."
+                        ctxx.optionTuple(),
+                        "Cannot have multiple default values with SelectOne.",
                     ),
                     "SelectOne statement should have a single default, using the"
                     " first one.",
@@ -591,7 +603,7 @@ class WizardSelectCasesContext(
             target = self._evisitor.visitExpr(case.expr())
             if not isinstance(target.value, str):
                 raise WizardTypeError(
-                    f"Case label should be string, not {target.type}."
+                    case.expr(), f"Case label should be string, not {target.type}."
                 )
 
             # Check if the case match or if we have a fallthrough:
