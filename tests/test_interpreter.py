@@ -9,6 +9,20 @@ from .test_utils import InterpreterChecker, MockSubPackage, MockManager
 
 def test_basic():
 
+    c = InterpreterChecker(MockManager(), SubPackages([]), {},)
+
+    # Test 1:
+    s = """
+x = 3
+4 + 5
+x += 4
+"""
+    c.parse(s)
+    assert c._variables == {"x": Value(7)}
+
+
+def test_forloop():
+
     c = InterpreterChecker(
         MockManager(),
         SubPackages(
@@ -22,15 +36,6 @@ def test_basic():
 
     # Test 1:
     s = """
-x = 3
-4 + 5
-x += 4
-"""
-    c.parse(s)
-    assert c._variables == {"x": Value(7)}
-
-    # Test 2:
-    s = """
 x = 1
 For i from 0 to 4
     x += 1
@@ -39,8 +44,8 @@ EndFor
     c.parse(s)
     assert c._variables == {"x": Value(6)}
 
-    # Test 3:
-    c._variables.clear()
+    # Test 2:
+    c.clear()
     s = """
 s = ""
 For pkg in SubPackages
@@ -51,7 +56,7 @@ EndFor
     assert c._variables == {"s": Value("abef")}
 
     # Test 3:
-    c._variables.clear()
+    c.clear()
     values = []
     c._functions["fn"] = lambda vs: values.append((vs[0].value, vs[1].value))
     s = """
@@ -66,6 +71,42 @@ EndFor
     c.parse(s)
     assert c._variables == {"c": Value(40)}
     assert values == [(i, j) for i in range(1, 5) for j in range(1, 5, 2)]
+
+
+def test_whileloop():
+
+    c = InterpreterChecker(MockManager(), SubPackages([]), {},)
+
+    # Test 1:
+    s = """
+u = "5461"
+x = 0
+i = 0
+While i < len(u)
+    x = 10 * x + int(u[i])
+    i += 1
+EndWhile
+"""
+    c.parse(s)
+    assert c._variables == {"u": Value("5461"), "i": 4, "x": 5461}
+
+    # Kaprekar number, yay!
+    c._functions["sort"] = lambda vs: Value("".join(sorted(vs[0].value)))
+    s = """
+input = 3524
+target = 6174
+
+While input != target
+    input_i = sort(str(input))
+    input_d = ""
+    For i from 1 to len(input_i)
+        input_d += input_i[len(input_i) - i]
+    EndFor
+    input = int(input_d) - int(input_i)
+EndWhile
+"""
+    c.parse(s)
+    assert c._variables["input"] == Value(6174)
 
 
 def test_if():
