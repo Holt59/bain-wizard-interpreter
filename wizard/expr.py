@@ -3,13 +3,20 @@
 import codecs
 import re
 
-from typing import Callable, List, Optional
+from typing import overload, Callable, List, Optional, Type
 
 from .antlr4.wizardParser import wizardParser
 from .errors import WizardTypeError, WizardIndexError, WizardNameError
 from .abstract_interpreter import AbstractWizardInterpreter
 from .severity import Issue
-from .value import SubPackage, SubPackages, Value, VariableType, Void  # noqa: F401
+from .value import (  # noqa: F401
+    SubPackage,
+    SubPackages,
+    Value,
+    ValueType,
+    VariableType,
+    Void,
+)
 
 
 class WizardExpressionVisitor:
@@ -256,10 +263,31 @@ class WizardExpressionVisitor:
 
         return Value(txt)
 
+    @overload
     def visitExpr(self, ctx: wizardParser.ExprContext) -> Value:
+        ...
+
+    @overload
+    def visitExpr(
+        self, ctx: wizardParser.ExprContext, typ: Type[ValueType]
+    ) -> Value[ValueType]:
+        ...
+
+    def visitExpr(
+        self, ctx: wizardParser.ExprContext, typ: Optional[Type[ValueType]] = None
+    ):
         try:
-            return getattr(self, "visit" + type(ctx).__name__[:-7])(ctx)  # type: ignore
+            value = getattr(self, "visit" + type(ctx).__name__[:-7])(ctx)
         except TypeError as te:
             raise WizardTypeError(ctx, *te.args)
         except IndexError as ie:
             raise WizardIndexError(ctx, *ie.args)
+
+        if typ is not None and not isinstance(value.value, typ):
+            raise WizardTypeError(
+                ctx,
+                f"Expected value of type {VariableType.from_pytype(typ)} but got value"
+                f" of type {value.type}.",
+            )
+
+        return value  # type: ignore

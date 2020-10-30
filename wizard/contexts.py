@@ -319,22 +319,15 @@ class WizardForLoopContext(
     def _visitForRangeHeader(
         self, ctx: wizardParser.ForRangeHeaderContext
     ) -> Sequence[Value]:
-        start = self._evisitor.visitExpr(ctx.expr(0))
-        end = self._evisitor.visitExpr(ctx.expr(1))
+        start: Value[int] = self._evisitor.visitExpr(ctx.expr(0), int)
+        end: Value[int] = self._evisitor.visitExpr(ctx.expr(1), int)
 
         if ctx.expr(2):
-            by = self._evisitor.visitExpr(ctx.expr(2))
+            by = self._evisitor.visitExpr(ctx.expr(2), int)
         else:
             by = Value(1)
 
-        if (
-            isinstance(start.value, int)
-            and isinstance(end.value, int)
-            and isinstance(by.value, int)
-        ):
-            return [Value(i) for i in range(start.value, end.value + 1, by.value)]
-
-        raise WizardTypeError(ctx, "Cannot create range from non-integer values.")
+        return [Value(i) for i in range(start.value, end.value + 1, by.value)]
 
     def _visitForInHeader(
         self, ctx: wizardParser.ForInHeaderContext
@@ -480,25 +473,16 @@ class WizardSelectContext(WizardInterpreterContext[wizardParser.SelectStmtContex
             ctxx = self.context.selectMany()
 
         # Parse the description and option:
-        desc = self._evisitor.visitExpr(ctxx.expr())
-        if not isinstance(desc.value, str):
-            raise WizardTypeError(ctxx.expr(), "Description should be a string.")
+        desc: Value[str] = self._evisitor.visitExpr(ctxx.expr(), str)
 
         opts: List[SelectOption] = []
         defs: List[SelectOption] = []
         for opt in ctxx.optionTuple():
             a, b, c = (
-                self._evisitor.visitExpr(opt.expr(0)),
-                self._evisitor.visitExpr(opt.expr(1)),
-                self._evisitor.visitExpr(opt.expr(2)),
+                self._evisitor.visitExpr(opt.expr(0), str),
+                self._evisitor.visitExpr(opt.expr(1), str),
+                self._evisitor.visitExpr(opt.expr(2), str),
             )
-
-            if (
-                not isinstance(a.value, str)
-                or not isinstance(b.value, str)
-                or not isinstance(c.value, str)
-            ):
-                raise WizardTypeError(opt, "Invalid option for select statement.")
 
             name = a.value
             isdef = False
@@ -600,11 +584,7 @@ class WizardSelectCasesContext(
             case = self._cases[self._index]
             self._index += 1
 
-            target = self._evisitor.visitExpr(case.expr())
-            if not isinstance(target.value, str):
-                raise WizardTypeError(
-                    case.expr(), f"Case label should be string, not {target.type}."
-                )
+            target: Value[str] = self._evisitor.visitExpr(case.expr(), str)
 
             # Check if the case match or if we have a fallthrough:
             if self._fallthrough or any(

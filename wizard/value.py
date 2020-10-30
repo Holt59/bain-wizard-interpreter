@@ -3,11 +3,13 @@
 from abc import abstractproperty
 from enum import Enum, auto
 from typing import (
+    Generic,
     List,
     Iterable,
     Optional,
     Sequence,
     Type,
+    TypeVar,
     Union,
 )
 
@@ -86,7 +88,10 @@ class VariableType(Enum):
 WizardValueType = Union[bool, int, float, str, SubPackage, SubPackages, Void]
 
 
-class Value:
+ValueType = TypeVar("ValueType", bound=WizardValueType)
+
+
+class Value(Generic[ValueType]):
 
     """
     Represent a value of a given type, that can be a constant or the reuslt of
@@ -96,9 +101,9 @@ class Value:
     checking so you can use them directly.
     """
 
-    _value: WizardValueType
+    _value: ValueType
 
-    def __init__(self, value: WizardValueType):
+    def __init__(self, value: ValueType):
         self._type = VariableType.from_pytype(type(value))
         self._value = value
 
@@ -118,7 +123,7 @@ class Value:
         return self._type == VariableType.VOID
 
     @property
-    def value(self) -> WizardValueType:
+    def value(self) -> ValueType:
         """
         Returns:
             The value of this constant.

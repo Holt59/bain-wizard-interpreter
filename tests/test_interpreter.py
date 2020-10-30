@@ -317,3 +317,12 @@ def test_exceptions():
 
     with pytest.raises(WizardNameError):
         c.parse("x += 2")
+
+    with pytest.raises(WizardTypeError) as te:
+        c.parse(
+            """x = 1
+s = 2
+x += str(s)
+"""
+        )
+    assert te.value.line == 3
