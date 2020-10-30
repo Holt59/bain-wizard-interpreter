@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+import inspect
+
 from enum import Enum, auto
 from typing import (
     Any,
@@ -8,7 +10,6 @@ from typing import (
     Mapping,
     MutableMapping,
     Optional,
-    Union,
 )
 
 from .antlr4.wizardParser import wizardParser
@@ -26,11 +27,11 @@ from .expr import (
     SubPackages,
     Value,
     VariableType,
-    Void,
     WizardExpressionVisitor,
 )
 from .mmitf import ModManagerInterface
 from .severity import Issue, SeverityContext
+from .utils import wrap_function, optional
 
 
 class WizardInterpreterResult(Enum):
@@ -147,14 +148,19 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
 
         fns: MutableMapping[str, Callable[[List[Value]], Value]] = {}
 
-        def wrap(method: Callable) -> Callable[[List[Value]], Value]:
-            return lambda vs: method(*vs)  # type: ignore
-
         # Add all the free functions:
         for fname in dir(wf):
             if fname.startswith("__"):
                 continue
-            fns[fname] = wrap(getattr(wf, fname))
+            sig = inspect.signature(getattr(wf, fname))
+            varargs = "args" in sig.parameters
+            fns[fname] = wrap_function(
+                fname,
+                getattr(wf, fname),
+                *(object for _ in range(len(sig.parameters) - varargs)),
+                varargs=varargs,
+                rawargs=True,
+            )
 
         # Add methods:
         for fname in dir(wf):
@@ -163,7 +169,7 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
             fns["string." + fname] = fns[fname]
 
         for t in ("integer", "float", "bool"):
-            fns[t + ".str"] = wrap(wf.str)
+            fns[t + ".str"] = fns["str"]
 
         return fns
 
@@ -177,52 +183,6 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
         Args:
             manager: The manager to delete the call to.
         """
-
-        class optional:
-            t: type
-
-            def __init__(self, t: type):
-                self.t = t
-
-        def wrap_method(
-            name: str, method, *args: Union[optional, type], varargs: bool = False
-        ) -> Callable[[List[Value]], Value]:
-            def fn(vs: List[Value]) -> Value:
-
-                # List of Python arguments:
-                pargs = []
-
-                if not varargs and len(vs) > len(args):
-                    raise WizardTypeError(f"{name}: too many arguments.")
-
-                for iarg, arg in enumerate(args):
-                    if iarg >= len(vs) and not isinstance(arg, optional):
-                        raise WizardTypeError(
-                            f"{name}: missing required positional argument(s)."
-                        )
-
-                    tp: type
-                    if isinstance(arg, optional):
-                        tp = arg.t
-                    else:
-                        tp = arg
-
-                    if not isinstance(vs[iarg].value, tp):
-                        raise WizardTypeError(
-                            f"Argument at position {iarg} has incorrect type for"
-                            f" {name}, expected {VariableType.from_pytype(tp)} got"
-                            f" {vs[iarg].type}."
-                        )
-
-                    pargs.append(vs[iarg].value)
-
-                ret = method(*pargs)
-                if ret is None:
-                    ret = Void()
-
-                return Value(ret)
-
-            return fn
 
         fns: MutableMapping[str, Callable[[List[Value]], Value]] = {}
 
@@ -267,10 +227,10 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
             ("SelectEspm", manager.selectPlugin, str),
             ("SelectSubPackage", manager.selectSubPackage, str),
         ]:
-            fns[t[0]] = wrap_method(*t)  # type: ignore
+            fns[t[0]] = wrap_function(*t)  # type: ignore
 
         # Varargs:
-        fns["DataFileExists"] = wrap_method(
+        fns["DataFileExists"] = wrap_function(
             "DataFileExists", manager.dataFileExists, str, varargs=True
         )
 
@@ -287,7 +247,7 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
             )
             return manager.note(str(x))
 
-        fns["Note"] = wrap_method("Note", note, object)
+        fns["Note"] = wrap_function("Note", note, object)
 
         return fns
 

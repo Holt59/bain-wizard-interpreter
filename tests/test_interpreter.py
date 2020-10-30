@@ -2,6 +2,7 @@
 
 import pytest  # noqa: F401
 
+from wizard.errors import WizardTypeError, WizardNameError
 from wizard.expr import SubPackages, Value
 
 from .test_utils import InterpreterChecker, MockSubPackage, MockManager
@@ -296,3 +297,23 @@ def test_default_functions():
 
     c.parse("s = 'hello world'.len()")
     assert c._variables["s"] == Value(11)
+
+
+def test_exceptions():
+
+    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+
+    with pytest.raises(WizardTypeError):
+        c.parse("s == int(1, 2, 3)")
+
+    with pytest.raises(WizardTypeError):
+        c.parse("c == int()")
+
+    with pytest.raises(WizardTypeError):
+        c.parse("1 + '2'")
+
+    with pytest.raises(WizardNameError):
+        c.parse("foo(1, 2, 3)")
+
+    with pytest.raises(WizardNameError):
+        c.parse("x += 2")
