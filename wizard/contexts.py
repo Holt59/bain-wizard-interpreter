@@ -12,7 +12,6 @@ from typing import (
     List,
     Optional,
     Sequence,
-    Tuple,
     Type,
     TypeVar,
     Union,
@@ -471,23 +470,18 @@ class WizardSelectContext(WizardInterpreterContext[wizardParser.SelectStmtContex
 
         # Parse the description and option:
         desc = self._evisitor.visitExpr(ctxx.expr())
-        vopts: List[Tuple[Value, Value, Value]] = []
-        for opt in ctxx.optionTuple():
-            vopts.append(
-                (
-                    self._evisitor.visitExpr(opt.expr(0)),
-                    self._evisitor.visitExpr(opt.expr(1)),
-                    self._evisitor.visitExpr(opt.expr(2)),
-                )
-            )
-
-        # Check the types:
         if not isinstance(desc.value, str):
             raise WizardTypeError("Description should be a string.")
 
         opts: List[SelectOption] = []
         defs: List[SelectOption] = []
-        for a, b, c in vopts:
+        for opt in ctxx.optionTuple():
+            a, b, c = (
+                self._evisitor.visitExpr(opt.expr(0)),
+                self._evisitor.visitExpr(opt.expr(1)),
+                self._evisitor.visitExpr(opt.expr(2)),
+            )
+
             if (
                 not isinstance(a.value, str)
                 or not isinstance(b.value, str)
