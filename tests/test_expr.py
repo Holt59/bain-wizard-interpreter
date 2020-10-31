@@ -94,7 +94,9 @@ def test_add_sub():
 
     c = ExpressionChecker(
         MockInterpreter(
-            {"x": Value(4), "y": Value(-3), "s": Value("hello")}, SubPackages([]), {},
+            {"x": Value(4), "y": Value(-3), "s": Value("hello")},
+            SubPackages([]),
+            {},
         )
     )
 

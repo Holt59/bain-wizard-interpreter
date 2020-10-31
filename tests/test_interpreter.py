@@ -10,7 +10,11 @@ from .test_utils import InterpreterChecker, MockSubPackage, MockManager
 
 def test_basic():
 
-    c = InterpreterChecker(MockManager(), SubPackages([]), {},)
+    c = InterpreterChecker(
+        MockManager(),
+        SubPackages([]),
+        {},
+    )
 
     # Test 1:
     s = """
@@ -76,7 +80,11 @@ EndFor
 
 def test_whileloop():
 
-    c = InterpreterChecker(MockManager(), SubPackages([]), {},)
+    c = InterpreterChecker(
+        MockManager(),
+        SubPackages([]),
+        {},
+    )
 
     # Test 1:
     s = """

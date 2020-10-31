@@ -1,3 +1,4 @@
 .vscode
 **/.antlr
 **/__pycache__
+.tox

@@ -32,7 +32,8 @@ class WizardExpressionVisitor:
     _intp: AbstractWizardInterpreter
 
     def __init__(
-        self, interpreter: AbstractWizardInterpreter,
+        self,
+        interpreter: AbstractWizardInterpreter,
     ):
         """
         Args:
