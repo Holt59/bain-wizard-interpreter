@@ -72,7 +72,7 @@ class VariableType(Enum):
             return VariableType.FLOAT
         if pytype is str:
             return VariableType.STRING
-        raise ValueError(f"Unknow type: {pytype}.")
+        raise ValueError(f"Unknown type: {pytype}.")
 
     def __str__(self) -> str:
         if self is VariableType.LIST_SUBPACKAGES:
@@ -94,7 +94,7 @@ ValueType = TypeVar("ValueType", bound=WizardValueType)
 class Value(Generic[ValueType]):
 
     """
-    Represent a value of a given type, that can be a constant or the reuslt of
+    Represent a value of a given type, that can be a constant or the result of
     a complex expression.
 
     Value expose operators from the BAIN Wizard specification with proper type

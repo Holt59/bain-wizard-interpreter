@@ -24,7 +24,7 @@ def wrap_function(
     Wrap the given function to be usable by the Wizard expression visitor.
 
     Args:
-        name: The name of the function, for logging purpose (warning / erros).
+        name: The name of the function, for logging purpose (warning / errors).
         method: The function to wrap.
         *args: The type of arguments expected by the method.
         varargs: True if the method accept any number of arguments.

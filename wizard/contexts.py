@@ -212,7 +212,7 @@ class WizardBodyContext(WizardInterpreterContext[wizardParser.BodyContext]):
                     self._interpreter, self._evisitor, child.keywordStmt(), self
                 )
 
-        raise WizardParseError(child, f"Unknow context in body: {child}.")
+        raise WizardParseError(child, f"Unknown context in body: {child}.")
 
     def _visitControlFlowStmt(
         self, ctx: wizardParser.ControlFlowStmtContext
@@ -435,7 +435,7 @@ class WizardAssignmentContext(
         # Retrieve the name:
         name: str = self.context.Identifier().getText()
 
-        # Evalue the expression:
+        # Evaluate the expression:
         value: Value = self._evisitor.visitExpr(self.context.expr())
 
         if isinstance(self.context, wizardParser.CompoundAssignmentContext):
@@ -457,7 +457,7 @@ class WizardAssignmentContext(
                 op = Value.__sub__
             else:
                 raise WizardParseError(
-                    self.context, f"Unknown compouned operation: {self.context}."
+                    self.context, f"Unknown compound operation: {self.context}."
                 )
 
             try:

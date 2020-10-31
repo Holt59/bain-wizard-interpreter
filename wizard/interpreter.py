@@ -63,7 +63,7 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext):
     # The expression visitor:
     _evisitor: WizardExpressionVisitor
 
-    # Under this are stuff that can be "rewinded":
+    # Under this are stuff that can be "rewound":
 
     # The list of variables:
     _variables: MutableMapping[str, Value]
