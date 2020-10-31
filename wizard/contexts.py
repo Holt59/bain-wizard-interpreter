@@ -5,6 +5,8 @@ This file contains "context" which are used to rewind the
 interpreter.
 """
 
+import copy
+
 from abc import abstractmethod
 from typing import (
     Callable,
@@ -68,6 +70,23 @@ class WizardInterpreterContext(Generic[RuleContext]):
         self._evisitor = evisitor
         self._context = context
         self._parent = parent
+
+    def __deepcopy__(self, memo):
+        # We do not want to DeepCopy the interpreter, expression visitor and
+        # the context:
+        memo[id(self._interpreter)] = self._interpreter
+        memo[id(self._evisitor)] = self._evisitor
+        memo[id(self._context)] = self._context
+
+        # Need to do this manually, since we cannot re-call deepcopy(self):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+
+        for k, v in self.__dict__.items():
+            setattr(result, k, copy.deepcopy(v, memo))
+
+        return result
 
     @property
     def parent(self) -> Optional["WizardInterpreterContext"]:
@@ -563,6 +582,13 @@ class WizardSelectCasesContext(
         self._index = 0
         self._found = False
         self._fallthrough = False
+
+    def __deepcopy__(self, memo):
+        # We do not want to copy context objects:
+        memo[id(self._cases)] = self._cases
+        memo[id(self._default)] = self._default
+
+        return super().__deepcopy__(memo)
 
     def break_(self) -> Optional[WizardInterpreterContext]:
         # Disable fallthrough:
