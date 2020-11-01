@@ -87,6 +87,11 @@ class SelectOption:
 
 class ModManagerInterface:
 
+    """
+    The ModManagerInterface represents the interface to implement to let the
+    interpreter (or runner) interact with the game files and the user.
+    """
+
     _runner: WizardRunner
 
     # Initialize the interface with a runner:
