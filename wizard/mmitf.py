@@ -1,8 +1,50 @@
 # -*- encoding: utf-8 -*-
 
 
-from abc import abstractmethod
+from abc import abstractmethod, abstractproperty
 from typing import List, Optional
+
+
+class WizardRunnerState:
+
+    """
+    State for the wizard runner that can be used to rewind to a previous
+    state.
+    """
+
+    ...
+
+
+class WizardRunner:
+
+    """
+    The actual wizard runner.
+    """
+
+    @abstractmethod
+    def abort(self):
+        """
+        Abort the script execution, returning immediately.
+        """
+        ...
+
+    @abstractmethod
+    def rewind(self, state: WizardRunnerState):
+        """
+        Rewind the runner to the given state.
+
+        Args:
+            state: The state to rewind to.
+        """
+        ...
+
+    @abstractproperty
+    def state(self) -> WizardRunnerState:
+        """
+        Returns:
+            The current state of the interpreter.
+        """
+        ...
 
 
 class SelectOption:
@@ -38,16 +80,55 @@ class SelectOption:
 
 class ModManagerInterface:
 
-    # Development methods:
+    _runner: WizardRunner
 
+    # Initialize the interface with a runner:
+    def setup(self, runner: WizardRunner):
+        self._runner = runner
+
+    # Development methods:
     def warning(self, text: str):
         """
         Called when a warning is emitted by the interpreter, usually due
         to an improper script.
+
+        This should be a light warning for the user, even invisible, as it is
+        mostly called for script-related stuff (e.g. use of a variable before
+        it is set).
         """
         ...
 
-    # Choice methods:
+    def error(self, exc: Exception):
+        """
+        Called when an error occurs while executing the script. Unlike warning(),
+        errors cannot be recovered from and cannot be safely ignored.
+
+        By default this method simply re-raised the given exception.
+
+        Args:
+            exc: The actual Python exception that raises the error.
+        """
+        raise exc
+
+    # Choice / dialog methods:
+    def cancel(self) -> bool:
+        """
+        Called when a 'Cancel' keyword is encountered.
+
+        Returns:
+            True to stop executing the script, False to continue.
+        """
+        return True
+
+    def complete(self) -> bool:
+        """
+        Called when a 'Return' keyword is encountered or at the end of the
+        installation.
+
+        Returns:
+            True to stop executing the script, False to continue.
+        """
+        return True
 
     @abstractmethod
     def selectOne(

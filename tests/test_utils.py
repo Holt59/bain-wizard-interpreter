@@ -69,11 +69,7 @@ class MockManager(ModManagerInterface):
 
         fn = object.__getattribute__(self, item)
 
-        if (
-            hasattr(fn, "__func__")
-            and hasattr(ModManagerInterface, item)
-            and fn.__func__ is getattr(ModManagerInterface, item)
-        ):
+        if hasattr(fn, "__isabstractmethod__") and fn.__isabstractmethod__:
 
             def fn(*args):
 
@@ -191,6 +187,3 @@ class InterpreterChecker(WizardInterpreter):
         parser._errHandler = BailErrorStrategy()
 
         return self.visit(parser.parseWizard())
-
-    def clear(self):
-        self._variables.clear()

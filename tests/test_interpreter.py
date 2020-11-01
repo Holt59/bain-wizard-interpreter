@@ -23,7 +23,7 @@ x = 3
 x += 4
 """
     c.parse(s)
-    assert c._variables == {"x": Value(7)}
+    assert c.variables == {"x": Value(7)}
 
 
 def test_forloop():
@@ -47,10 +47,9 @@ For i from 0 to 4
 EndFor
 """
     c.parse(s)
-    assert c._variables == {"x": Value(6)}
+    assert c.variables == {"x": Value(6)}
 
     # Test 2:
-    c.clear()
     s = """
 s = ""
 For pkg in SubPackages
@@ -58,10 +57,9 @@ For pkg in SubPackages
 EndFor
 """
     c.parse(s)
-    assert c._variables == {"s": Value("abef")}
+    assert c.variables == {"s": Value("abef")}
 
     # Test 3:
-    c.clear()
     values = []
     c._functions["fn"] = lambda vs: values.append((vs[0].value, vs[1].value))
     s = """
@@ -74,7 +72,7 @@ For i from 1 to 4
 EndFor
 """
     c.parse(s)
-    assert c._variables == {"c": Value(40)}
+    assert c.variables == {"c": Value(40)}
     assert values == [(i, j) for i in range(1, 5) for j in range(1, 5, 2)]
 
 
@@ -97,7 +95,7 @@ While i < len(u)
 EndWhile
 """
     c.parse(s)
-    assert c._variables == {"u": Value("5461"), "i": 4, "x": 5461}
+    assert c.variables == {"u": Value("5461"), "i": 4, "x": 5461}
 
     # Kaprekar number, yay!
     c._functions["sort"] = lambda vs: Value("".join(sorted(vs[0].value)))
@@ -115,7 +113,7 @@ While input != target
 EndWhile
 """
     c.parse(s)
-    assert c._variables["input"] == Value(6174)
+    assert c.variables["input"] == Value(6174)
 
 
 def test_if():
@@ -130,7 +128,7 @@ Else
 EndIf
 """
     c.parse(s)
-    assert c._variables == {"x": Value(1)}
+    assert c.variables == {"x": Value(1)}
 
     s = """
 If False
@@ -140,9 +138,8 @@ Else
 EndIf
 """
     c.parse(s)
-    assert c._variables == {"x": Value(2)}
+    assert c.variables == {"x": Value(2)}
 
-    c.clear()
     s = """
 x = 1
 y = 3
@@ -155,9 +152,8 @@ Else
 EndIf
 """
     c.parse(s)
-    assert c._variables == {"x": Value(1), "y": Value(3), "u": Value(2)}
+    assert c.variables == {"x": Value(1), "y": Value(3), "u": Value(2)}
 
-    c.clear()
     s = """
 x = 1
 y = 3
@@ -170,7 +166,7 @@ Elif x + y == 4
 EndIf
 """
     c.parse(s)
-    assert c._variables == {"x": Value(1), "y": Value(3), "u": Value(5)}
+    assert c.variables == {"x": Value(1), "y": Value(3), "u": Value(5)}
 
 
 def test_select():
@@ -195,20 +191,17 @@ Default
 EndSelect
 """
     m.onSelect("O1")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(2)}
+    assert c.variables == {"x": Value(2)}
 
     m.onSelect("O2")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(3)}
+    assert c.variables == {"x": Value(3)}
 
     # First option is selected by default, the "Default" case is... Useless?
     m.onSelect("OX")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(2)}
+    assert c.variables == {"x": Value(2)}
 
     s = r"""
 x = 1
@@ -226,24 +219,20 @@ Default
 EndSelect
 """
     m.onSelect([])
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(16)}
+    assert c.variables == {"x": Value(16)}
 
     m.onSelect(["O1"])
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(3)}
+    assert c.variables == {"x": Value(3)}
 
     m.onSelect(["O2"])
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(4)}
+    assert c.variables == {"x": Value(4)}
 
     m.onSelect(["O1", "O2"])
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(6)}
+    assert c.variables == {"x": Value(6)}
 
     # No Case for selected:
     s = r"""
@@ -260,14 +249,12 @@ Default
 EndSelect
 """
     m.onSelect("O1")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(4)}
+    assert c.variables == {"x": Value(4)}
 
     m.onSelect("O2")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(3)}
+    assert c.variables == {"x": Value(3)}
 
     # Fallthrough
     s = r"""
@@ -283,14 +270,12 @@ Case "O2"
 EndSelect
 """
     m.onSelect("O1")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(6)}
+    assert c.variables == {"x": Value(6)}
 
     m.onSelect("O2")
-    c.clear()
     c.parse(s)
-    assert c._variables == {"x": Value(4)}
+    assert c.variables == {"x": Value(4)}
 
 
 def test_default_functions():
@@ -298,13 +283,13 @@ def test_default_functions():
     c = InterpreterChecker(MockManager(), SubPackages([]), {})
 
     c.parse("s = int('3')")
-    assert c._variables["s"] == Value(3)
+    assert c.variables["s"] == Value(3)
 
     c.parse("s = len('hello world')")
-    assert c._variables["s"] == Value(11)
+    assert c.variables["s"] == Value(11)
 
     c.parse("s = 'hello world'.len()")
-    assert c._variables["s"] == Value(11)
+    assert c.variables["s"] == Value(11)
 
 
 def test_exceptions():
