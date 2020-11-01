@@ -17,7 +17,9 @@ class MockSubPackage(SubPackage):
 
     _files: List[str]
 
-    def __new__(cls, name: str, files: List[str]):
+    def __new__(cls, name: str, files: List[str] = []):
+        # Important: There is a default for files() so that the object can
+        # be deepcopied.
         value = SubPackage.__new__(cls, name)
         value._files = files
         return value

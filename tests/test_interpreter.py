@@ -4,6 +4,7 @@ import pytest  # noqa: F401
 
 from wizard.errors import WizardTypeError, WizardNameError
 from wizard.expr import SubPackages, Value
+from wizard.interpreter import WizardInterpreterResult
 
 from .test_utils import InterpreterChecker, MockSubPackage, MockManager
 
@@ -290,6 +291,66 @@ def test_default_functions():
 
     c.parse("s = 'hello world'.len()")
     assert c.variables["s"] == Value(11)
+
+
+def test_abort():
+
+    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+
+    # Test abort - We should not reach the "c = 10" line:
+    c._functions["fn"] = lambda *args: c.abort()
+    s = """
+x = 1
+y = 2
+c = x * y
+fn(x, y)
+c = 10
+"""
+    assert c.parse(s) == WizardInterpreterResult.CANCEL
+    assert c.variables == {"x": Value(1), "y": Value(2), "c": Value(2)}
+
+    # A kind of "while" loop using rewind():
+    values = [0]
+
+    def fn(*args):
+        values[0] += 1
+        if values[0] == 5:
+            return Value(5)
+        c.rewind(c.state())
+
+    c._functions["fn"] = fn
+    s = """
+x = fn()
+"""
+    assert c.parse(s) == WizardInterpreterResult.COMPLETED
+    assert c.variables == {"x": Value(5)}
+
+    # A kind of "while" loop using rewind():
+    values = {"cnt": 0, "ctx": None}
+
+    def fn1(*args):
+        # On rewind(), the value of x should be 1:
+        assert c.variables == {"x": Value(1)}
+        values["ctx"] = c.state()
+
+    def fn2(*args):
+        # In fn2(), the value of x should be 2:
+        assert c.variables == {"x": Value(2)}
+        values["cnt"] += 1
+        if values["cnt"] < 5:
+            c.rewind(values["ctx"])
+
+    c._functions["fn1"] = fn1
+    c._functions["fn2"] = fn2
+    s = """
+x = 1
+fn1() ; Save the context.
+x = 2
+fn2() ; Rewind 5 times
+"""
+    assert c.parse(s) == WizardInterpreterResult.COMPLETED
+    assert c.variables == {"x": Value(2)}
+    assert values["cnt"] == 5
 
 
 def test_exceptions():

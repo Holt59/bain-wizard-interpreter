@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 
-from abc import abstractmethod, abstractproperty
+from abc import abstractmethod
 from typing import List, Optional
 
 
@@ -25,6 +25,9 @@ class WizardRunner:
     def abort(self):
         """
         Abort the script execution, returning immediately.
+
+        Raises:
+            ValueError: If the runner is not running when abort() is called.
         """
         ...
 
@@ -35,14 +38,18 @@ class WizardRunner:
 
         Args:
             state: The state to rewind to.
+
+        Raises:
+            ValueError: If the runner is not running when rewind() is called.
         """
         ...
 
-    @abstractproperty
+    @abstractmethod
     def state(self) -> WizardRunnerState:
         """
         Returns:
-            The current state of the interpreter.
+            A (deep) copy of the current state of the interpreter, suitable
+            for rewinding.
         """
         ...
 

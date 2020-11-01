@@ -155,7 +155,11 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
 
     # Under this are stuff that can be "rewound":
 
+    # Current state of the interpreter (used to return variables, etc.):
     _state: WizardInterpreterState
+
+    # Previous state of the interpreter (used in state()):
+    _pstate: WizardInterpreterState
 
     def __init__(
         self,
@@ -186,6 +190,7 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
 
         # Initial state, in case someone calls variables() or context():
         self._state = WizardInterpreterState(None, {})
+        self.__pstate = self._state
 
     # AbstractWizardInterpreter interface:
     @property
@@ -214,14 +219,17 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
     # WizardRunner interface:
 
     def abort(self):
+        if not self._state:
+            raise ValueError("Cannot abort() when the runner is not running.")
         raise WizardInterpreter.CancelFlow()
 
     def rewind(self, context: WizardRunnerState):
+        if not self._state:
+            raise ValueError("Cannot rewind() when the runner is not running.")
         raise WizardInterpreter.RewindFlow(context)
 
-    @property
-    def context(self) -> WizardRunnerState:
-        return copy.deepcopy(self._state)
+    def state(self) -> WizardRunnerState:
+        return self._pstate
 
     # Main entry:
     def visit(self, ctx: wizardParser.ParseWizardContext) -> WizardInterpreterResult:
@@ -235,23 +243,34 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
 
         while self._state:
             try:
-                self._state = self._state.exec()
+                # Copy the state so that .state() returns the state before
+                # execution:
+                self._pstate = copy.deepcopy(self._state)
 
+                # Check if the current state is a cancel or a return:
                 if isinstance(self._state.context, WizardCancelContext):
                     if self._manager.cancel():
                         return WizardInterpreterResult.CANCEL
 
-                if isinstance(self._state.context, WizardReturnContext):
+                elif isinstance(self._state.context, WizardReturnContext):
                     if self._manager.complete():
                         return WizardInterpreterResult.RETURN
 
+                # Execute the current state:
+                self._state = self._state.exec()
+
             except WizardInterpreter.RewindFlow as rfex:
-                self._state = rfex.state  # type: ignore
+                # Copy back the state (we do not want to modify the state stored
+                # in the manager or elsewhere):
+                self._state = copy.deepcopy(rfex.state)  # type: ignore
 
             except WizardInterpreter.CancelFlow:
                 return WizardInterpreterResult.CANCEL
 
             except Exception as ex:
                 self._manager.error(ex)
+
+        # Final copy of the state (no need for a deepcopy here):
+        self._pstate = self._state
 
         return WizardInterpreterResult.COMPLETED
