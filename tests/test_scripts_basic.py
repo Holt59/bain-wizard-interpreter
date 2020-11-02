@@ -15,20 +15,7 @@ from pathlib import Path
 from wizard.expr import SubPackages
 from wizard.errors import WizardError
 
-from .test_utils import InterpreterChecker, MockManager
-
-
-def check_script(c: InterpreterChecker, script: Path):
-
-    # Read the script:
-    with open(script, "r") as fp:
-        lines = fp.read()
-
-    try:
-        c.parse(lines)
-    except (WizardError, ParseCancellationException) as err:
-        print("Failed script: {}".format(script))
-        raise err
+from .test_utils import MockRunner
 
 
 def test_wizparse_scripts():
@@ -40,9 +27,7 @@ def test_wizparse_scripts():
     scripts.remove(Path("vendor/wizparse/tests/test.txt"))
 
     # Create an interpreter with a mock-manager:
-    m = MockManager()
-
-    c = InterpreterChecker(m, SubPackages([]), {})
+    c = MockRunner(SubPackages([]))
 
     # IMPORTANT:
     # 1. There are no sub-packages, so some scripts might fail.
@@ -50,8 +35,12 @@ def test_wizparse_scripts():
     #    selectMany, so some scripts might fail.
 
     # Needed for farmhouseChimneys (at least):
-    m.setReturnValue("getPluginStatus", 2)
+    c.setReturnValue("getPluginStatus", 2)
 
     # Check each script:
     for script in scripts:
-        check_script(c, script)
+        try:
+            c.run(script)
+        except (WizardError, ParseCancellationException) as err:
+            print("Failed script: {}".format(script))
+            raise err

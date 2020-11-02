@@ -26,6 +26,10 @@ class Issue(Enum):
     # Indicates that a Note can be anything (not only a string):
     USAGE_OF_ANYTHING_IN_NOTE = auto()
 
+    # Select a sub-package or a plugin that does not exist:
+    SELECT_MISSING_SUBPACKAGE = auto()
+    SELECT_MISSING_PLUGIN = auto()
+
 
 class SeverityContext:
 

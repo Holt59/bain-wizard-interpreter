@@ -14,102 +14,7 @@ from typing import List, Mapping
 
 from wizard.expr import SubPackage, SubPackages
 
-from .test_utils import InterpreterChecker, MockManager, MockSubPackage
-
-
-class MockManagerPlus(MockManager):
-
-    _all_subpackages: Mapping[str, SubPackage]
-    _all_plugins: List[str]
-
-    _notes: List[str]
-    _subpackages: List[str]
-    _plugins: List[str]
-
-    def __init__(self, subpackages: List[SubPackage]):
-        super().__init__()
-
-        self._all_subpackages = {str(sp): sp for sp in subpackages}
-        self._all_plugins = [
-            f
-            for sp in subpackages
-            for f in sp.files
-            if f.endswith(".esp") or f.endswith(".esm")
-        ]
-
-    def clear(self):
-        self._notes = []
-        self._subpackages = []
-        self._plugins = []
-        super().clear()
-
-    @property
-    def notes(self):
-        """
-        Returns:
-            The notes set during script execution (not sorted).
-        """
-        return self._notes
-
-    @property
-    def subpackages(self) -> List[str]:
-        """
-        Returns:
-            The list of selected subpackages, in alphabetical order (easier
-            for comparison).
-        """
-        return sorted(list(set(self._subpackages)))
-
-    @property
-    def plugins(self) -> List[str]:
-        """
-        Returns:
-            The list of selected plugins, in alphabetical order (easier
-            for comparison).
-        """
-        return sorted(list(set(self._plugins)))
-
-    def deselectAll(self):
-        self._subpackages.clear()
-        self._plugins.clear()
-
-    def deselectAllPlugins(self):
-        self._plugins.clear()
-
-    def deselectPlugin(self, plugin_name: str):
-        if plugin_name in self._plugins:
-            self._plugins.remove(plugin_name)
-
-    def deselectSubPackage(self, name: str):
-        if name in self._subpackages:
-            self._subpackages.remove(name)
-
-    def note(self, text: str):
-        self._notes.append(text)
-
-    def selectAll(self):
-        self._plugins = list(self._all_plugins)
-        self._subpackages = list(self._all_subpackages.keys())
-
-    def selectAllPlugins(self):
-        # Guess we only select plugins from selected subpackages?
-        self._plugins = [
-            f
-            for sp in self._all_subpackages
-            for f in sp.files
-            if sp in self._subpackages and (f.endswith(".esp") or f.endswith(".esm"))
-        ]
-
-    def selectPlugin(self, plugin_name: str):
-        self._plugins.append(plugin_name)
-
-    def selectSubPackage(self, name: str):
-        self._subpackages.append(name)
-
-        # Auto-select plugins?
-        for f in self._all_subpackages[name].files:
-            if f.endswith(".esp") or f.endswith(".esm"):
-                self.selectPlugin(f.split("\\")[-1])
+from .test_utils import MockRunner, MockSubPackage
 
 
 def read_subpackages(files_txt: Path) -> SubPackages:
@@ -140,17 +45,16 @@ def test_better_cities():
     # Read the subpackages:
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
-    # Create the manager and interpreter:
-    m = MockManagerPlus(subpackages)
-    c = InterpreterChecker(m, subpackages)
+    # Create the runner:
+    runner = MockRunner(subpackages)
 
     # I had these installed, so I use them to check:
-    m.setReturnFunction(
+    runner.setReturnFunction(
         "dataFileExists", lambda s: s in ["Knights.esp", "All Natural.esp"]
     )
 
     # First run:
-    m.onSelects(
+    runner.onSelects(
         [
             "No",
             "Everything",
@@ -209,14 +113,14 @@ def test_better_cities():
         ]
     )
 
-    c.parse(script)
+    result = runner.run(script)
 
     for ex in expected:
-        assert ex in m.calls
+        assert ex in runner.calls
 
-    assert m.notes == notes
-    assert m.subpackages == packages
-    assert m.plugins == plugins
+    assert result.notes == notes
+    assert result.subpackages == packages
+    assert result.plugins == plugins
 
 
 def test_majestic_mountains():
@@ -232,11 +136,10 @@ def test_majestic_mountains():
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
     # Create the manager and interpreter:
-    m = MockManagerPlus(subpackages)
-    c = InterpreterChecker(m, subpackages)
+    runner = MockRunner(subpackages)
 
     # First run:
-    m.onSelects(
+    runner.onSelects(
         ["Welcome", "Begin Installation", ["Landscape Textures", "Moss Rocks"], []]
     )
 
@@ -264,18 +167,19 @@ Otherwise, right-click the installer again and choose Install""",
 
     plugins = sorted(["MajesticMountains.esp", "MajesticMountains_Moss.esp"])
 
-    c.parse(script)
+    result = runner.run(script)
 
     for ex in expected:
-        assert ex in m.calls
+        assert ex in runner.calls
 
-    assert m.notes == notes
-    assert m.subpackages == packages
-    assert m.plugins == plugins
+    assert result.notes == notes
+    assert result.subpackages == packages
+    assert result.plugins == plugins
 
     # Second test (different choice) - The note does not change.
-    m.clear()
-    m.onSelects(["Welcome", "Begin Installation", ["Landscape Textures"], ["SMIM"]])
+    runner.onSelects(
+        ["Welcome", "Begin Installation", ["Landscape Textures"], ["SMIM"]]
+    )
 
     packages = [
         "00 Majestic Mountains",
@@ -285,14 +189,14 @@ Otherwise, right-click the installer again and choose Install""",
 
     plugins = sorted(["MajesticMountains.esp"])
 
-    c.parse(script)
+    result = runner.run(script)
 
     for ex in expected:
-        assert ex in m.calls
+        assert ex in runner.calls
 
-    assert m.notes == notes
-    assert m.subpackages == packages
-    assert m.plugins == plugins
+    assert result.notes == notes
+    assert result.subpackages == packages
+    assert result.plugins == plugins
 
 
 def test_book_covers():
@@ -312,9 +216,8 @@ def test_book_covers():
         # Read the subpackages:
         subpackages = read_subpackages(folder.joinpath("files.txt"))
 
-        # Create the manager and interpreter:
-        m = MockManagerPlus(subpackages)
-        c = InterpreterChecker(m, subpackages)
+        # Create the runner:
+        runner = MockRunner(subpackages)
 
         # Same for all options (LE also contains CZ, but... ):
         options = [
@@ -328,11 +231,11 @@ def test_book_covers():
         ]
 
         for opt, sub in options:
-            m.onSelect(opt)
-            c.parse(script)
-            assert m.notes == []
-            assert m.subpackages == [sub]
-            assert m.plugins == ["Book Covers Skyrim.esp"]
+            runner.onSelect(opt)
+            result = runner.run(script)
+            assert result.notes == []
+            assert result.subpackages == [sub]
+            assert result.plugins == ["Book Covers Skyrim.esp"]
 
     # Optional Paper Textures:
     folder = Path("tests/data/Optional Paper Textures-35399-2-2")
@@ -345,32 +248,31 @@ def test_book_covers():
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
     # Create the manager and interpreter:
-    m = MockManagerPlus(subpackages)
-    c = InterpreterChecker(m, subpackages)
+    runner = MockRunner(subpackages)
 
-    m.onSelects([[]])
-    c.parse(script)
-    assert m.notes == []
-    assert m.subpackages == []
-    assert m.plugins == []
+    runner.onSelects([[]])
+    result = runner.run(script)
+    assert result.notes == []
+    assert result.subpackages == []
+    assert result.plugins == []
 
-    m.onSelects([["World"]])
-    c.parse(script)
-    assert m.notes == []
-    assert m.subpackages == ["01 BCS Optional Paper World"]
-    assert m.plugins == []
+    runner.onSelects([["World"]])
+    result = runner.run(script)
+    assert result.notes == []
+    assert result.subpackages == ["01 BCS Optional Paper World"]
+    assert result.plugins == []
 
-    m.onSelects([["Inventory"]])
-    c.parse(script)
-    assert m.notes == []
-    assert m.subpackages == ["01 BCS Optional Paper Inventory"]
-    assert m.plugins == []
+    runner.onSelects([["Inventory"]])
+    result = runner.run(script)
+    assert result.notes == []
+    assert result.subpackages == ["01 BCS Optional Paper Inventory"]
+    assert result.plugins == []
 
-    m.onSelects([["World", "Inventory"]])
-    c.parse(script)
-    assert m.notes == []
-    assert m.subpackages == [
+    runner.onSelects([["World", "Inventory"]])
+    result = runner.run(script)
+    assert result.notes == []
+    assert result.subpackages == [
         "01 BCS Optional Paper Inventory",
         "01 BCS Optional Paper World",
     ]
-    assert m.plugins == []
+    assert result.plugins == []

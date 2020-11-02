@@ -70,3 +70,29 @@ class WizardNameError(WizardError):
 
 class WizardTypeError(WizardError):
     pass
+
+
+class WizardMissingPackageError(WizardError):
+
+    _name: str
+
+    def __init__(self, context: ParserRuleContext, name: str):
+        super().__init__(f"Trying to activate missing '{name}' sub-package.")
+        self._name = name
+
+    @property
+    def subpackage(self) -> str:
+        return self._name
+
+
+class WizardMissingPluginError(WizardError):
+
+    _name: str
+
+    def __init__(self, context: ParserRuleContext, name: str):
+        super().__init__(f"Trying to activate missing '{name}' plugin.")
+        self._name = name
+
+    @property
+    def subpackage(self) -> str:
+        return self._name

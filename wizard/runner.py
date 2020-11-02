@@ -2,28 +2,74 @@
 
 import copy
 
-from typing import Dict, List, NamedTuple
+from pathlib import Path
+from typing import Dict, List, NamedTuple, TextIO, Union
 
-from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
+from antlr4 import FileStream, InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
 
+from .errors import WizardMissingPackageError, WizardMissingPluginError
 from .interpreter import WizardInterpreter, WizardInterpreterResult
 from .mmitf import ModManagerInterface, WizardRunnerState
 from .value import SubPackages
+from .severity import Issue
 
 
-class WizardRunnerData(NamedTuple):
+class WizardRunnerData:
+
+    """
+    Wrapper around multiple containers that are updated during the execution
+    of a Wizard script and need to be rewound.
+    """
 
     # The list of selected subpackages and plugins:
-    subpackages: List[str] = []
-    plugins: List[str] = []
+    _subpackages: List[str]
+    _plugins: List[str]
 
     # Renaming of plugins (original name -> new name):
-    renames: Dict[str, str] = {}
+    _renames: Dict[str, str]
 
     # The list of notes:
-    notes: List[str] = []
+    _notes: List[str]
+
+    def __init__(self):
+        self._subpackages = []
+        self._plugins = []
+        self._renames = {}
+        self._notes = []
+
+    @property
+    def subpackages(self) -> List[str]:
+        """
+        Returns:
+            The name of the selected sub-packages.
+        """
+        return self._subpackages
+
+    @property
+    def plugins(self) -> List[str]:
+        """
+        Returns:
+            The name of the selected plugins.
+        """
+        return self._plugins
+
+    @property
+    def renames(self) -> Dict[str, str]:
+        """
+        Returns:
+            The mapping for renamed plugins (original name -> new name).
+        """
+        return self._renames
+
+    @property
+    def notes(self) -> List[str]:
+        """
+        Returns:
+            The list of notes.
+        """
+        return self._notes
 
 
 class WizardBundleState(WizardRunnerState):
@@ -49,7 +95,7 @@ class WizardRunnerResult:
 
     def __init__(self, status: WizardInterpreterResult, data: WizardRunnerData):
         self._status = status
-        self._data
+        self._data = data
 
     @property
     def status(self) -> WizardInterpreterResult:
@@ -66,7 +112,7 @@ class WizardRunnerResult:
             The notes set during script execution, in the order they were
             added..
         """
-        return self._notes
+        return self._data.notes
 
     @property
     def subpackages(self) -> List[str]:
@@ -107,15 +153,37 @@ class WizardRunner(ModManagerInterface, WizardInterpreter):
         self.setup(self)
 
         self._data = WizardRunnerData()
-        self._plugins = [f for sp in subpackages for f in sp.files if self._isPlugin(f)]
+        self._plugins = [
+            Path(f).name for sp in subpackages for f in sp.files if self._isPlugin(f)
+        ]
 
     # Main method:
-    def run(self, stream: InputStream):
+    def run(self, script: Union[InputStream, Path, TextIO, str]):
+        """
+        Run the script from the given input stream.
+
+        Args:
+            script: The script to read the script from. Can be a antlr4 stream,
+                a path to a script file, a string containing the script or a TextIO
+                object.
+
+        Returns:
+            The result of running the script.
+        """
 
         # Reset the data:
         self._data = WizardRunnerData()
 
         # Parse the stream:
+        if isinstance(script, InputStream):
+            stream = script
+        elif isinstance(script, Path):
+            stream = FileStream(script)
+        elif isinstance(script, str):
+            stream = InputStream(script)
+        else:
+            stream = InputStream(script.read())
+
         lexer = wizardLexer(stream)
         stream = CommonTokenStream(lexer)
         parser = wizardParser(stream)
@@ -181,18 +249,34 @@ class WizardRunner(ModManagerInterface, WizardInterpreter):
         # Guess we only select plugins from selected subpackages?
         self._data.plugins = [
             f
-            for sp in self._all_subpackages
+            for sp in self._subpackages
             for f in sp.files
-            if sp in self._subpackages and (f.endswith(".esp") or f.endswith(".esm"))
+            if sp in self._data.subpackages and self._isPlugin(f)
         ]
 
     def selectPlugin(self, plugin_name: str):
-        self._plugins.append(plugin_name)
+        if plugin_name not in self._plugins:
+            self.raise_or_warn(
+                Issue.SELECT_MISSING_PLUGIN,
+                WizardMissingPluginError(self._state.context, plugin_name),
+                f"Trying to select plugin '{plugin_name}' that does not exist.",
+            )
+            return
+        self._data.plugins.append(plugin_name)
 
     def selectSubPackage(self, name: str):
 
         # Find the package:
-        isp = self._subpackages.index(name)  # type: ignore
+        try:
+            isp = self._subpackages.index(name)  # type: ignore
+        except ValueError:
+            self.raise_or_warn(
+                Issue.SELECT_MISSING_SUBPACKAGE,
+                WizardMissingPackageError(self._state.context, name),
+                f"Trying to select sub-package '{name}' that does not exist.",
+            )
+            return
+
         subpackage = self._subpackages[isp]
 
         self._data.subpackages.append(name)

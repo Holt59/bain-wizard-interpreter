@@ -6,16 +6,12 @@ from wizard.errors import WizardTypeError, WizardNameError
 from wizard.expr import SubPackages, Value
 from wizard.interpreter import WizardInterpreterResult
 
-from .test_utils import InterpreterChecker, MockSubPackage, MockManager
+from .test_utils import MockRunner, MockSubPackage
 
 
 def test_basic():
 
-    c = InterpreterChecker(
-        MockManager(),
-        SubPackages([]),
-        {},
-    )
+    c = MockRunner(SubPackages([]))
 
     # Test 1:
     s = """
@@ -23,21 +19,19 @@ x = 3
 4 + 5
 x += 4
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"x": Value(7)}
 
 
 def test_forloop():
 
-    c = InterpreterChecker(
-        MockManager(),
+    c = MockRunner(
         SubPackages(
             [
                 MockSubPackage("ab", ["a", "x/y", "b"]),
                 MockSubPackage("ef", ["b", "u", "c/d"]),
             ]
-        ),
-        {},
+        )
     )
 
     # Test 1:
@@ -47,7 +41,7 @@ For i from 0 to 4
     x += 1
 EndFor
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"x": Value(6)}
 
     # Test 2:
@@ -57,7 +51,7 @@ For pkg in SubPackages
     s += pkg
 EndFor
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"s": Value("abef")}
 
     # Test 3:
@@ -72,18 +66,14 @@ For i from 1 to 4
     EndFor
 EndFor
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"c": Value(40)}
     assert values == [(i, j) for i in range(1, 5) for j in range(1, 5, 2)]
 
 
 def test_whileloop():
 
-    c = InterpreterChecker(
-        MockManager(),
-        SubPackages([]),
-        {},
-    )
+    c = MockRunner(SubPackages([]))
 
     # Test 1:
     s = """
@@ -95,7 +85,7 @@ While i < len(u)
     i += 1
 EndWhile
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"u": Value("5461"), "i": 4, "x": 5461}
 
     # Kaprekar number, yay!
@@ -113,13 +103,13 @@ While input != target
     input = int(input_d) - int(input_i)
 EndWhile
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables["input"] == Value(6174)
 
 
 def test_if():
 
-    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+    c = MockRunner(SubPackages([]))
 
     s = """
 If True
@@ -128,7 +118,7 @@ Else
     x = 2
 EndIf
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"x": Value(1)}
 
     s = """
@@ -138,7 +128,7 @@ Else
     x = 2
 EndIf
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"x": Value(2)}
 
     s = """
@@ -152,7 +142,7 @@ Else
     u = 3
 EndIf
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"x": Value(1), "y": Value(3), "u": Value(2)}
 
     s = """
@@ -166,14 +156,13 @@ Elif x + y == 4
     u = 5
 EndIf
 """
-    c.parse(s)
+    c.run(s)
     assert c.variables == {"x": Value(1), "y": Value(3), "u": Value(5)}
 
 
 def test_select():
 
-    m = MockManager()
-    c = InterpreterChecker(m, SubPackages([]), {})
+    runner = MockRunner(SubPackages([]))
 
     s = r"""
 x = 1
@@ -191,18 +180,18 @@ Default
     Break
 EndSelect
 """
-    m.onSelect("O1")
-    c.parse(s)
-    assert c.variables == {"x": Value(2)}
+    runner.onSelect("O1")
+    runner.run(s)
+    assert runner.variables == {"x": Value(2)}
 
-    m.onSelect("O2")
-    c.parse(s)
-    assert c.variables == {"x": Value(3)}
+    runner.onSelect("O2")
+    runner.run(s)
+    assert runner.variables == {"x": Value(3)}
 
     # First option is selected by default, the "Default" case is... Useless?
-    m.onSelect("OX")
-    c.parse(s)
-    assert c.variables == {"x": Value(2)}
+    runner.onSelect("OX")
+    runner.run(s)
+    assert runner.variables == {"x": Value(2)}
 
     s = r"""
 x = 1
@@ -219,21 +208,21 @@ Default
     x += 15
 EndSelect
 """
-    m.onSelect([])
-    c.parse(s)
-    assert c.variables == {"x": Value(16)}
+    runner.onSelect([])
+    runner.run(s)
+    assert runner.variables == {"x": Value(16)}
 
-    m.onSelect(["O1"])
-    c.parse(s)
-    assert c.variables == {"x": Value(3)}
+    runner.onSelect(["O1"])
+    runner.run(s)
+    assert runner.variables == {"x": Value(3)}
 
-    m.onSelect(["O2"])
-    c.parse(s)
-    assert c.variables == {"x": Value(4)}
+    runner.onSelect(["O2"])
+    runner.run(s)
+    assert runner.variables == {"x": Value(4)}
 
-    m.onSelect(["O1", "O2"])
-    c.parse(s)
-    assert c.variables == {"x": Value(6)}
+    runner.onSelect(["O1", "O2"])
+    runner.run(s)
+    assert runner.variables == {"x": Value(6)}
 
     # No Case for selected:
     s = r"""
@@ -249,13 +238,13 @@ Default
     Break
 EndSelect
 """
-    m.onSelect("O1")
-    c.parse(s)
-    assert c.variables == {"x": Value(4)}
+    runner.onSelect("O1")
+    runner.run(s)
+    assert runner.variables == {"x": Value(4)}
 
-    m.onSelect("O2")
-    c.parse(s)
-    assert c.variables == {"x": Value(3)}
+    runner.onSelect("O2")
+    runner.run(s)
+    assert runner.variables == {"x": Value(3)}
 
     # Fallthrough
     s = r"""
@@ -270,32 +259,32 @@ Case "O2"
     Break
 EndSelect
 """
-    m.onSelect("O1")
-    c.parse(s)
-    assert c.variables == {"x": Value(6)}
+    runner.onSelect("O1")
+    runner.run(s)
+    assert runner.variables == {"x": Value(6)}
 
-    m.onSelect("O2")
-    c.parse(s)
-    assert c.variables == {"x": Value(4)}
+    runner.onSelect("O2")
+    runner.run(s)
+    assert runner.variables == {"x": Value(4)}
 
 
 def test_default_functions():
 
-    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+    c = MockRunner(SubPackages([]))
 
-    c.parse("s = int('3')")
+    c.run("s = int('3')")
     assert c.variables["s"] == Value(3)
 
-    c.parse("s = len('hello world')")
+    c.run("s = len('hello world')")
     assert c.variables["s"] == Value(11)
 
-    c.parse("s = 'hello world'.len()")
+    c.run("s = 'hello world'.len()")
     assert c.variables["s"] == Value(11)
 
 
 def test_abort():
 
-    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+    c = MockRunner(SubPackages([]))
 
     # Test abort - We should not reach the "c = 10" line:
     c._functions["fn"] = lambda *args: c.abort()
@@ -306,7 +295,7 @@ c = x * y
 fn(x, y)
 c = 10
 """
-    assert c.parse(s) == WizardInterpreterResult.CANCEL
+    assert c.run(s).status == WizardInterpreterResult.CANCEL
     assert c.variables == {"x": Value(1), "y": Value(2), "c": Value(2)}
 
     # A kind of "while" loop using rewind():
@@ -322,7 +311,7 @@ c = 10
     s = """
 x = fn()
 """
-    assert c.parse(s) == WizardInterpreterResult.COMPLETED
+    assert c.run(s).status == WizardInterpreterResult.COMPLETED
     assert c.variables == {"x": Value(5)}
 
     # A kind of "while" loop using rewind():
@@ -348,32 +337,32 @@ fn1() ; Save the context.
 x = 2
 fn2() ; Rewind 5 times
 """
-    assert c.parse(s) == WizardInterpreterResult.COMPLETED
+    assert c.run(s).status == WizardInterpreterResult.COMPLETED
     assert c.variables == {"x": Value(2)}
     assert values["cnt"] == 5
 
 
 def test_exceptions():
 
-    c = InterpreterChecker(MockManager(), SubPackages([]), {})
+    c = MockRunner(SubPackages([]))
 
     with pytest.raises(WizardTypeError):
-        c.parse("s == int(1, 2, 3)")
+        c.run("s == int(1, 2, 3)")
 
     with pytest.raises(WizardTypeError):
-        c.parse("c == int()")
+        c.run("c == int()")
 
     with pytest.raises(WizardTypeError):
-        c.parse("1 + '2'")
+        c.run("1 + '2'")
 
     with pytest.raises(WizardNameError):
-        c.parse("foo(1, 2, 3)")
+        c.run("foo(1, 2, 3)")
 
     with pytest.raises(WizardNameError):
-        c.parse("x += 2")
+        c.run("x += 2")
 
     with pytest.raises(WizardTypeError) as te:
-        c.parse(
+        c.run(
             """x = 1
 s = 2
 x += str(s)

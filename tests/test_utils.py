@@ -9,8 +9,9 @@ from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
 
 from wizard.expr import SubPackage, Value, WizardExpressionVisitor
-from wizard.interpreter import WizardInterpreter, WizardInterpreterResult
-from wizard.mmitf import ModManagerInterface, SelectOption
+from wizard.mmitf import SelectOption
+from wizard.runner import WizardRunner
+from wizard.value import SubPackages
 
 
 class MockSubPackage(SubPackage):
@@ -29,11 +30,10 @@ class MockSubPackage(SubPackage):
         return iter(self._files)
 
 
-class MockManager(ModManagerInterface):
+class MockRunner(WizardRunner):
 
     """
-    This is a Mock of a ModManagerInterface. It provides the following
-    functionalities:
+    This is a Mock of a WizardRunner. It provides the following functionalities:
 
         1. You can specify which options the call to selectOne() and
            selectMany() should return using onSelect (for the next call)
@@ -55,7 +55,8 @@ class MockManager(ModManagerInterface):
     _returns: MutableMapping[str, Callable]
     _calls: List[str]
 
-    def __init__(self):
+    def __init__(self, subpackages: SubPackages):
+        super().__init__(subpackages)
         self.clear()
 
     def clear(self):
@@ -178,14 +179,3 @@ class ExpressionChecker(WizardExpressionVisitor):
         parser = wizardParser(stream)
         parser._errHandler = BailErrorStrategy()
         return self.visitExpr(parser.parseWizard().body().expr(0))
-
-
-class InterpreterChecker(WizardInterpreter):
-    def parse(self, expr: str) -> WizardInterpreterResult:
-        input_stream = InputStream(expr)
-        lexer = wizardLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-
-        return self.visit(parser.parseWizard())
