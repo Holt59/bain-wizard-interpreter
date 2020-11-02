@@ -248,7 +248,7 @@ class WizardRunner(ModManagerInterface, WizardInterpreter):
     def selectAllPlugins(self):
         # Guess we only select plugins from selected subpackages?
         self._data.plugins = [
-            f
+            Path(f).name
             for sp in self._subpackages
             for f in sp.files
             if sp in self._data.subpackages and self._isPlugin(f)
@@ -284,7 +284,7 @@ class WizardRunner(ModManagerInterface, WizardInterpreter):
         # Auto-select plugins?
         for f in subpackage.files:
             if self._isPlugin(f):
-                self.selectPlugin(f.split("\\")[-1])
+                self.selectPlugin(Path(f).name)
 
     def renamePlugin(self, original_name: str, new_name: str):
         self._data.renames[original_name] = new_name

@@ -22,12 +22,12 @@ def read_subpackages(files_txt: Path) -> SubPackages:
         files = [line.strip() for line in fp.readlines()]
 
     # This is dirty, but I would have to write a proper checker...
-    spnames = set(f.split("\\")[0] for f in files if f.split(" ")[0].isdigit())
+    spnames = set(Path(f).parts[0] for f in files if f.split(" ")[0].isdigit())
 
     sp: List[MockSubPackage] = []
     for spname in sorted(spnames):
         sp.append(
-            MockSubPackage(spname, [f for f in files if f.startswith(spname + "\\")])
+            MockSubPackage(spname, [f for f in files if Path(f).parts[:1] == (spname,)])
         )
 
     return SubPackages(sp)
