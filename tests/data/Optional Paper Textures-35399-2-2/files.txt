@@ -1,12 +1,12 @@
 
-Images\BCSPaperInventory.jpg
-Images\BCSPaperInventoryEdge.jpg
-Images\BCSPaperWorld.jpg
-fomod\info.xml
-fomod\ModuleConfig.xml
+Images/BCSPaperInventory.jpg
+Images/BCSPaperInventoryEdge.jpg
+Images/BCSPaperWorld.jpg
+fomod/info.xml
+fomod/ModuleConfig.xml
 README - BCS Optional Paper Texture.txt
 wizard.txt
-01 BCS Optional Paper World\textures\clutter\books\book01paper.dds
-01 BCS Optional Paper World\textures\clutter\books\book01paper_n.dds
-01 BCS Optional Paper Inventory\textures\clutter\books\largebookpaper01.dds
-01 BCS Optional Paper Inventory\textures\clutter\books\largebookpaper01_n.dds
+01 BCS Optional Paper World/textures/clutter/books/book01paper.dds
+01 BCS Optional Paper World/textures/clutter/books/book01paper_n.dds
+01 BCS Optional Paper Inventory/textures/clutter/books/largebookpaper01.dds
+01 BCS Optional Paper Inventory/textures/clutter/books/largebookpaper01_n.dds
