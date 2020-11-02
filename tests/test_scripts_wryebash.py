@@ -280,7 +280,7 @@ def test_book_covers():
 
 def test_farmhouse_chimneys():
 
-    # You can get this one Nexus: https://www.nexusmods.com/skyrimspecialedition/mods/8766
+    # You can get this one Nexus: https://www.nexusmods.com/skyrimspecialedition/mods/8766 # noqa: E501
     folder = Path("tests/data/Farmhouse Chimneys v3.0.2-8766-3-0-2")
 
     # Read the script:
@@ -315,10 +315,12 @@ def test_farmhouse_chimneys():
         """Thank you for installing Farmhouse Chimneys
 
 
-Confirm your selections above - if you are not happy with the selection use the BACK button below.
+Confirm your selections above - if you are not happy with the selection use the BACK \
+button below.
 When ready, tick 'Apply these selections' Below, and then click the 'Finish' button.
 
-If You Have Auto-Anneal/Install Wizards set in Wrye Bash preferences, the Wizard will install your selections after clicking Finish
+If You Have Auto-Anneal/Install Wizards set in Wrye Bash preferences, the Wizard will \
+install your selections after clicking Finish
 Otherwise, right-click the installer again and choose Install""",
     ]
 
