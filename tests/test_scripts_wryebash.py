@@ -10,9 +10,9 @@ Each folder under tests/data should contain:
 """
 
 from pathlib import Path
-from typing import List, Mapping
+from typing import List
 
-from wizard.expr import SubPackage, SubPackages
+from wizard.expr import SubPackages
 
 from .test_utils import MockRunner, MockSubPackage
 

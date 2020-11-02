@@ -3,7 +3,7 @@
 import copy
 
 from pathlib import Path
-from typing import Dict, List, NamedTuple, TextIO, Union
+from typing import Dict, List, TextIO, Union
 
 from antlr4 import FileStream, InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
