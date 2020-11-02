@@ -23,6 +23,11 @@ class WizardError(Exception):
     def line(self) -> int:
         return self._ctx.start.line  # type: ignore
 
+    def __str__(self) -> str:
+        return "Line {}, Column {}: {}".format(
+            self._ctx.start.line, self._ctx.start.column, super().__str__()
+        )
+
 
 class WizardParseError(WizardError):
 

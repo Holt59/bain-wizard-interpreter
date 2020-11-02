@@ -276,3 +276,80 @@ def test_book_covers():
         "01 BCS Optional Paper World",
     ]
     assert result.plugins == []
+
+
+def test_farmhouse_chimneys():
+
+    # You can get this one Nexus: https://www.nexusmods.com/skyrimspecialedition/mods/8766
+    folder = Path("tests/data/Farmhouse Chimneys v3.0.2-8766-3-0-2")
+
+    # Read the script:
+    with open(folder.joinpath("wizard.txt"), "r") as fp:
+        script = fp.read()
+
+    # Read the subpackages:
+    subpackages = read_subpackages(folder.joinpath("files.txt"))
+
+    # Create the runner:
+    runner = MockRunner(subpackages)
+
+    # I had these installed, so I use them to check:
+    runner.setReturnValue("dataFileExists", False)
+    runner.setReturnValue("getPluginStatus", -1)
+
+    # First run:
+    runner.onSelects(
+        [
+            "Welcome",
+            "Original Meshes",
+            "Vanilla",
+            ["Falskaar", "Moon and Star"],
+            ["Cutting Room Floor"],
+            ["Ivarstead", "Karthwasten", "Shor's Stone"],
+        ]
+    )
+
+    expected = []
+
+    notes = [
+        """Thank you for installing Farmhouse Chimneys
+
+
+Confirm your selections above - if you are not happy with the selection use the BACK button below.
+When ready, tick 'Apply these selections' Below, and then click the 'Finish' button.
+
+If You Have Auto-Anneal/Install Wizards set in Wrye Bash preferences, the Wizard will install your selections after clicking Finish
+Otherwise, right-click the installer again and choose Install""",
+    ]
+
+    packages = [
+        "00 - Original Meshes",
+        "01 - Vanilla",
+        "02 - Falskaar",
+        "03 - Moon and Star",
+        "04 - Cutting Room Floor",
+        "05 - Ivarstead",
+        "05 - Karthwasten",
+        "05 - Shors Stone",
+    ]
+
+    plugins = sorted(
+        [
+            "FarmhouseChimneys.esp",
+            "FarmhouseChimneysCRF.esp",
+            "FarmhouseChimneysFalskaar.esp",
+            "FarmhouseChimneysIvarstead.esp",
+            "FarmhouseChimneysKarthwasten.esp",
+            "FarmhouseChimneysMaS.esp",
+            "FarmhouseChimneysShorsStone.esp",
+        ]
+    )
+
+    result = runner.run(script)
+
+    for ex in expected:
+        assert ex in runner.calls
+
+    assert result.notes == notes
+    assert result.subpackages == packages
+    assert result.plugins == plugins

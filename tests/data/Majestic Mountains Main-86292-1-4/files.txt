@@ -276,4 +276,4 @@ images\landscapes.png
 images\logo.png
 images\moss.jpg
 images\snow_shader.png
-Wizard.txt
+wizard.txt
