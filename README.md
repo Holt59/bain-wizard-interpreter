@@ -5,6 +5,61 @@ A BAIN Wizard Interpreter based on [`wizparse`](https://github.com/wrye-bash/wiz
 This is a *Work In Progress*, when done, I hope to have a fully functional interpreter that could
 be used in various settings to run BAIN Wizard installers.
 
+# Basic Usage
+
+```python
+from typing import List
+
+from wizard.mmitf import SelectOption
+from wizard.runner import WizardRunner
+from wizard.value import SubPackage, SubPackages
+
+
+class MySubPackage(SubPackage):
+
+    """
+    Implement your own subpackage - SubPackage inherits str so you should use
+    __new__ instead of __init__.
+    """
+
+    _files: List[str]
+
+    def __new__(cls, name: str, files: List[str] = []):
+        # Important: There is a default for files() so that the object can
+        # be deepcopied.
+        value = SubPackage.__new__(cls, name)
+        value._files = files
+        return value
+
+    @property
+    def files(self):
+        return iter(self._files)
+
+
+class MyRunner(WizardRunner):
+
+    """
+    Extends the runner and implement the missing methods.
+    """
+
+    def selectOne(
+        self, description: str, options: List[SelectOption], default: SelectOption
+    ) -> SelectOption:
+      ...
+
+    # TODO: List of methods to implement.
+
+
+# Create the subpackages:
+subpackages = SubPackages([MySubPackage(...) for ...])
+
+# Create the runner:
+runner = MyRunner(subpackages)
+
+# Run a script:
+runner.run("wizard.txt")
+```
+
 # Dependencies
 
 ## `wizparse`
