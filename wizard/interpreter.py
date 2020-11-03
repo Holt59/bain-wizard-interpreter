@@ -241,11 +241,14 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
             WizardBodyContext(self, self._evisitor, ctx.body(), parent=None), {}
         )
 
-        while self._state:
+        while True:
             try:
                 # Copy the state so that .state() returns the state before
                 # execution:
                 self._pstate = copy.deepcopy(self._state)
+
+                if not self._pstate and self._manager.complete():
+                    return WizardInterpreterResult.COMPLETED
 
                 # Check if the current state is a cancel or a return:
                 if isinstance(self._state.context, WizardCancelContext):
@@ -269,8 +272,3 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
 
             except Exception as ex:
                 self._manager.error(ex)
-
-        # Final copy of the state (no need for a deepcopy here):
-        self._pstate = self._state
-
-        return WizardInterpreterResult.COMPLETED
