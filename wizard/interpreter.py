@@ -32,8 +32,6 @@ from .severity import SeverityContext
 
 class WizardInterpreterResult(Enum):
 
-    # TODO: More clean way to do this (with extra info?).
-
     # A 'Cancel' instruction was encountered:
     CANCEL = auto()
 
@@ -42,6 +40,9 @@ class WizardInterpreterResult(Enum):
 
     # The script was completely executed:
     COMPLETED = auto()
+
+    # An error was encountered:
+    ERROR = auto()
 
 
 class WizardInterpreterState(WizardRunnerState):
@@ -272,3 +273,4 @@ class WizardInterpreter(AbstractWizardInterpreter, SeverityContext, WizardRunner
 
             except Exception as ex:
                 self._manager.error(ex)
+                return WizardInterpreterResult.ERROR

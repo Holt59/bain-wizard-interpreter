@@ -192,7 +192,7 @@ class ModManagerInterface:
             -1, 0 or 1 if the installed version is less, equal or greater than the given
             version.
         """
-        pass
+        ...
 
     @abstractmethod
     def compareSEVersion(self, version: str) -> int:
@@ -207,7 +207,7 @@ class ModManagerInterface:
             -1, 0 or 1 if the installed version is less, equal or greater than the given
             version.
         """
-        pass
+        ...
 
     @abstractmethod
     def compareGEVersion(self, version: str) -> int:
@@ -222,7 +222,7 @@ class ModManagerInterface:
             -1, 0 or 1 if the installed version is less, equal or greater than the given
             version.
         """
-        pass
+        ...
 
     @abstractmethod
     def compareWBVersion(self, version: str) -> int:
@@ -237,7 +237,7 @@ class ModManagerInterface:
             -1, 0 or 1 if the installed version is less, equal or greater than the given
             version.
         """
-        pass
+        ...
 
     @abstractmethod
     def dataFileExists(self, *filepaths: str) -> bool:

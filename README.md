@@ -42,13 +42,51 @@ class MyRunner(WizardRunner):
     Extends the runner and implement the missing methods.
     """
 
+    # These are the methods you need to provide - See mmitf.ModManagerInterface for
+    # the documentation of each method.
+
+    # The WizardRunner class extends ModManagerInterface and already implements many
+    # functions, but you can always override them.
+
     def selectOne(
         self, description: str, options: List[SelectOption], default: SelectOption
     ) -> SelectOption:
-      ...
+        ...
 
-    # TODO: List of methods to implement.
+    def selectMany(
+        self,
+        description: str,
+        options: List[SelectOption],
+        default: List[SelectOption] = [],
+    ) -> List[SelectOption]:
+        ...
 
+    def compareGameVersion(self, version: str) -> int:
+        ...
+
+    def compareSEVersion(self, version: str) -> int:
+        ...
+
+    def compareGEVersion(self, version: str) -> int:
+        ...
+
+    def compareWBVersion(self, version: str) -> int:
+        ...
+
+    def dataFileExists(self, *filepaths: str) -> bool:
+        ...
+
+    def getPluginLoadOrder(self, filename: str, fallback: int = -1) -> int:
+        ...
+
+    def getPluginStatus(self, filename) -> int:
+        ...
+
+    def getFilename(self, path: str) -> str:
+        ...
+
+    def getFolder(self, path: str) -> str:
+        ...
 
 # Create the subpackages:
 subpackages = SubPackages([MySubPackage(...) for ...])
@@ -57,8 +95,50 @@ subpackages = SubPackages([MySubPackage(...) for ...])
 runner = MyRunner(subpackages)
 
 # Run a script:
-runner.run("wizard.txt")
+result = runner.run("wizard.txt")
+
+result.status  # Status of the execution.
+result.subpackages  # List of selected subpackages.
+result.plugins  # List of enabled plugins.
+result.notes  # List of notes.
+result.tweaks.disabled  # List of disabled INI settings.
+result.tweaks.modified  # List of new or modified INI settings.
 ```
+
+## Handling errors
+
+If an error occurs during the script execution, the interpreter will call
+the `WizardRunner.error()` function with the Python exception. By default, this
+method re-raise the error, you can change it:
+
+```python
+def error(self, exc: Exception):
+    # Do whatever you want.
+    ...
+```
+
+If this method returns, `result.status` will be `WizardInterpreterResult.ERROR`.
+
+## Extra features
+
+The `WizardRunner` exposes a few extra features through methods that you can use
+during the execution, e.g. in `selectOne`, `selectMany`, `error`, `complete`, etc.
+
+```python
+runner = WizardRunner(...)
+
+# Abort the execution - Equivalent to a 'Cancel' keyword:
+runner.abort()
+
+# Retrieve the current state():
+state = runner.state()
+
+# Rewind to the given state:
+runner.rewind(state)
+```
+
+The `runner.abort` and `runner.rewind` method rely on exception to work, so these do
+not return.
 
 # Dependencies
 
