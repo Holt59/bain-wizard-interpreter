@@ -2,7 +2,7 @@
 
 
 from abc import abstractmethod
-from typing import List, Optional
+from typing import Any, List, Optional
 
 
 class WizardRunnerState:
@@ -305,7 +305,7 @@ class ModManagerInterface:
         filename: str,
         section: str,
         setting: str,
-        value,
+        value: Any,
         comment: Optional[str] = "",
     ):
         """

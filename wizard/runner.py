@@ -3,13 +3,14 @@
 import copy
 
 from pathlib import Path
-from typing import Dict, List, TextIO, Union
+from typing import Any, Dict, List, Optional, TextIO, Union
 
 from antlr4 import FileStream, InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
 
 from .errors import WizardMissingPackageError, WizardMissingPluginError
+from .inisettings import WizardINISetting, WizardINISettingEdit, WizardINITweaks
 from .interpreter import WizardInterpreter, WizardInterpreterResult
 from .mmitf import ModManagerInterface, WizardRunnerState
 from .value import SubPackages
@@ -30,6 +31,9 @@ class WizardRunnerData:
     # Renaming of plugins (original name -> new name):
     _renames: Dict[str, str]
 
+    # The INI tweaks (disabled and modified settings):
+    _tweaks: WizardINITweaks
+
     # The list of notes:
     _notes: List[str]
 
@@ -37,6 +41,7 @@ class WizardRunnerData:
         self._subpackages = []
         self._plugins = []
         self._renames = {}
+        self._tweaks = WizardINITweaks()
         self._notes = []
 
     @property
@@ -62,6 +67,15 @@ class WizardRunnerData:
             The mapping for renamed plugins (original name -> new name).
         """
         return self._renames
+
+    @property
+    def tweaks(self) -> WizardINITweaks:
+        """
+        Returns:
+            The INI tweaks created by the script (disabled, new or
+            modified settings).
+        """
+        return self._tweaks
 
     @property
     def notes(self) -> List[str]:
@@ -106,15 +120,6 @@ class WizardRunnerResult:
         return self._status
 
     @property
-    def notes(self):
-        """
-        Returns:
-            The notes set during script execution, in the order they were
-            added..
-        """
-        return self._data.notes
-
-    @property
     def subpackages(self) -> List[str]:
         """
         Returns:
@@ -129,6 +134,24 @@ class WizardRunnerResult:
             The list of selected plugins, in alphabetical order.
         """
         return sorted(list(set(self._data.plugins)))
+
+    @property
+    def tweaks(self) -> WizardINITweaks:
+        """
+        Returns:
+            The INI tweaks created by the script (disabled, new or
+            modified settings).
+        """
+        return self._data.tweaks
+
+    @property
+    def notes(self):
+        """
+        Returns:
+            The notes set during script execution, in the order they were
+            added..
+        """
+        return self._data.notes
 
 
 class WizardRunner(ModManagerInterface, WizardInterpreter):
@@ -223,6 +246,22 @@ class WizardRunner(ModManagerInterface, WizardInterpreter):
         return name.endswith(".esp") or name.endswith(".esm") or name.endswith(".esl")
 
     # ModManagerInterface functions:
+
+    def disableINILine(self, filename: str, section: str, setting: str):
+        self._data.tweaks.disabled.append(WizardINISetting(filename, section, setting))
+
+    def editINI(
+        self,
+        filename: str,
+        section: str,
+        setting: str,
+        value: Any,
+        comment: Optional[str] = "",
+    ):
+        self._data.tweaks.modified.append(
+            WizardINISettingEdit(filename, section, setting, value, comment)
+        )
+
     def deselectAll(self):
         self._data.subpackages.clear()
         self._data.plugins.clear()
