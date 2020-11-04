@@ -39,7 +39,7 @@ class SubPackages(List[SubPackage]):
     Class to wrap the 'SubPackages' variable.
     """
 
-    def __init__(self, subpackages: Sequence[SubPackage]):
+    def __init__(self, subpackages: Sequence[SubPackage] = []):
         super().__init__(subpackages)
 
 
