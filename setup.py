@@ -17,6 +17,7 @@ setup(
     version="0.0.1",
     # Find the package automatically (include everything):
     packages=["wizard"],
+    package_data={"wizard": "py.typed"},
     # Author information:
     author="Holt59",
     author_email="capelle.mikael@gmail",
