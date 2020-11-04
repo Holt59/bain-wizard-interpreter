@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 dev_requires = [
     "black",
@@ -16,7 +16,7 @@ setup(
     # Version of the package:
     version="0.0.1",
     # Find the package automatically (include everything):
-    packages=["wizard"],
+    packages=find_packages(),
     package_data={"wizard": ["py.typed"]},
     # Author information:
     author="Holt59",
