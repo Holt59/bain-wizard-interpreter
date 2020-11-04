@@ -48,7 +48,7 @@ EndFor
     s = """
 s = ""
 For pkg in SubPackages
-    s += pkg
+    s += str(pkg)
 EndFor
 """
     c.run(s)

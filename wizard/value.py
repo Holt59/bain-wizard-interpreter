@@ -24,13 +24,35 @@ class Void:
     pass
 
 
-class SubPackage(str):
-    def __new__(cls, *args, **kwargs):
-        return str.__new__(cls, *args, **kwargs)
+class SubPackage:
+
+    _name: str
+
+    def __init__(self, name: str):
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        """
+        Returns:
+            The name of the subpackage.
+        """
+        return self._name
 
     @abstractproperty
     def files(self) -> Iterable[str]:
         pass
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, SubPackage):
+            return self.name == other.name
+        elif isinstance(other, str):
+            return self.name == other
+        else:
+            raise TypeError(f"Cannot compare SubPackage with {type(other)}.")
+
+    def __str__(self) -> str:
+        return self._name
 
 
 class SubPackages(List[SubPackage]):
@@ -246,12 +268,15 @@ class Value(Generic[ValueType]):
         if not isinstance(item._value, (str, SubPackage)):
             raise TypeError(f"Cannot check presence of variable of type {self._type}.")
 
+        if isinstance(item._value, SubPackage):
+            item = Value(item._value.name)
+
         if case_insensitive:
             item = Value(item._value.lower())
 
         it: Iterable[str]
         if isinstance(self._value, SubPackages):
-            it = iter(self._value)
+            it = (s.name for s in self._value)
         else:
             it = self._value.files
 
@@ -269,8 +294,14 @@ class Value(Generic[ValueType]):
         if not isinstance(index._value, (int)):
             raise TypeError(f"Cannot index with variable of type {index._type}.")
 
+        value: Union[str, SubPackages]
+        if isinstance(self._value, SubPackage):
+            value = self._value.name
+        else:
+            value = self._value
+
         try:
-            return Value(self._value[index._value])
+            return Value(value[index._value])
         except IndexError:
             raise IndexError(index._value)
 
@@ -297,7 +328,7 @@ class Value(Generic[ValueType]):
 
         it: Iterable[str]
         if isinstance(self._value, SubPackages):
-            it = iter(self._value)
+            it = (s.name for s in self._value)
         else:
             it = self._value.files
 
