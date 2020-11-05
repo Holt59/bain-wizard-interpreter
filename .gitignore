@@ -2,3 +2,6 @@
 **/.antlr
 **/__pycache__
 .tox
+build
+dist
+*.egg-info
