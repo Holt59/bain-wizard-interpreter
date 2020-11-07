@@ -16,7 +16,7 @@ from wizard.contexts import (
 from wizard.expr import SubPackage, Value, WizardExpressionVisitor
 from wizard.interpreter import WizardInterpreter
 from wizard.manager import SelectOption
-from wizard.runner import WizardRunner
+from wizard.scriptrunner import WizardScriptRunner
 from wizard.severity import SeverityContext
 from wizard.state import WizardInterpreterState
 from wizard.value import SubPackages
@@ -96,7 +96,7 @@ class InterpreterChecker(WizardInterpreter):
         return ctx
 
 
-class RunnerChecker(WizardRunner):
+class RunnerChecker(WizardScriptRunner):
 
     """
     Provides the following functionalities:

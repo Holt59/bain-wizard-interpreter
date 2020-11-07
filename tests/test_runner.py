@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from wizard.runner import WizardRunnerResult
+from wizard.scriptrunner import WizardScriptRunnerStatus
 from wizard.value import Value
 
 from .test_utils import RunnerChecker
@@ -20,7 +20,7 @@ fn(x, y)
 c = 10
 """
     status, result = c.run(s)
-    assert status == WizardRunnerResult.CANCEL
+    assert status == WizardScriptRunnerStatus.CANCEL
     assert result.variables == {"x": Value(1), "y": Value(2), "c": Value(2)}
 
     # A kind of "while" loop using rewind():
@@ -37,7 +37,7 @@ c = 10
 x = fn()
 """
     status, result = c.run(s)
-    assert status == WizardRunnerResult.COMPLETE
+    assert status == WizardScriptRunnerStatus.COMPLETE
     assert result.variables == {"x": Value(5)}
 
     # A kind of "while" loop using rewind():
@@ -64,6 +64,6 @@ x = 2
 fn2() ; Rewind 5 times
 """
     status, result = c.run(s)
-    assert status == WizardRunnerResult.COMPLETE
+    assert status == WizardScriptRunnerStatus.COMPLETE
     assert result.variables == {"x": Value(2)}
     assert values["cnt"] == 5

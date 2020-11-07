@@ -7,11 +7,17 @@ be used in various settings to run BAIN Wizard installers.
 
 # Basic Usage
 
+There are various way to use the interpreter. The easiest way is to extends the `WizardScriptRunner`
+and add the missing functionalities that are mod-manager / game specific.
+You can then use `WizardScriptRunner.run()` to execute a script, and everything will be called when
+required.
+
+
 ```python
 from typing import List
 
 from wizard.manager import SelectOption
-from wizard.runner import WizardRunner
+from wizard.scriptrunner import WizardRunner
 from wizard.value import SubPackage, SubPackages
 
 
@@ -32,7 +38,7 @@ class MySubPackage(SubPackage):
         return iter(self._files)
 
 
-class MyRunner(WizardRunner):
+class MyRunner(WizardScriptRunner):
 
     """
     Extends the runner and implement the missing methods.
@@ -104,7 +110,7 @@ result.tweaks.modified  # List of new or modified INI settings.
 ## Handling errors
 
 If an error occurs during the script execution, the interpreter will call
-the `WizardRunner.error()` function with the Python exception. By default, this
+the `WizardScriptRunner.error()` function with the Python exception. By default, this
 method re-raise the error, you can change it:
 
 ```python
@@ -113,11 +119,11 @@ def error(self, exc: Exception):
     ...
 ```
 
-If this method returns, `result.status` will be `WizardInterpreterResult.ERROR`.
+If this method returns, `result.status` will be `WizardScriptRunnerStatus.ERROR`.
 
 ## Extra features
 
-The `WizardRunner` exposes a few extra features through methods that you can use
+The `WizardScriptRunner` exposes a few extra features through methods that you can use
 during the execution, e.g. in `selectOne`, `selectMany`, `error`, `complete`, etc.
 
 ```python

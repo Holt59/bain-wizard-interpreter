@@ -113,6 +113,9 @@ def test_better_cities():
 
     status, result = runner.run(script)
 
+    # The call is a JSON dump, hence the "null" for the None argument.
+    assert 'requiresVersions("1.2.0.416", "0.0.18.6", null, "294")' in runner.calls
+
     assert result.notes == notes
     assert result.subpackages == packages
     assert result.plugins == plugins

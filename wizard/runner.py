@@ -9,48 +9,16 @@ from typing import (
     List,
     Optional,
     Sequence,
-    TextIO,
-    Tuple,
-    Union,
 )
 
-from antlr4 import InputStream, FileStream, CommonTokenStream, BailErrorStrategy
-
-from .antlr4.wizardLexer import wizardLexer
-from .antlr4.wizardParser import wizardParser
-
-from .contexts import (
-    WizardKeywordContext,
-    WizardInterpreterContext,
-    WizardInterpreterContextFactory,
-    WizardSelectContext,
-    WizardTerminationContext,
-)
+from .contexts import WizardKeywordContext
 from .errors import WizardMissingPackageError, WizardMissingPluginError
 from .expr import WizardExpressionVisitor
-from .functions import make_basic_functions, make_manager_functions
-from .interpreter import WizardInterpreter
 from .inisettings import WizardINISetting, WizardINISettingEdit, WizardINITweaks
 from .keywords import WizardKeywordVisitor
-from .manager import ManagerModInterface, ManagerUserInterface
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
 from .value import SubPackages
-
-
-class WizardRunnerResult(Enum):
-
-    # A 'Cancel' instruction was encountered:
-    CANCEL = auto()
-
-    # A 'Return' instruction was encountered:
-    RETURN = auto()
-
-    # The script was completely executed:
-    COMPLETE = auto()
-
-    # An error was encountered:
-    ERROR = auto()
 
 
 class WizardRunnerState(WizardInterpreterState):
@@ -375,142 +343,3 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         for f in subpackage.files:
             if self._isPlugin(f):
                 self.visitSelectPlugin(context, state, Path(f).name)
-
-
-class WizardRunner(
-    WizardInterpreter, ManagerModInterface, ManagerUserInterface, SeverityContext
-):
-
-    """
-    The WizardRunner is a high-level interface for the interpreter that
-    uses callbacks to interact with the user.
-
-    Implementations should inherit the WizardRunner class and implements
-    missing methods from the manager interfaces.
-    """
-
-    # Internal exceptions used to rewind / cancel at any point:
-    class RewindFlow(Exception):
-
-        """
-        Exception used to rewind a script execution when calling rewind().
-        """
-
-        context: WizardInterpreterContext
-
-        def __init__(self, context: WizardInterpreterContext):
-            self.context = context
-
-    class CancelFlow(Exception):
-
-        """
-        Exception used to cancel a script execution when calling abort().
-        """
-
-        ...
-
-    # The current context:
-    _ctx: WizardInterpreterContext
-
-    def __init__(self, subpackages: SubPackages = SubPackages()):
-        functions = make_basic_functions()
-        functions.update(make_manager_functions(self, self))
-
-        factory = WizardInterpreterContextFactory(
-            WizardRunnerExpressionVisitor(subpackages, functions, self),
-            WizardRunnerKeywordVisitor(subpackages, self),
-            self,
-        )
-
-        SeverityContext.__init__(self)
-        WizardInterpreter.__init__(self, subpackages, self, factory)
-
-    def context(self) -> WizardInterpreterContext:
-        return self._ctx
-
-    def abort(self):
-        raise WizardRunner.CancelFlow()
-
-    def rewind(self, context: WizardInterpreterContext):
-        raise WizardRunner.RewindFlow(context)
-
-    def run(
-        self, script: Union[InputStream, Path, TextIO, str]
-    ) -> Tuple[WizardRunnerResult, WizardRunnerState]:
-        """
-        Run the script from the given input stream.
-
-        Args:
-            script: The script to read the script from. Can be a antlr4 stream,
-                a path to a script file, a string containing the script or a TextIO
-                object.
-
-        Returns:
-            A tuple (result, state) from running the script where state is the last
-            state of the interpreter and result the result.
-        """
-
-        # Parse the stream:
-        if isinstance(script, InputStream):
-            stream = script
-        elif isinstance(script, Path):
-            stream = FileStream(script)
-        elif isinstance(script, str):
-            stream = InputStream(script)
-        else:
-            stream = InputStream(script.read())
-
-        lexer = wizardLexer(stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-
-        # Run the interpret:
-        ctx: WizardInterpreterContext = self.make_context(
-            parser.parseWizard(), WizardRunnerState()
-        )
-
-        while True:
-
-            self._ctx = ctx
-
-            try:
-                if isinstance(ctx, WizardSelectContext):
-
-                    if ctx.is_many():
-                        ctx = ctx.select(
-                            self.selectMany(ctx.description, ctx.options, ctx.defaults)
-                        )
-                    else:
-                        ctx = ctx.select(
-                            [
-                                self.selectOne(
-                                    ctx.description, ctx.options, ctx.defaults[0]
-                                )
-                            ]
-                        )
-                elif isinstance(ctx, WizardTerminationContext):
-                    if ctx.is_cancel():
-                        if self.cancel():
-                            return (WizardRunnerResult.CANCEL, ctx.state)
-                    elif ctx.is_return():
-                        if self.complete():
-                            return (WizardRunnerResult.RETURN, ctx.state)
-                    else:
-                        if self.complete():
-                            return (WizardRunnerResult.COMPLETE, ctx.state)
-
-                ctx = ctx.exec()
-
-            except WizardRunner.RewindFlow as rfex:
-                ctx = rfex.context
-
-            except WizardRunner.CancelFlow:
-                if self.cancel():
-                    return (WizardRunnerResult.CANCEL, ctx.state)
-
-            except Exception as ex:
-                self.error(ex)
-                return (WizardRunnerResult.ERROR, ctx.state)
-
-        return (WizardRunnerResult.COMPLETE, ctx.state)
