@@ -14,7 +14,7 @@ from typing import List
 
 from wizard.expr import SubPackages
 
-from .test_utils import MockRunner, MockSubPackage
+from .test_utils import MockSubPackage, RunnerChecker
 
 
 def read_subpackages(files_txt: Path) -> SubPackages:
@@ -46,7 +46,7 @@ def test_better_cities():
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
     # Create the runner:
-    runner = MockRunner(subpackages)
+    runner = RunnerChecker(subpackages)
 
     # I had these installed, so I use them to check:
     runner.setReturnFunction(
@@ -69,8 +69,6 @@ def test_better_cities():
             ["Clocks of Cyrodiil", "IC Expanded"],
         ]
     )
-
-    expected = ['requiresVersions("1.2.0.416", "0.0.18.6", "", "294")']
 
     notes = [
         "No FPS Patch will be installed.",
@@ -113,10 +111,7 @@ def test_better_cities():
         ]
     )
 
-    result = runner.run(script)
-
-    for ex in expected:
-        assert ex in runner.calls
+    status, result = runner.run(script)
 
     assert result.notes == notes
     assert result.subpackages == packages
@@ -136,14 +131,12 @@ def test_majestic_mountains():
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
     # Create the manager and interpreter:
-    runner = MockRunner(subpackages)
+    runner = RunnerChecker(subpackages)
 
     # First run:
     runner.onSelects(
         ["Welcome", "Begin Installation", ["Landscape Textures", "Moss Rocks"], []]
     )
-
-    expected = []
 
     # Note: Added extra \\ because these are found in the file.
     notes = [
@@ -167,10 +160,7 @@ Otherwise, right-click the installer again and choose Install""",
 
     plugins = sorted(["MajesticMountains.esp", "MajesticMountains_Moss.esp"])
 
-    result = runner.run(script)
-
-    for ex in expected:
-        assert ex in runner.calls
+    status, result = runner.run(script)
 
     assert result.notes == notes
     assert result.subpackages == packages
@@ -189,10 +179,7 @@ Otherwise, right-click the installer again and choose Install""",
 
     plugins = sorted(["MajesticMountains.esp"])
 
-    result = runner.run(script)
-
-    for ex in expected:
-        assert ex in runner.calls
+    status, result = runner.run(script)
 
     assert result.notes == notes
     assert result.subpackages == packages
@@ -217,7 +204,7 @@ def test_book_covers():
         subpackages = read_subpackages(folder.joinpath("files.txt"))
 
         # Create the runner:
-        runner = MockRunner(subpackages)
+        runner = RunnerChecker(subpackages)
 
         # Same for all options (LE also contains CZ, but... ):
         options = [
@@ -232,7 +219,7 @@ def test_book_covers():
 
         for opt, sub in options:
             runner.onSelect(opt)
-            result = runner.run(script)
+            status, result = runner.run(script)
             assert result.notes == []
             assert result.subpackages == [sub]
             assert result.plugins == ["Book Covers Skyrim.esp"]
@@ -248,28 +235,28 @@ def test_book_covers():
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
     # Create the manager and interpreter:
-    runner = MockRunner(subpackages)
+    runner = RunnerChecker(subpackages)
 
     runner.onSelects([[]])
-    result = runner.run(script)
+    status, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == []
     assert result.plugins == []
 
     runner.onSelects([["World"]])
-    result = runner.run(script)
+    status, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == ["01 BCS Optional Paper World"]
     assert result.plugins == []
 
     runner.onSelects([["Inventory"]])
-    result = runner.run(script)
+    status, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == ["01 BCS Optional Paper Inventory"]
     assert result.plugins == []
 
     runner.onSelects([["World", "Inventory"]])
-    result = runner.run(script)
+    status, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == [
         "01 BCS Optional Paper Inventory",
@@ -291,7 +278,7 @@ def test_farmhouse_chimneys():
     subpackages = read_subpackages(folder.joinpath("files.txt"))
 
     # Create the runner:
-    runner = MockRunner(subpackages)
+    runner = RunnerChecker(subpackages)
 
     # I had these installed, so I use them to check:
     runner.setReturnValue("dataFileExists", False)
@@ -308,8 +295,6 @@ def test_farmhouse_chimneys():
             ["Ivarstead", "Karthwasten", "Shor's Stone"],
         ]
     )
-
-    expected = []
 
     notes = [
         """Thank you for installing Farmhouse Chimneys
@@ -347,10 +332,7 @@ Otherwise, right-click the installer again and choose Install""",
         ]
     )
 
-    result = runner.run(script)
-
-    for ex in expected:
-        assert ex in runner.calls
+    status, result = runner.run(script)
 
     assert result.notes == notes
     assert result.subpackages == packages

@@ -126,6 +126,8 @@ class Value(Generic[ValueType]):
     _value: ValueType
 
     def __init__(self, value: ValueType):
+        if value is None:
+            value = Void()
         self._type = VariableType.from_pytype(type(value))
         self._value = value
 

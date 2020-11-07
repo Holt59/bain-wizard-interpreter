@@ -4,14 +4,13 @@ import pytest  # noqa: F401
 
 from wizard.errors import WizardTypeError, WizardNameError
 from wizard.expr import SubPackages, Value
-from wizard.interpreter import WizardInterpreterResult
 
-from .test_utils import MockRunner, MockSubPackage
+from .test_utils import InterpreterChecker, RunnerChecker, MockSubPackage
 
 
 def test_basic():
 
-    c = MockRunner(SubPackages([]))
+    c = InterpreterChecker()
 
     # Test 1:
     s = """
@@ -19,20 +18,19 @@ x = 3
 4 + 5
 x += 4
 """
-    c.run(s)
-    assert c.variables == {"x": Value(7)}
+    ctx = c.run(s)
+    assert ctx.state.variables == {"x": Value(7)}
 
 
 def test_forloop():
 
-    c = MockRunner(
-        SubPackages(
-            [
-                MockSubPackage("ab", ["a", "x/y", "b"]),
-                MockSubPackage("ef", ["b", "u", "c/d"]),
-            ]
-        )
+    subpackages = SubPackages(
+        [
+            MockSubPackage("ab", ["a", "x/y", "b"]),
+            MockSubPackage("ef", ["b", "u", "c/d"]),
+        ]
     )
+    c = InterpreterChecker(subpackages)
 
     # Test 1:
     s = """
@@ -41,8 +39,8 @@ For i from 0 to 4
     x += 1
 EndFor
 """
-    c.run(s)
-    assert c.variables == {"x": Value(6)}
+    r = c.run(s)
+    assert r.state.variables == {"x": Value(6), "i": Value(4)}
 
     # Test 2:
     s = """
@@ -51,12 +49,14 @@ For pkg in SubPackages
     s += str(pkg)
 EndFor
 """
-    c.run(s)
-    assert c.variables == {"s": Value("abef")}
+    r = c.run(s)
+    assert r.state.variables == {"s": Value("abef"), "pkg": Value(subpackages[-1])}
 
     # Test 3:
     values = []
-    c._functions["fn"] = lambda vs: values.append((vs[0].value, vs[1].value))
+    c._factory.evisitor._functions["fn"] = lambda st, vs: values.append(
+        (vs[0].value, vs[1].value)
+    )
     s = """
 c = 0
 For i from 1 to 4
@@ -66,14 +66,14 @@ For i from 1 to 4
     EndFor
 EndFor
 """
-    c.run(s)
-    assert c.variables == {"c": Value(40)}
+    r = c.run(s)
+    assert r.state.variables == {"c": Value(40), "i": Value(4), "j": Value(3)}
     assert values == [(i, j) for i in range(1, 5) for j in range(1, 5, 2)]
 
 
 def test_whileloop():
 
-    c = MockRunner(SubPackages([]))
+    c = InterpreterChecker()
 
     # Test 1:
     s = """
@@ -85,11 +85,13 @@ While i < len(u)
     i += 1
 EndWhile
 """
-    c.run(s)
-    assert c.variables == {"u": Value("5461"), "i": 4, "x": 5461}
+    r = c.run(s)
+    assert r.state.variables == {"u": Value("5461"), "i": 4, "x": 5461}
 
     # Kaprekar number, yay!
-    c._functions["sort"] = lambda vs: Value("".join(sorted(vs[0].value)))
+    c._factory.evisitor._functions["sort"] = lambda st, vs: Value(
+        "".join(sorted(vs[0].value))
+    )
     s = """
 input = 3524
 target = 6174
@@ -103,13 +105,13 @@ While input != target
     input = int(input_d) - int(input_i)
 EndWhile
 """
-    c.run(s)
-    assert c.variables["input"] == Value(6174)
+    r = c.run(s)
+    assert r.state.variables["input"] == Value(6174)
 
 
 def test_if():
 
-    c = MockRunner(SubPackages([]))
+    c = InterpreterChecker()
 
     s = """
 If True
@@ -118,8 +120,8 @@ Else
     x = 2
 EndIf
 """
-    c.run(s)
-    assert c.variables == {"x": Value(1)}
+    r = c.run(s)
+    assert r.state.variables == {"x": Value(1)}
 
     s = """
 If False
@@ -128,8 +130,8 @@ Else
     x = 2
 EndIf
 """
-    c.run(s)
-    assert c.variables == {"x": Value(2)}
+    r = c.run(s)
+    assert r.state.variables == {"x": Value(2)}
 
     s = """
 x = 1
@@ -142,8 +144,8 @@ Else
     u = 3
 EndIf
 """
-    c.run(s)
-    assert c.variables == {"x": Value(1), "y": Value(3), "u": Value(2)}
+    r = c.run(s)
+    assert r.state.variables == {"x": Value(1), "y": Value(3), "u": Value(2)}
 
     s = """
 x = 1
@@ -156,13 +158,13 @@ Elif x + y == 4
     u = 5
 EndIf
 """
-    c.run(s)
-    assert c.variables == {"x": Value(1), "y": Value(3), "u": Value(5)}
+    r = c.run(s)
+    assert r.state.variables == {"x": Value(1), "y": Value(3), "u": Value(5)}
 
 
 def test_select():
 
-    runner = MockRunner(SubPackages([]))
+    runner = RunnerChecker()
 
     s = r"""
 x = 1
@@ -181,17 +183,17 @@ Default
 EndSelect
 """
     runner.onSelect("O1")
-    runner.run(s)
-    assert runner.variables == {"x": Value(2)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(2)}
 
     runner.onSelect("O2")
-    runner.run(s)
-    assert runner.variables == {"x": Value(3)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(3)}
 
     # First option is selected by default, the "Default" case is... Useless?
     runner.onSelect("OX")
-    runner.run(s)
-    assert runner.variables == {"x": Value(2)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(2)}
 
     s = r"""
 x = 1
@@ -209,20 +211,20 @@ Default
 EndSelect
 """
     runner.onSelect([])
-    runner.run(s)
-    assert runner.variables == {"x": Value(16)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(16)}
 
     runner.onSelect(["O1"])
-    runner.run(s)
-    assert runner.variables == {"x": Value(3)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(3)}
 
     runner.onSelect(["O2"])
-    runner.run(s)
-    assert runner.variables == {"x": Value(4)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(4)}
 
     runner.onSelect(["O1", "O2"])
-    runner.run(s)
-    assert runner.variables == {"x": Value(6)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(6)}
 
     # No Case for selected:
     s = r"""
@@ -239,12 +241,12 @@ Default
 EndSelect
 """
     runner.onSelect("O1")
-    runner.run(s)
-    assert runner.variables == {"x": Value(4)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(4)}
 
     runner.onSelect("O2")
-    runner.run(s)
-    assert runner.variables == {"x": Value(3)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(3)}
 
     # Fallthrough
     s = r"""
@@ -260,91 +262,31 @@ Case "O2"
 EndSelect
 """
     runner.onSelect("O1")
-    runner.run(s)
-    assert runner.variables == {"x": Value(6)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(6)}
 
     runner.onSelect("O2")
-    runner.run(s)
-    assert runner.variables == {"x": Value(4)}
+    _, r = runner.run(s)
+    assert r.variables == {"x": Value(4)}
 
 
 def test_default_functions():
 
-    c = MockRunner(SubPackages([]))
+    c = InterpreterChecker()
 
-    c.run("s = int('3')")
-    assert c.variables["s"] == Value(3)
+    r = c.run("s = int('3')")
+    assert r.state.variables["s"] == Value(3)
 
-    c.run("s = len('hello world')")
-    assert c.variables["s"] == Value(11)
+    r = c.run("s = len('hello world')")
+    assert r.state.variables["s"] == Value(11)
 
-    c.run("s = 'hello world'.len()")
-    assert c.variables["s"] == Value(11)
-
-
-def test_abort():
-
-    c = MockRunner(SubPackages([]))
-
-    # Test abort - We should not reach the "c = 10" line:
-    c._functions["fn"] = lambda *args: c.abort()
-    s = """
-x = 1
-y = 2
-c = x * y
-fn(x, y)
-c = 10
-"""
-    assert c.run(s).status == WizardInterpreterResult.CANCEL
-    assert c.variables == {"x": Value(1), "y": Value(2), "c": Value(2)}
-
-    # A kind of "while" loop using rewind():
-    values = [0]
-
-    def fn(*args):
-        values[0] += 1
-        if values[0] == 5:
-            return Value(5)
-        c.rewind(c.state())
-
-    c._functions["fn"] = fn
-    s = """
-x = fn()
-"""
-    assert c.run(s).status == WizardInterpreterResult.COMPLETED
-    assert c.variables == {"x": Value(5)}
-
-    # A kind of "while" loop using rewind():
-    values = {"cnt": 0, "ctx": None}
-
-    def fn1(*args):
-        # On rewind(), the value of x should be 1:
-        assert c.variables == {"x": Value(1)}
-        values["ctx"] = c.state()
-
-    def fn2(*args):
-        # In fn2(), the value of x should be 2:
-        assert c.variables == {"x": Value(2)}
-        values["cnt"] += 1
-        if values["cnt"] < 5:
-            c.rewind(values["ctx"])
-
-    c._functions["fn1"] = fn1
-    c._functions["fn2"] = fn2
-    s = """
-x = 1
-fn1() ; Save the context.
-x = 2
-fn2() ; Rewind 5 times
-"""
-    assert c.run(s).status == WizardInterpreterResult.COMPLETED
-    assert c.variables == {"x": Value(2)}
-    assert values["cnt"] == 5
+    r = c.run("s = 'hello world'.len()")
+    assert r.state.variables["s"] == Value(11)
 
 
 def test_exceptions():
 
-    c = MockRunner(SubPackages([]))
+    c = InterpreterChecker()
 
     with pytest.raises(WizardTypeError):
         c.run("s == int(1, 2, 3)")

@@ -1,16 +1,24 @@
 # -*- encoding: utf-8 -*-
 
 import json
+import sys
 
-from typing import Any, Callable, List, MutableMapping, Union
+from typing import Any, Callable, List, Optional, Mapping, MutableMapping, Union
 
 from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
 
+from wizard.contexts import (
+    WizardInterpreterContext,
+    WizardTerminationContext,
+)
 from wizard.expr import SubPackage, Value, WizardExpressionVisitor
-from wizard.mmitf import SelectOption
+from wizard.interpreter import WizardInterpreter
+from wizard.manager import SelectOption
 from wizard.runner import WizardRunner
+from wizard.severity import SeverityContext
+from wizard.state import WizardInterpreterState
 from wizard.value import SubPackages
 
 
@@ -27,10 +35,71 @@ class MockSubPackage(SubPackage):
         return iter(self._files)
 
 
-class MockRunner(WizardRunner):
+class MockSeverityContext(SeverityContext):
+    def warning(self, text: str):
+        print(f"WARNING: {text}", file=sys.stderr)
+
+
+class ExpressionChecker(WizardExpressionVisitor):
+    def __init__(
+        self,
+        variables: Optional[MutableMapping[str, Value]] = None,
+        state: Optional[WizardInterpreterState] = None,
+        subpackages: SubPackages = SubPackages(),
+        functions: Mapping[
+            str, Callable[[WizardInterpreterState, List[Value]], Value]
+        ] = {},
+        severity: SeverityContext = MockSeverityContext(),
+    ):
+        super().__init__(subpackages, functions, severity)
+
+        assert variables is None or state is None
+
+        if state is None and variables is None:
+            self.state = WizardInterpreterState()
+        elif state is None and variables is not None:
+            self.state = WizardInterpreterState(variables)
+        elif state is not None:
+            self.state = state
+
+    def parse(self, expr: str) -> Value:
+        input_stream = InputStream(expr)
+        lexer = wizardLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = wizardParser(stream)
+        parser._errHandler = BailErrorStrategy()
+        return self.visitExpr(parser.parseWizard().body().expr(0), self.state)
+
+
+class InterpreterChecker(WizardInterpreter):
+    def __init__(
+        self,
+        subpackages: SubPackages = SubPackages(),
+        severity: SeverityContext = MockSeverityContext(),
+    ):
+        super().__init__(subpackages, severity)
+
+    def run(self, script: str) -> WizardTerminationContext[WizardInterpreterState]:
+        input_stream = InputStream(script)
+        lexer = wizardLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = wizardParser(stream)
+        parser._errHandler = BailErrorStrategy()
+
+        ctx: WizardInterpreterContext = self.make_context(
+            parser.parseWizard(), WizardInterpreterState()
+        )
+
+        while not isinstance(ctx, WizardTerminationContext):
+            ctx = ctx.exec()
+
+        return ctx
+
+
+class RunnerChecker(WizardRunner):
 
     """
-    This is a Mock of a WizardRunner. It provides the following functionalities:
+    Provides the following functionalities:
 
         1. You can specify which options the call to selectOne() and
            selectMany() should return using onSelect (for the next call)
@@ -52,7 +121,10 @@ class MockRunner(WizardRunner):
     _returns: MutableMapping[str, Callable]
     _calls: List[str]
 
-    def __init__(self, subpackages: SubPackages):
+    def __init__(
+        self,
+        subpackages: SubPackages = SubPackages(),
+    ):
         super().__init__(subpackages)
         self.clear()
 
@@ -166,13 +238,3 @@ class MockRunner(WizardRunner):
 
         opts = self._next_opts.pop(0)
         return [opt for opt in options if opt.name in opts]
-
-
-class ExpressionChecker(WizardExpressionVisitor):
-    def parse(self, expr: str) -> Value:
-        input_stream = InputStream(expr)
-        lexer = wizardLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-        return self.visitExpr(parser.parseWizard().body().expr(0))

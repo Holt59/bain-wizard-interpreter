@@ -2,10 +2,7 @@
 
 import pytest
 
-from typing import Callable, List, Mapping, MutableMapping
-
 from wizard.expr import (
-    AbstractWizardInterpreter,
     SubPackages,
     Value,
     VariableType,
@@ -19,46 +16,16 @@ from wizard.errors import (
 from .test_utils import ExpressionChecker, MockSubPackage
 
 
-class MockInterpreter(AbstractWizardInterpreter):
-    def __init__(
-        self,
-        variables: MutableMapping[str, Value],
-        subpackages: SubPackages,
-        functions: Mapping[str, Callable[[List[Value]], Value]],
-    ):
-        self._variables = variables
-        self._subpackages = subpackages
-        self._functions = functions
-
-    @property
-    def subpackages(self) -> SubPackages:
-        return self._subpackages
-
-    @property
-    def variables(self) -> MutableMapping[str, Value]:
-        return self._variables
-
-    @property
-    def functions(self) -> Mapping[str, Callable[[List[Value]], Value]]:
-        return self._functions
-
-    def is_strict(self) -> bool:
-        return False
-
-    def warning(self, text: str):
-        pass
-
-
 def test_constant():
 
-    c = ExpressionChecker(MockInterpreter({}, SubPackages([]), {}))
+    c = ExpressionChecker()
 
     # Bool values:
     assert c.parse("False") == Value(False)
     assert c.parse("True") == Value(True)
 
     # SubPackages:
-    assert c.parse("SubPackages") == Value(c._intp._subpackages)
+    assert c.parse("SubPackages") == Value(c._subpackages)
 
     # Int values:
     assert c.parse("0") == Value(0)
@@ -93,14 +60,10 @@ def test_constant():
 def test_add_sub():
 
     c = ExpressionChecker(
-        MockInterpreter(
-            {"x": Value(4), "y": Value(-3), "s": Value("hello")},
-            SubPackages([]),
-            {},
-        )
+        variables={"x": Value(4), "y": Value(-3), "s": Value("hello")}
     )
 
-    # Constant / Ints.
+    # Constant / Integers.
     assert c.parse("-3") == Value(-3)
     assert c.parse("3 + 4") == Value(7)
     assert c.parse("2 - 7") == Value(-5)
@@ -111,7 +74,7 @@ def test_add_sub():
     assert c.parse("'hello' + ' world'") == Value("hello world")
     assert c.parse("'a' + 'b' + 'c'") == Value("abc")
 
-    # Variables / Ints.
+    # Variables / Integers.
     assert c.parse("-x") == Value(-4)
     assert c.parse("-y") == Value(3)
     assert c.parse("x + 2") == Value(6)
@@ -129,9 +92,7 @@ def test_add_sub():
 
 def test_mul_div_mod_pow():
 
-    c = ExpressionChecker(
-        MockInterpreter({"x": Value(4), "y": Value(1.3)}, SubPackages([]), {})
-    )
+    c = ExpressionChecker(variables={"x": Value(4), "y": Value(1.3)})
 
     # Constant:
     assert c.parse("3 * 4") == Value(12)
@@ -147,20 +108,19 @@ def test_mul_div_mod_pow():
 
 def test_increment_decrement():
 
-    interpreter = MockInterpreter({"x": Value(0), "y": Value(0)}, SubPackages([]), {})
-    c = ExpressionChecker(interpreter)
+    c = ExpressionChecker(variables={"x": Value(0), "y": Value(0)})
 
     assert c.parse("x++") == Value(1)
-    assert interpreter.variables["x"] == Value(1)
+    assert c.state.variables["x"] == Value(1)
 
     assert c.parse("x++") == Value(2)
-    assert interpreter.variables["x"] == Value(2)
+    assert c.state.variables["x"] == Value(2)
 
     assert c.parse("--x") == Value(1)
-    assert interpreter.variables["x"] == Value(1)
+    assert c.state.variables["x"] == Value(1)
 
     assert c.parse("y--") == Value(-1)
-    assert interpreter.variables["y"] == Value(-1)
+    assert c.state.variables["y"] == Value(-1)
 
 
 def test_containers():
@@ -171,8 +131,7 @@ def test_containers():
             MockSubPackage("bar", ["b", "u", "c/d"]),
         ]
     )
-
-    c = ExpressionChecker(MockInterpreter({}, subpackages, {}))
+    c = ExpressionChecker(subpackages=subpackages)
 
     assert c.parse("SubPackages") == Value(subpackages)
     assert c.parse("SubPackages[0]") == Value(subpackages[0])
@@ -190,7 +149,7 @@ def test_containers():
 
 
 def test_index_and_slice():
-    c = ExpressionChecker(MockInterpreter({}, [], {}))
+    c = ExpressionChecker()
 
     assert c.parse("'hello world'[0]") == Value("h")
     assert c.parse("'hello world'[10]") == Value("d")
@@ -205,6 +164,7 @@ def test_index_and_slice():
 
     assert c.parse("'hello world'[:]") == Value("hello world")
     assert c.parse("'hello world'[0:]") == Value("hello world")
+    # cSpell:ignore hlowrd
     assert c.parse("'hello world'[0::2]") == Value("hlowrd")
 
     assert c.parse("'hello world'[:3]") == Value("hel")
@@ -227,15 +187,11 @@ def test_index_and_slice():
 def test_functions():
 
     c = ExpressionChecker(
-        MockInterpreter(
-            {},
-            SubPackages([]),
-            {
-                "nargs": lambda vs: len(vs),
-                "add": lambda vs: sum(vs, Value(type(vs[0].value)())),
-                "string.trim": lambda vs: Value(vs[0]._value.strip()),
-            },
-        ),
+        functions={
+            "nargs": lambda st, vs: len(vs),
+            "add": lambda st, vs: sum(vs, Value(type(vs[0].value)())),
+            "string.trim": lambda st, vs: Value(vs[0]._value.strip()),
+        },
     )
 
     assert c.parse("nargs()") == Value(0)
@@ -254,3 +210,6 @@ def test_functions():
     with pytest.raises(WizardNameError) as ex:
         c.parse("fn()")
     assert ex.value.name == "fn"
+
+    setattr(c, "visitFn", lambda st, x: 2 * x)
+    assert c.parse("Fn(1)") == Value(2)

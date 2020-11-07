@@ -12,10 +12,9 @@ from antlr4.error.Errors import ParseCancellationException
 
 from pathlib import Path
 
-from wizard.expr import SubPackages
 from wizard.errors import WizardError
 
-from .test_utils import MockRunner
+from .test_utils import RunnerChecker
 
 
 def test_wizparse_scripts():
@@ -27,7 +26,7 @@ def test_wizparse_scripts():
     scripts.remove(Path("vendor/wizparse/tests/test.txt"))
 
     # Create an interpreter with a mock-manager:
-    c = MockRunner(SubPackages([]))
+    c = RunnerChecker()
 
     # IMPORTANT:
     # 1. There are no sub-packages, so some scripts might fail.
