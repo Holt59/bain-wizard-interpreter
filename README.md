@@ -10,7 +10,7 @@ be used in various settings to run BAIN Wizard installers.
 ```python
 from typing import List
 
-from wizard.mmitf import SelectOption
+from wizard.manager import SelectOption
 from wizard.runner import WizardRunner
 from wizard.value import SubPackage, SubPackages
 
@@ -18,18 +18,14 @@ from wizard.value import SubPackage, SubPackages
 class MySubPackage(SubPackage):
 
     """
-    Implement your own subpackage - SubPackage inherits str so you should use
-    __new__ instead of __init__.
+    Implement your own SubPackage.
     """
 
     _files: List[str]
 
-    def __new__(cls, name: str, files: List[str] = []):
-        # Important: There is a default for files() so that the object can
-        # be deepcopied.
-        value = SubPackage.__new__(cls, name)
-        value._files = files
-        return value
+    def __init__(self, name: str, files: List[str]):
+        super().__init__(name)
+        self._files = files
 
     @property
     def files(self):
@@ -42,10 +38,10 @@ class MyRunner(WizardRunner):
     Extends the runner and implement the missing methods.
     """
 
-    # These are the methods you need to provide - See mmitf.ModManagerInterface for
-    # the documentation of each method.
+    # These are the methods you need to provide - See manager.ManagerModInterface
+    # and manager.ManagerUserInterface for the documentation of each method.
 
-    # The WizardRunner class extends ModManagerInterface and already implements many
+    # The WizardRunner class extends both interfaces and already implements many
     # functions, but you can always override them.
 
     def selectOne(
@@ -88,16 +84,16 @@ class MyRunner(WizardRunner):
     def getFolder(self, path: str) -> str:
         ...
 
-# Create the subpackages:
+# Create the sub-packages:
 subpackages = SubPackages([MySubPackage(...) for ...])
 
 # Create the runner:
 runner = MyRunner(subpackages)
 
 # Run a script:
-result = runner.run("wizard.txt")
+status, result = runner.run("wizard.txt")
 
-result.status  # Status of the execution.
+status  # Status of the execution.
 result.subpackages  # List of selected subpackages.
 result.plugins  # List of enabled plugins.
 result.notes  # List of notes.
@@ -130,11 +126,11 @@ runner = WizardRunner(...)
 # Abort the execution - Equivalent to a 'Cancel' keyword:
 runner.abort()
 
-# Retrieve the current state():
-state = runner.state()
+# Retrieve the current context:
+context = runner.context()
 
-# Rewind to the given state:
-runner.rewind(state)
+# Rewind to the given context:
+runner.rewind(context)
 ```
 
 The `runner.abort` and `runner.rewind` method rely on exception to work, so these do
