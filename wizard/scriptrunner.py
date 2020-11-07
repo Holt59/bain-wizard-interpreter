@@ -12,7 +12,8 @@ from .antlr4.wizardParser import wizardParser
 from .contexts import (
     WizardInterpreterContext,
     WizardInterpreterContextFactory,
-    WizardSelectContext,
+    WizardSelectOneContext,
+    WizardSelectManyContext,
     WizardTerminationContext,
 )
 from .functions import make_basic_functions, make_manager_functions
@@ -174,20 +175,14 @@ class WizardScriptRunner(
             self._ctx = ctx
 
             try:
-                if isinstance(ctx, WizardSelectContext):
-
-                    if ctx.is_many():
-                        ctx = ctx.select(
-                            self.selectMany(ctx.description, ctx.options, ctx.defaults)
-                        )
-                    else:
-                        ctx = ctx.select(
-                            [
-                                self.selectOne(
-                                    ctx.description, ctx.options, ctx.defaults[0]
-                                )
-                            ]
-                        )
+                if isinstance(ctx, WizardSelectOneContext):
+                    ctx = ctx.select(
+                        self.selectOne(ctx.description, ctx.options, ctx.default)
+                    )
+                elif isinstance(ctx, WizardSelectManyContext):
+                    ctx = ctx.select(
+                        self.selectMany(ctx.description, ctx.options, ctx.defaults)
+                    )
                 elif isinstance(ctx, WizardTerminationContext):
                     if ctx.is_cancel():
                         if self.cancel():

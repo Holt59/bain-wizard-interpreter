@@ -31,6 +31,8 @@ from .contexts import (
     WizardReturnContext,
     WizardSelectCasesContext,
     WizardSelectContext,
+    WizardSelectOneContext,
+    WizardSelectManyContext,
     WizardTerminationContext,
     WizardWhileLoopContext,
 )
@@ -189,7 +191,10 @@ class WizardInterpreterContextFactory:
         context: wizardParser.SelectStmtContext,
         parent: WizardInterpreterContext,
     ) -> WizardSelectContext:
-        return WizardSelectContext(self, context, parent)
+        if context.selectOne():
+            return WizardSelectOneContext(self, context.selectOne(), parent)
+        else:
+            return WizardSelectManyContext(self, context.selectMany(), parent)
 
     def make_select_cases_context(
         self,

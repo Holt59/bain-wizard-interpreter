@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-from enum import Enum, auto
 from pathlib import Path
 from typing import (
     Any,

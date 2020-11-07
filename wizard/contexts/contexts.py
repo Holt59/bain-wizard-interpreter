@@ -13,6 +13,7 @@ from typing import (
     List,
     Optional,
     Sequence,
+    Tuple,
     TypeVar,
     Union,
     TYPE_CHECKING,
@@ -538,20 +539,46 @@ class WizardCompoundAssignmentContext(
         return parent
 
 
-class WizardSelectContext(
-    WizardInterpreterContext[ContextState, wizardParser.SelectStmtContext]
-):
+def parse_select_options(
+    factory: "WizardInterpreterContextFactory",
+    context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
+    state: ContextState,
+) -> Tuple[str, List[SelectOption], List[SelectOption]]:
 
-    """
-    The select context is split in multiple contexts:
-      - The WizardSelectContext queries the user and returns a WizardSelectCasesContext,
-      - The WizardSelectCasesContext loop through the cases returning WizardCaseContext
-        or WizardDefaultContext,
-      - The WizardCaseContext and WizardDefaultContext simply evaluate their bodies.
-    """
+    # Parse the description and option:
+    description = factory.evisitor.visitExpr(context.expr(), state, str).value
 
-    # SelectMany or SelectOne:
-    _many: bool
+    options: List[SelectOption] = []
+    defaults: List[SelectOption] = []
+    for opt in context.optionTuple():
+        a, b, c = (
+            factory.evisitor.visitExpr(opt.expr(0), state, str),
+            factory.evisitor.visitExpr(opt.expr(1), state, str),
+            factory.evisitor.visitExpr(opt.expr(2), state, str),
+        )
+
+        name = a.value
+        isdef = False
+        if name.startswith("|"):
+            name = name[1:]
+            isdef = True
+
+        options.append(
+            SelectOption(name, b.value, c.value if c.value.strip() else None)
+        )
+
+        # Add to defaults:
+        if isdef:
+            options.append(options[-1])
+
+    # Not default in SelectOne -> Select first one.
+    if not isinstance(context, wizardParser.SelectManyContext) and not defaults:
+        defaults.append(options[0])
+
+    return description, options, defaults
+
+
+class WizardSelectContext(WizardInterpreterContext[ContextState, RuleContext]):
 
     # The description:
     _description: str
@@ -560,7 +587,7 @@ class WizardSelectContext(
     _options: List[SelectOption]
 
     # The default option(s):
-    _defaults: List[SelectOption]
+    _default: List[SelectOption]
 
     # The selected option(s):
     _selected: List[SelectOption]
@@ -568,74 +595,16 @@ class WizardSelectContext(
     def __init__(
         self,
         factory: "WizardInterpreterContextFactory",
-        context: wizardParser.SelectStmtContext,
+        context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
         parent: WizardInterpreterContext,
     ):
         super().__init__(factory, context, parent)
 
-        ctxx: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext]
-        if self.context.selectOne():
-            self._many = False
-            ctxx = self.context.selectOne()
-        else:
-            self._many = True
-            ctxx = self.context.selectMany()
+        self._description, self._options, self._defaults = parse_select_options(
+            factory, context, self.state
+        )
 
-        # Parse the description and option:
-        self._description = self._factory.evisitor.visitExpr(
-            ctxx.expr(), self.state, str
-        ).value
-
-        self._options = []
-        self._defaults = []
-        for opt in ctxx.optionTuple():
-            a, b, c = (
-                self._factory.evisitor.visitExpr(opt.expr(0), self.state, str),
-                self._factory.evisitor.visitExpr(opt.expr(1), self.state, str),
-                self._factory.evisitor.visitExpr(opt.expr(2), self.state, str),
-            )
-
-            name = a.value
-            isdef = False
-            if name.startswith("|"):
-                name = name[1:]
-                isdef = True
-
-            self._options.append(
-                SelectOption(name, b.value, c.value if c.value.strip() else None)
-            )
-
-            # Add to defaults:
-            if isdef:
-                self._options.append(self._options[-1])
-
-        # Not default in SelectOne -> Select first one.
-        if not self._many and not self._defaults:
-            self._defaults.append(self._options[0])
-
-        # More than one default in SelectOne:
-        if not self._many and len(self._defaults) != 1:
-            self._factory.severity.raise_or_warn(
-                Issue.MULTIPLE_DEFAULTS_IN_SELECT_ON,
-                WizardTypeError(
-                    ctxx.optionTuple(),
-                    "SelectOne statement should have a single default value.",
-                ),
-                "SelectOne statement should have a single default, using the"
-                " first one.",
-            )
-            self._defaults = [self._defaults[0]]
-
-        # We select the defaults:
-        self._selected = self._defaults
-
-    def is_many(self) -> bool:
-        """
-        Returns:
-            True if this context corresponds to a SelectMany, False if it corresponds
-            to a SelectOne.
-        """
-        return self._many
+        # Note: It's the job of the child class to choose the default selected.
 
     @property
     def description(self) -> str:
@@ -653,21 +622,12 @@ class WizardSelectContext(
         """
         return self._options
 
-    @property
-    def defaults(self) -> List[SelectOption]:
+    def _select(self, options: List[SelectOption]) -> "WizardSelectContext":
         """
-        Returns:
-            The default options for this select context. This is always a list, but
-            for SelectOne, the list will contain a single element.
-        """
-        return self._defaults
-
-    def select(self, options: List[SelectOption]) -> "WizardSelectContext":
-        """
-        Select the given list of options and return the object.
+        Select the given options and return the object.
 
         Args:
-            options: The option to select.
+            options: The options to select.
 
         Returns:
             A copy of the current object with the given options selected.
@@ -681,6 +641,89 @@ class WizardSelectContext(
         return self._factory.make_select_cases_context(
             self._selected, self.context, self.parent
         )
+
+
+class WizardSelectOneContext(
+    WizardSelectContext[ContextState, wizardParser.SelectOneContext]
+):
+    def __init__(
+        self,
+        factory: "WizardInterpreterContextFactory",
+        context: wizardParser.SelectOneContext,
+        parent: WizardInterpreterContext,
+    ):
+        super().__init__(factory, context, parent)
+
+        # More than one default in SelectOne:
+        if len(self._defaults) != 1:
+            self._factory.severity.raise_or_warn(
+                Issue.MULTIPLE_DEFAULTS_IN_SELECT_ON,
+                WizardTypeError(
+                    context,
+                    "SelectOne statement should have a single default value.",
+                ),
+                "SelectOne statement should have a single default, using the"
+                " first one.",
+            )
+            self._defaults = [self._defaults[0]]
+
+        # We select the defaults:
+        self._selected = self._defaults
+
+    @property
+    def default(self) -> SelectOption:
+        """
+        Returns:
+            The default option for this select context.
+        """
+        return self._defaults[0]
+
+    def select(self, option: SelectOption) -> "WizardSelectOneContext":
+        """
+        Select the given option and return the object.
+
+        Args:
+            option: The option to select.
+
+        Returns:
+            A copy of the current object with the given option selected.
+        """
+        return self._select([option])  # type: ignore
+
+
+class WizardSelectManyContext(
+    WizardSelectContext[ContextState, wizardParser.SelectOneContext]
+):
+    def __init__(
+        self,
+        factory: "WizardInterpreterContextFactory",
+        context: wizardParser.SelectManyContext,
+        parent: WizardInterpreterContext,
+    ):
+        super().__init__(factory, context, parent)
+
+        # We select the defaults:
+        self._selected = self._defaults
+
+    @property
+    def defaults(self) -> List[SelectOption]:
+        """
+        Returns:
+            The default options for this select context.
+        """
+        return self._defaults
+
+    def select(self, options: List[SelectOption]) -> "WizardSelectManyContext":
+        """
+        Select the given list of options and return the object.
+
+        Args:
+            options: The options to select.
+
+        Returns:
+            A copy of the current object with the given options selected.
+        """
+        return self._select(options)  # type: ignore
 
 
 class WizardSelectCasesContext(
@@ -704,7 +747,7 @@ class WizardSelectCasesContext(
         self,
         factory: "WizardInterpreterContextFactory",
         options: List[SelectOption],
-        context: wizardParser.IfStmtContext,
+        context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
         parent: WizardInterpreterContext,
     ):
         """
@@ -718,14 +761,13 @@ class WizardSelectCasesContext(
 
         self._options = options
 
-        if self.context.selectOne():
+        if isinstance(self.context, wizardParser.SelectOneContext):
             self._ismany = False
-            ctxx = self.context.selectOne()
         else:
             self._ismany = True
-            ctxx = self.context.selectMany()
-        self._cases = list(ctxx.selectCaseList().caseStmt())
-        self._default = ctxx.selectCaseList().defaultStmt()
+
+        self._cases = list(context.selectCaseList().caseStmt())
+        self._default = context.selectCaseList().defaultStmt()
 
         self._index = 0
         self._found = False
