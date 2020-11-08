@@ -80,6 +80,14 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
             self._state = state
 
     @property
+    def factory(self) -> "WizardInterpreterContextFactory":
+        """
+        Returns:
+            The factory associated with this context.
+        """
+        return self._factory
+
+    @property
     def parent(self) -> "WizardInterpreterContext":
         """
         Returns:

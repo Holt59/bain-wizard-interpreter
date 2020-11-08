@@ -17,7 +17,7 @@ from .inisettings import WizardINISetting, WizardINISettingEdit, WizardINITweaks
 from .keywords import WizardKeywordVisitor
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
-from .value import SubPackages
+from .value import SubPackage, SubPackages
 
 
 class WizardRunnerState(WizardInterpreterState):
@@ -161,10 +161,33 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             Path(f).name
             for sp in self._subpackages
             for f in sp.files
-            if self._isPlugin(f)
+            if self.is_plugin(f)
         ]
 
-    def _isPlugin(self, name: str) -> bool:
+    @property
+    def subpackages(self) -> SubPackages:
+        """
+        Returns:
+            The list of all available subpackages.
+        """
+        return self._subpackages
+
+    @property
+    def plugins(self) -> List[str]:
+        """
+        Returns:
+            The list of all available plugins.
+        """
+        return self._plugins
+
+    def plugins_for(self, subpackage: SubPackage) -> List[str]:
+        """
+        Returns:
+            The list of plugin names in the given subpackage.
+        """
+        return [Path(f).name for f in subpackage.files if self.is_plugin(f)]
+
+    def is_plugin(self, name: str) -> bool:
         """
         Check if the given name corresponds to a plugin.
 
@@ -294,7 +317,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             Path(f).name
             for sp in self._subpackages
             for f in sp.files
-            if sp in state._subpackages and self._isPlugin(f)
+            if sp in state._subpackages and self.is_plugin(f)
         ]
 
     def visitSelectPlugin(
@@ -340,5 +363,5 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
 
         # Auto-select plugins?
         for f in subpackage.files:
-            if self._isPlugin(f):
+            if self.is_plugin(f):
                 self.visitSelectPlugin(context, state, Path(f).name)
