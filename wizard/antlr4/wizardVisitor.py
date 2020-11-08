@@ -74,6 +74,11 @@ class wizardVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by wizardParser#cancelStmt.
+    def visitCancelStmt(self, ctx:wizardParser.CancelStmtContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by wizardParser#caseStmt.
     def visitCaseStmt(self, ctx:wizardParser.CaseStmtContext):
         return self.visitChildren(ctx)

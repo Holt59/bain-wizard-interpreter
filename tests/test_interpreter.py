@@ -2,7 +2,7 @@
 
 import pytest  # noqa: F401
 
-from wizard.contexts import WizardSelectContext
+from wizard.contexts import WizardSelectContext, WizardTerminationContext
 from wizard.errors import WizardTypeError, WizardNameError
 from wizard.expr import SubPackages, Value
 from wizard.manager import SelectOption
@@ -315,6 +315,26 @@ def test_default_functions():
     assert r.state.variables["s"] == Value(11)
 
 
+def test_cancel():
+    c = InterpreterChecker()
+
+    s = """
+Cancel
+"""
+    ctx = c.run(s)
+    assert isinstance(ctx, WizardTerminationContext)
+    assert ctx.is_cancel()
+    assert ctx.message() is None
+
+    s = """
+Cancel "Cancel."
+"""
+    ctx = c.run(s)
+    assert isinstance(ctx, WizardTerminationContext)
+    assert ctx.is_cancel()
+    assert ctx.message() == "Cancel."
+
+
 def test_exceptions():
 
     c = InterpreterChecker()
@@ -333,6 +353,9 @@ def test_exceptions():
 
     with pytest.raises(WizardNameError):
         c.run("x += 2")
+
+    with pytest.raises(WizardTypeError):
+        c.run("Cancel 2 + 3")
 
     with pytest.raises(WizardTypeError) as te:
         c.run(

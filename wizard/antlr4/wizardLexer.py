@@ -20,7 +20,7 @@ def serializedATN():
         buf.write("\t\64\4\65\t\65\4\66\t\66\4\67\t\67\48\t8\49\t9\4:\t:")
         buf.write("\4;\t;\4<\t<\4=\t=\4>\t>\4?\t?\4@\t@\4A\tA\4B\tB\4C\t")
         buf.write("C\4D\tD\4E\tE\4F\tF\4G\tG\4H\tH\3\2\3\2\3\2\3\2\3\2\3")
-        buf.write("\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4")
+        buf.write("\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4")
         buf.write("\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3")
         buf.write("\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b")
         buf.write("\3\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3\13")
@@ -83,7 +83,7 @@ def serializedATN():
         buf.write("\3\2\2\2\2}\3\2\2\2\2\177\3\2\2\2\2\u0081\3\2\2\2\2\u0083")
         buf.write("\3\2\2\2\2\u0085\3\2\2\2\2\u0087\3\2\2\2\2\u0089\3\2\2")
         buf.write("\2\2\u008b\3\2\2\2\2\u008d\3\2\2\2\2\u008f\3\2\2\2\3\u0091")
-        buf.write("\3\2\2\2\5\u0098\3\2\2\2\7\u00a1\3\2\2\2\t\u00a8\3\2\2")
+        buf.write("\3\2\2\2\5\u009a\3\2\2\2\7\u00a1\3\2\2\2\t\u00a8\3\2\2")
         buf.write("\2\13\u00ad\3\2\2\2\r\u00b5\3\2\2\2\17\u00ba\3\2\2\2\21")
         buf.write("\u00bf\3\2\2\2\23\u00c3\3\2\2\2\25\u00ca\3\2\2\2\27\u00cf")
         buf.write("\3\2\2\2\31\u00d2\3\2\2\2\33\u00d5\3\2\2\2\35\u00d8\3")
@@ -104,14 +104,14 @@ def serializedATN():
         buf.write("\u02ba\3\2\2\2\u0083\u02bc\3\2\2\2\u0085\u02be\3\2\2\2")
         buf.write("\u0087\u02c0\3\2\2\2\u0089\u02c3\3\2\2\2\u008b\u02c6\3")
         buf.write("\2\2\2\u008d\u02c9\3\2\2\2\u008f\u02d1\3\2\2\2\u0091\u0092")
-        buf.write("\7E\2\2\u0092\u0093\7c\2\2\u0093\u0094\7p\2\2\u0094\u0095")
-        buf.write("\7e\2\2\u0095\u0096\7g\2\2\u0096\u0097\7n\2\2\u0097\4")
-        buf.write("\3\2\2\2\u0098\u0099\7E\2\2\u0099\u009a\7q\2\2\u009a\u009b")
-        buf.write("\7p\2\2\u009b\u009c\7v\2\2\u009c\u009d\7k\2\2\u009d\u009e")
-        buf.write("\7p\2\2\u009e\u009f\7w\2\2\u009f\u00a0\7g\2\2\u00a0\6")
-        buf.write("\3\2\2\2\u00a1\u00a2\7T\2\2\u00a2\u00a3\7g\2\2\u00a3\u00a4")
-        buf.write("\7v\2\2\u00a4\u00a5\7w\2\2\u00a5\u00a6\7t\2\2\u00a6\u00a7")
-        buf.write("\7p\2\2\u00a7\b\3\2\2\2\u00a8\u00a9\7E\2\2\u00a9\u00aa")
+        buf.write("\7E\2\2\u0092\u0093\7q\2\2\u0093\u0094\7p\2\2\u0094\u0095")
+        buf.write("\7v\2\2\u0095\u0096\7k\2\2\u0096\u0097\7p\2\2\u0097\u0098")
+        buf.write("\7w\2\2\u0098\u0099\7g\2\2\u0099\4\3\2\2\2\u009a\u009b")
+        buf.write("\7T\2\2\u009b\u009c\7g\2\2\u009c\u009d\7v\2\2\u009d\u009e")
+        buf.write("\7w\2\2\u009e\u009f\7t\2\2\u009f\u00a0\7p\2\2\u00a0\6")
+        buf.write("\3\2\2\2\u00a1\u00a2\7E\2\2\u00a2\u00a3\7c\2\2\u00a3\u00a4")
+        buf.write("\7p\2\2\u00a4\u00a5\7e\2\2\u00a5\u00a6\7g\2\2\u00a6\u00a7")
+        buf.write("\7n\2\2\u00a7\b\3\2\2\2\u00a8\u00a9\7E\2\2\u00a9\u00aa")
         buf.write("\7c\2\2\u00aa\u00ab\7u\2\2\u00ab\u00ac\7g\2\2\u00ac\n")
         buf.write("\3\2\2\2\u00ad\u00ae\7F\2\2\u00ae\u00af\7g\2\2\u00af\u00b0")
         buf.write("\7h\2\2\u00b0\u00b1\7c\2\2\u00b1\u00b2\7w\2\2\u00b2\u00b3")
@@ -393,7 +393,7 @@ class wizardLexer(Lexer):
     modeNames = [ "DEFAULT_MODE" ]
 
     literalNames = [ "<INVALID>",
-            "'Cancel'", "'Continue'", "'Return'", "'Case'", "'Default'", 
+            "'Continue'", "'Return'", "'Cancel'", "'Case'", "'Default'", 
             "'Elif'", "'Else'", "'For'", "'EndFor'", "'from'", "'to'", "'by'", 
             "'If'", "'EndIf'", "'EndSelect'", "'SelectOne'", "'SelectMany'", 
             "'While'", "'EndWhile'", "'!'", "'not'", "'|'", "'or'", "'&'", 

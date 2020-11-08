@@ -176,6 +176,15 @@ class WizardTerminationContext(
         """
         return isinstance(self.parent, WizardCancelContext)
 
+    def message(self) -> Optional[str]:
+        """
+        Returns:
+            The cancel message, if any. If `is_cancel()` is False, this returns None.
+        """
+        if not isinstance(self.parent, WizardCancelContext):
+            return None
+        return self.parent.message()
+
     def is_return(self) -> bool:
         """
         Returns:
@@ -219,6 +228,25 @@ class WizardCancelContext(
     """
     Special context that is returned when a 'Cancel' instruction is encountered.
     """
+
+    # The cancel message:
+    _message: Optional[str]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self._message = None
+        if self.context.expr():
+            self._message = self._factory.evisitor.visitExpr(
+                self.context.expr(), self.state, str
+            ).value
+
+    def message(self) -> Optional[str]:
+        """
+        Returns:
+            The cancel message, if any.
+        """
+        return self._message
 
     def exec(self) -> WizardInterpreterContext:
         return self._factory.make_termination_context(self)
@@ -301,7 +329,7 @@ class WizardBodyContext(
         elif isinstance(ctx, wizardParser.ContinueContext):
             return self._factory.make_continue_context(ctx, parent)
         elif isinstance(ctx, wizardParser.CancelContext):
-            return self._factory.make_cancel_context(ctx, parent)
+            return self._factory.make_cancel_context(ctx.cancelStmt(), parent)
         elif isinstance(ctx, wizardParser.ReturnContext):
             return self._factory.make_return_context(ctx, parent)
 

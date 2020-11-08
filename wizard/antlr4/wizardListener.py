@@ -125,6 +125,15 @@ class wizardListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by wizardParser#cancelStmt.
+    def enterCancelStmt(self, ctx:wizardParser.CancelStmtContext):
+        pass
+
+    # Exit a parse tree produced by wizardParser#cancelStmt.
+    def exitCancelStmt(self, ctx:wizardParser.CancelStmtContext):
+        pass
+
+
     # Enter a parse tree produced by wizardParser#caseStmt.
     def enterCaseStmt(self, ctx:wizardParser.CaseStmtContext):
         pass

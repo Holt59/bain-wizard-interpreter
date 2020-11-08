@@ -14,6 +14,7 @@ from typing import List
 
 from wizard.contexts import WizardSelectContext
 from wizard.expr import SubPackages
+from wizard.scriptrunner import WizardScriptRunnerStatus
 
 from .test_utils import MockSubPackage, RunnerChecker
 
@@ -188,6 +189,15 @@ Otherwise, right-click the installer again and choose Install""",
     assert result.notes == notes
     assert result.subpackages == packages
     assert result.plugins == plugins
+
+    # Third test (with cancel).
+    runner.onSelects(["Welcome", "Cancel"])
+
+    plugins = sorted(["MajesticMountains.esp"])
+
+    status, result = runner.run(script)
+
+    assert status == WizardScriptRunnerStatus.CANCEL
 
 
 def test_book_covers():

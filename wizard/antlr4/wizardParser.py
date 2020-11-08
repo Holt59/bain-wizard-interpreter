@@ -12,151 +12,156 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3D")
-        buf.write("\u013f\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u0145\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
-        buf.write("\t\31\4\32\t\32\4\33\t\33\4\34\t\34\3\2\3\2\3\2\3\3\3")
-        buf.write("\3\7\3>\n\3\f\3\16\3A\13\3\3\4\3\4\3\4\3\4\5\4G\n\4\3")
-        buf.write("\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7")
-        buf.write("\3\7\3\7\5\7Y\n\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\n\3\n")
-        buf.write("\3\n\3\n\3\13\3\13\3\13\3\f\3\f\3\f\3\f\5\fm\n\f\3\f\3")
-        buf.write("\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\5\rx\n\r\3\16\3\16\3\16")
-        buf.write("\3\17\3\17\3\17\3\17\7\17\u0081\n\17\f\17\16\17\u0084")
-        buf.write("\13\17\3\17\5\17\u0087\n\17\3\17\3\17\3\20\3\20\5\20\u008d")
-        buf.write("\n\20\3\20\3\20\3\21\7\21\u0092\n\21\f\21\16\21\u0095")
-        buf.write("\13\21\3\21\5\21\u0098\n\21\3\22\3\22\3\22\3\22\3\22\3")
-        buf.write("\22\3\23\3\23\3\23\3\23\7\23\u00a4\n\23\f\23\16\23\u00a7")
-        buf.write("\13\23\3\23\5\23\u00aa\n\23\3\23\3\23\3\24\3\24\3\24\3")
-        buf.write("\24\7\24\u00b2\n\24\f\24\16\24\u00b5\13\24\3\24\5\24\u00b8")
-        buf.write("\n\24\3\24\3\24\3\25\3\25\3\25\3\25\3\25\3\26\3\26\3\26")
-        buf.write("\7\26\u00c4\n\26\f\26\16\26\u00c7\13\26\5\26\u00c9\n\26")
-        buf.write("\3\27\3\27\3\27\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30")
-        buf.write("\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30")
-        buf.write("\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\5\30\u00e9\n")
-        buf.write("\30\5\30\u00eb\n\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30")
-        buf.write("\3\30\3\30\3\30\3\30\3\30\5\30\u00f9\n\30\3\30\3\30\3")
-        buf.write("\30\3\30\5\30\u00ff\n\30\3\30\3\30\3\30\3\30\5\30\u0105")
-        buf.write("\n\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30")
-        buf.write("\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30")
-        buf.write("\3\30\5\30\u011d\n\30\3\30\3\30\5\30\u0121\n\30\3\30\3")
-        buf.write("\30\5\30\u0125\n\30\5\30\u0127\n\30\3\30\3\30\3\30\3\30")
-        buf.write("\3\30\5\30\u012e\n\30\7\30\u0130\n\30\f\30\16\30\u0133")
-        buf.write("\13\30\3\31\3\31\3\32\3\32\3\33\3\33\3\33\3\33\3\34\3")
-        buf.write("\34\3\34\2\3.\35\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36")
-        buf.write(" \"$&(*,.\60\62\64\66\2\r\3\2(-\3\2\26\27\4\2::>?\3\2")
-        buf.write(";<\3\2/\60\3\2\61\62\4\2..\63\63\3\2\30\31\3\2\32\33\3")
-        buf.write("\2\34\36\3\289\2\u015c\28\3\2\2\2\4?\3\2\2\2\6F\3\2\2")
-        buf.write("\2\bH\3\2\2\2\nL\3\2\2\2\fX\3\2\2\2\16Z\3\2\2\2\20^\3")
-        buf.write("\2\2\2\22a\3\2\2\2\24e\3\2\2\2\26h\3\2\2\2\30q\3\2\2\2")
-        buf.write("\32y\3\2\2\2\34|\3\2\2\2\36\u008c\3\2\2\2 \u0093\3\2\2")
-        buf.write("\2\"\u0099\3\2\2\2$\u009f\3\2\2\2&\u00ad\3\2\2\2(\u00bb")
-        buf.write("\3\2\2\2*\u00c8\3\2\2\2,\u00ca\3\2\2\2.\u00ea\3\2\2\2")
-        buf.write("\60\u0134\3\2\2\2\62\u0136\3\2\2\2\64\u0138\3\2\2\2\66")
-        buf.write("\u013c\3\2\2\289\5\4\3\29:\7\2\2\3:\3\3\2\2\2;>\5\6\4")
-        buf.write("\2<>\5.\30\2=;\3\2\2\2=<\3\2\2\2>A\3\2\2\2?=\3\2\2\2?")
-        buf.write("@\3\2\2\2@\5\3\2\2\2A?\3\2\2\2BG\5\b\5\2CG\5\n\6\2DG\5")
-        buf.write("\f\7\2EG\5,\27\2FB\3\2\2\2FC\3\2\2\2FD\3\2\2\2FE\3\2\2")
-        buf.write("\2G\7\3\2\2\2HI\7C\2\2IJ\7\64\2\2JK\5.\30\2K\t\3\2\2\2")
-        buf.write("LM\7C\2\2MN\t\2\2\2NO\5.\30\2O\13\3\2\2\2PY\7\65\2\2Q")
-        buf.write("Y\7\3\2\2RY\7\4\2\2SY\5\26\f\2TY\5\34\17\2UY\7\5\2\2V")
-        buf.write("Y\5\36\20\2WY\5(\25\2XP\3\2\2\2XQ\3\2\2\2XR\3\2\2\2XS")
-        buf.write("\3\2\2\2XT\3\2\2\2XU\3\2\2\2XV\3\2\2\2XW\3\2\2\2Y\r\3")
-        buf.write("\2\2\2Z[\7\6\2\2[\\\5.\30\2\\]\5\4\3\2]\17\3\2\2\2^_\7")
-        buf.write("\7\2\2_`\5\4\3\2`\21\3\2\2\2ab\7\b\2\2bc\5.\30\2cd\5\4")
-        buf.write("\3\2d\23\3\2\2\2ef\7\t\2\2fg\5\4\3\2g\25\3\2\2\2hi\7\n")
-        buf.write("\2\2il\7C\2\2jm\5\30\r\2km\5\32\16\2lj\3\2\2\2lk\3\2\2")
-        buf.write("\2mn\3\2\2\2no\5\4\3\2op\7\13\2\2p\27\3\2\2\2qr\7\f\2")
-        buf.write("\2rs\5.\30\2st\7\r\2\2tw\5.\30\2uv\7\16\2\2vx\5.\30\2")
-        buf.write("wu\3\2\2\2wx\3\2\2\2x\31\3\2\2\2yz\7A\2\2z{\5.\30\2{\33")
-        buf.write("\3\2\2\2|}\7\17\2\2}~\5.\30\2~\u0082\5\4\3\2\177\u0081")
-        buf.write("\5\22\n\2\u0080\177\3\2\2\2\u0081\u0084\3\2\2\2\u0082")
-        buf.write("\u0080\3\2\2\2\u0082\u0083\3\2\2\2\u0083\u0086\3\2\2\2")
-        buf.write("\u0084\u0082\3\2\2\2\u0085\u0087\5\24\13\2\u0086\u0085")
-        buf.write("\3\2\2\2\u0086\u0087\3\2\2\2\u0087\u0088\3\2\2\2\u0088")
-        buf.write("\u0089\7\20\2\2\u0089\35\3\2\2\2\u008a\u008d\5$\23\2\u008b")
-        buf.write("\u008d\5&\24\2\u008c\u008a\3\2\2\2\u008c\u008b\3\2\2\2")
-        buf.write("\u008d\u008e\3\2\2\2\u008e\u008f\7\21\2\2\u008f\37\3\2")
-        buf.write("\2\2\u0090\u0092\5\16\b\2\u0091\u0090\3\2\2\2\u0092\u0095")
-        buf.write("\3\2\2\2\u0093\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094")
-        buf.write("\u0097\3\2\2\2\u0095\u0093\3\2\2\2\u0096\u0098\5\20\t")
-        buf.write("\2\u0097\u0096\3\2\2\2\u0097\u0098\3\2\2\2\u0098!\3\2")
-        buf.write("\2\2\u0099\u009a\5.\30\2\u009a\u009b\7!\2\2\u009b\u009c")
-        buf.write("\5.\30\2\u009c\u009d\7!\2\2\u009d\u009e\5.\30\2\u009e")
-        buf.write("#\3\2\2\2\u009f\u00a0\7\22\2\2\u00a0\u00a5\5.\30\2\u00a1")
-        buf.write("\u00a2\7!\2\2\u00a2\u00a4\5\"\22\2\u00a3\u00a1\3\2\2\2")
-        buf.write("\u00a4\u00a7\3\2\2\2\u00a5\u00a3\3\2\2\2\u00a5\u00a6\3")
-        buf.write("\2\2\2\u00a6\u00a9\3\2\2\2\u00a7\u00a5\3\2\2\2\u00a8\u00aa")
-        buf.write("\7!\2\2\u00a9\u00a8\3\2\2\2\u00a9\u00aa\3\2\2\2\u00aa")
-        buf.write("\u00ab\3\2\2\2\u00ab\u00ac\5 \21\2\u00ac%\3\2\2\2\u00ad")
-        buf.write("\u00ae\7\23\2\2\u00ae\u00b3\5.\30\2\u00af\u00b0\7!\2\2")
-        buf.write("\u00b0\u00b2\5\"\22\2\u00b1\u00af\3\2\2\2\u00b2\u00b5")
-        buf.write("\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b4\3\2\2\2\u00b4")
-        buf.write("\u00b7\3\2\2\2\u00b5\u00b3\3\2\2\2\u00b6\u00b8\7!\2\2")
-        buf.write("\u00b7\u00b6\3\2\2\2\u00b7\u00b8\3\2\2\2\u00b8\u00b9\3")
-        buf.write("\2\2\2\u00b9\u00ba\5 \21\2\u00ba\'\3\2\2\2\u00bb\u00bc")
-        buf.write("\7\24\2\2\u00bc\u00bd\5.\30\2\u00bd\u00be\5\4\3\2\u00be")
-        buf.write("\u00bf\7\25\2\2\u00bf)\3\2\2\2\u00c0\u00c5\5.\30\2\u00c1")
-        buf.write("\u00c2\7!\2\2\u00c2\u00c4\5.\30\2\u00c3\u00c1\3\2\2\2")
-        buf.write("\u00c4\u00c7\3\2\2\2\u00c5\u00c3\3\2\2\2\u00c5\u00c6\3")
-        buf.write("\2\2\2\u00c6\u00c9\3\2\2\2\u00c7\u00c5\3\2\2\2\u00c8\u00c0")
-        buf.write("\3\2\2\2\u00c8\u00c9\3\2\2\2\u00c9+\3\2\2\2\u00ca\u00cb")
-        buf.write("\7\66\2\2\u00cb\u00cc\5*\26\2\u00cc-\3\2\2\2\u00cd\u00ce")
-        buf.write("\b\30\1\2\u00ce\u00cf\7#\2\2\u00cf\u00d0\5.\30\2\u00d0")
-        buf.write("\u00d1\7$\2\2\u00d1\u00eb\3\2\2\2\u00d2\u00d3\7C\2\2\u00d3")
-        buf.write("\u00d4\7#\2\2\u00d4\u00d5\5*\26\2\u00d5\u00d6\7$\2\2\u00d6")
-        buf.write("\u00eb\3\2\2\2\u00d7\u00d8\7B\2\2\u00d8\u00eb\7C\2\2\u00d9")
-        buf.write("\u00da\7C\2\2\u00da\u00eb\7B\2\2\u00db\u00dc\7@\2\2\u00dc")
-        buf.write("\u00eb\7C\2\2\u00dd\u00de\7C\2\2\u00de\u00eb\7@\2\2\u00df")
-        buf.write("\u00e0\7;\2\2\u00e0\u00eb\5.\30\20\u00e1\u00e2\t\3\2\2")
-        buf.write("\u00e2\u00eb\5.\30\17\u00e3\u00e9\5\60\31\2\u00e4\u00e9")
-        buf.write("\5\64\33\2\u00e5\u00e9\5\62\32\2\u00e6\u00e9\5\66\34\2")
-        buf.write("\u00e7\u00e9\7C\2\2\u00e8\u00e3\3\2\2\2\u00e8\u00e4\3")
-        buf.write("\2\2\2\u00e8\u00e5\3\2\2\2\u00e8\u00e6\3\2\2\2\u00e8\u00e7")
-        buf.write("\3\2\2\2\u00e9\u00eb\3\2\2\2\u00ea\u00cd\3\2\2\2\u00ea")
-        buf.write("\u00d2\3\2\2\2\u00ea\u00d7\3\2\2\2\u00ea\u00d9\3\2\2\2")
-        buf.write("\u00ea\u00db\3\2\2\2\u00ea\u00dd\3\2\2\2\u00ea\u00df\3")
-        buf.write("\2\2\2\u00ea\u00e1\3\2\2\2\u00ea\u00e8\3\2\2\2\u00eb\u0131")
-        buf.write("\3\2\2\2\u00ec\u00ed\f\f\2\2\u00ed\u00ee\7=\2\2\u00ee")
-        buf.write("\u0130\5.\30\r\u00ef\u00f0\f\13\2\2\u00f0\u00f1\t\4\2")
-        buf.write("\2\u00f1\u0130\5.\30\f\u00f2\u00f3\f\n\2\2\u00f3\u00f4")
-        buf.write("\t\5\2\2\u00f4\u0130\5.\30\13\u00f5\u00f6\f\t\2\2\u00f6")
-        buf.write("\u00f8\t\6\2\2\u00f7\u00f9\7\'\2\2\u00f8\u00f7\3\2\2\2")
-        buf.write("\u00f8\u00f9\3\2\2\2\u00f9\u00fa\3\2\2\2\u00fa\u0130\5")
-        buf.write(".\30\n\u00fb\u00fc\f\b\2\2\u00fc\u00fe\t\7\2\2\u00fd\u00ff")
-        buf.write("\7\'\2\2\u00fe\u00fd\3\2\2\2\u00fe\u00ff\3\2\2\2\u00ff")
-        buf.write("\u0100\3\2\2\2\u0100\u0130\5.\30\t\u0101\u0102\f\7\2\2")
-        buf.write("\u0102\u0104\t\b\2\2\u0103\u0105\7\'\2\2\u0104\u0103\3")
-        buf.write("\2\2\2\u0104\u0105\3\2\2\2\u0105\u0106\3\2\2\2\u0106\u0130")
-        buf.write("\5.\30\b\u0107\u0108\f\6\2\2\u0108\u0109\t\t\2\2\u0109")
-        buf.write("\u0130\5.\30\7\u010a\u010b\f\5\2\2\u010b\u010c\t\n\2\2")
-        buf.write("\u010c\u0130\5.\30\6\u010d\u010e\f\26\2\2\u010e\u010f")
-        buf.write("\7\"\2\2\u010f\u0110\7C\2\2\u0110\u0111\7#\2\2\u0111\u0112")
-        buf.write("\5*\26\2\u0112\u0113\7$\2\2\u0113\u0130\3\2\2\2\u0114")
-        buf.write("\u0115\f\16\2\2\u0115\u0116\7%\2\2\u0116\u0117\5.\30\2")
-        buf.write("\u0117\u0118\7&\2\2\u0118\u0130\3\2\2\2\u0119\u011a\f")
-        buf.write("\r\2\2\u011a\u011c\7%\2\2\u011b\u011d\5.\30\2\u011c\u011b")
-        buf.write("\3\2\2\2\u011c\u011d\3\2\2\2\u011d\u011e\3\2\2\2\u011e")
-        buf.write("\u0120\7\'\2\2\u011f\u0121\5.\30\2\u0120\u011f\3\2\2\2")
-        buf.write("\u0120\u0121\3\2\2\2\u0121\u0126\3\2\2\2\u0122\u0124\7")
-        buf.write("\'\2\2\u0123\u0125\5.\30\2\u0124\u0123\3\2\2\2\u0124\u0125")
-        buf.write("\3\2\2\2\u0125\u0127\3\2\2\2\u0126\u0122\3\2\2\2\u0126")
-        buf.write("\u0127\3\2\2\2\u0127\u0128\3\2\2\2\u0128\u0130\7&\2\2")
-        buf.write("\u0129\u012a\f\4\2\2\u012a\u012b\7A\2\2\u012b\u012d\5")
-        buf.write(".\30\2\u012c\u012e\7\'\2\2\u012d\u012c\3\2\2\2\u012d\u012e")
-        buf.write("\3\2\2\2\u012e\u0130\3\2\2\2\u012f\u00ec\3\2\2\2\u012f")
-        buf.write("\u00ef\3\2\2\2\u012f\u00f2\3\2\2\2\u012f\u00f5\3\2\2\2")
-        buf.write("\u012f\u00fb\3\2\2\2\u012f\u0101\3\2\2\2\u012f\u0107\3")
-        buf.write("\2\2\2\u012f\u010a\3\2\2\2\u012f\u010d\3\2\2\2\u012f\u0114")
-        buf.write("\3\2\2\2\u012f\u0119\3\2\2\2\u012f\u0129\3\2\2\2\u0130")
-        buf.write("\u0133\3\2\2\2\u0131\u012f\3\2\2\2\u0131\u0132\3\2\2\2")
-        buf.write("\u0132/\3\2\2\2\u0133\u0131\3\2\2\2\u0134\u0135\t\13\2")
-        buf.write("\2\u0135\61\3\2\2\2\u0136\u0137\7\67\2\2\u0137\63\3\2")
-        buf.write("\2\2\u0138\u0139\7\67\2\2\u0139\u013a\7\"\2\2\u013a\u013b")
-        buf.write("\7\67\2\2\u013b\65\3\2\2\2\u013c\u013d\t\f\2\2\u013d\67")
-        buf.write("\3\2\2\2\37=?FXlw\u0082\u0086\u008c\u0093\u0097\u00a5")
-        buf.write("\u00a9\u00b3\u00b7\u00c5\u00c8\u00e8\u00ea\u00f8\u00fe")
-        buf.write("\u0104\u011c\u0120\u0124\u0126\u012d\u012f\u0131")
+        buf.write("\t\31\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\3\2\3\2")
+        buf.write("\3\2\3\3\3\3\7\3@\n\3\f\3\16\3C\13\3\3\4\3\4\3\4\3\4\5")
+        buf.write("\4I\n\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3")
+        buf.write("\7\3\7\3\7\3\7\3\7\5\7[\n\7\3\b\3\b\5\b_\n\b\3\t\3\t\3")
+        buf.write("\t\3\t\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\r")
+        buf.write("\3\r\3\r\3\r\5\rs\n\r\3\r\3\r\3\r\3\16\3\16\3\16\3\16")
+        buf.write("\3\16\3\16\5\16~\n\16\3\17\3\17\3\17\3\20\3\20\3\20\3")
+        buf.write("\20\7\20\u0087\n\20\f\20\16\20\u008a\13\20\3\20\5\20\u008d")
+        buf.write("\n\20\3\20\3\20\3\21\3\21\5\21\u0093\n\21\3\21\3\21\3")
+        buf.write("\22\7\22\u0098\n\22\f\22\16\22\u009b\13\22\3\22\5\22\u009e")
+        buf.write("\n\22\3\23\3\23\3\23\3\23\3\23\3\23\3\24\3\24\3\24\3\24")
+        buf.write("\7\24\u00aa\n\24\f\24\16\24\u00ad\13\24\3\24\5\24\u00b0")
+        buf.write("\n\24\3\24\3\24\3\25\3\25\3\25\3\25\7\25\u00b8\n\25\f")
+        buf.write("\25\16\25\u00bb\13\25\3\25\5\25\u00be\n\25\3\25\3\25\3")
+        buf.write("\26\3\26\3\26\3\26\3\26\3\27\3\27\3\27\7\27\u00ca\n\27")
+        buf.write("\f\27\16\27\u00cd\13\27\5\27\u00cf\n\27\3\30\3\30\3\30")
+        buf.write("\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31")
+        buf.write("\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31")
+        buf.write("\3\31\3\31\3\31\3\31\3\31\5\31\u00ef\n\31\5\31\u00f1\n")
+        buf.write("\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31")
+        buf.write("\3\31\3\31\5\31\u00ff\n\31\3\31\3\31\3\31\3\31\5\31\u0105")
+        buf.write("\n\31\3\31\3\31\3\31\3\31\5\31\u010b\n\31\3\31\3\31\3")
+        buf.write("\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31")
+        buf.write("\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\5\31\u0123")
+        buf.write("\n\31\3\31\3\31\5\31\u0127\n\31\3\31\3\31\5\31\u012b\n")
+        buf.write("\31\5\31\u012d\n\31\3\31\3\31\3\31\3\31\3\31\5\31\u0134")
+        buf.write("\n\31\7\31\u0136\n\31\f\31\16\31\u0139\13\31\3\32\3\32")
+        buf.write("\3\33\3\33\3\34\3\34\3\34\3\34\3\35\3\35\3\35\2\3\60\36")
+        buf.write("\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62")
+        buf.write("\64\668\2\r\3\2(-\3\2\26\27\4\2::>?\3\2;<\3\2/\60\3\2")
+        buf.write("\61\62\4\2..\63\63\3\2\30\31\3\2\32\33\3\2\34\36\3\28")
+        buf.write("9\2\u0162\2:\3\2\2\2\4A\3\2\2\2\6H\3\2\2\2\bJ\3\2\2\2")
+        buf.write("\nN\3\2\2\2\fZ\3\2\2\2\16\\\3\2\2\2\20`\3\2\2\2\22d\3")
+        buf.write("\2\2\2\24g\3\2\2\2\26k\3\2\2\2\30n\3\2\2\2\32w\3\2\2\2")
+        buf.write("\34\177\3\2\2\2\36\u0082\3\2\2\2 \u0092\3\2\2\2\"\u0099")
+        buf.write("\3\2\2\2$\u009f\3\2\2\2&\u00a5\3\2\2\2(\u00b3\3\2\2\2")
+        buf.write("*\u00c1\3\2\2\2,\u00ce\3\2\2\2.\u00d0\3\2\2\2\60\u00f0")
+        buf.write("\3\2\2\2\62\u013a\3\2\2\2\64\u013c\3\2\2\2\66\u013e\3")
+        buf.write("\2\2\28\u0142\3\2\2\2:;\5\4\3\2;<\7\2\2\3<\3\3\2\2\2=")
+        buf.write("@\5\6\4\2>@\5\60\31\2?=\3\2\2\2?>\3\2\2\2@C\3\2\2\2A?")
+        buf.write("\3\2\2\2AB\3\2\2\2B\5\3\2\2\2CA\3\2\2\2DI\5\b\5\2EI\5")
+        buf.write("\n\6\2FI\5\f\7\2GI\5.\30\2HD\3\2\2\2HE\3\2\2\2HF\3\2\2")
+        buf.write("\2HG\3\2\2\2I\7\3\2\2\2JK\7C\2\2KL\7\64\2\2LM\5\60\31")
+        buf.write("\2M\t\3\2\2\2NO\7C\2\2OP\t\2\2\2PQ\5\60\31\2Q\13\3\2\2")
+        buf.write("\2R[\7\65\2\2S[\5\16\b\2T[\7\3\2\2U[\5\30\r\2V[\5\36\20")
+        buf.write("\2W[\7\4\2\2X[\5 \21\2Y[\5*\26\2ZR\3\2\2\2ZS\3\2\2\2Z")
+        buf.write("T\3\2\2\2ZU\3\2\2\2ZV\3\2\2\2ZW\3\2\2\2ZX\3\2\2\2ZY\3")
+        buf.write("\2\2\2[\r\3\2\2\2\\^\7\5\2\2]_\5\60\31\2^]\3\2\2\2^_\3")
+        buf.write("\2\2\2_\17\3\2\2\2`a\7\6\2\2ab\5\60\31\2bc\5\4\3\2c\21")
+        buf.write("\3\2\2\2de\7\7\2\2ef\5\4\3\2f\23\3\2\2\2gh\7\b\2\2hi\5")
+        buf.write("\60\31\2ij\5\4\3\2j\25\3\2\2\2kl\7\t\2\2lm\5\4\3\2m\27")
+        buf.write("\3\2\2\2no\7\n\2\2or\7C\2\2ps\5\32\16\2qs\5\34\17\2rp")
+        buf.write("\3\2\2\2rq\3\2\2\2st\3\2\2\2tu\5\4\3\2uv\7\13\2\2v\31")
+        buf.write("\3\2\2\2wx\7\f\2\2xy\5\60\31\2yz\7\r\2\2z}\5\60\31\2{")
+        buf.write("|\7\16\2\2|~\5\60\31\2}{\3\2\2\2}~\3\2\2\2~\33\3\2\2\2")
+        buf.write("\177\u0080\7A\2\2\u0080\u0081\5\60\31\2\u0081\35\3\2\2")
+        buf.write("\2\u0082\u0083\7\17\2\2\u0083\u0084\5\60\31\2\u0084\u0088")
+        buf.write("\5\4\3\2\u0085\u0087\5\24\13\2\u0086\u0085\3\2\2\2\u0087")
+        buf.write("\u008a\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2")
+        buf.write("\u0089\u008c\3\2\2\2\u008a\u0088\3\2\2\2\u008b\u008d\5")
+        buf.write("\26\f\2\u008c\u008b\3\2\2\2\u008c\u008d\3\2\2\2\u008d")
+        buf.write("\u008e\3\2\2\2\u008e\u008f\7\20\2\2\u008f\37\3\2\2\2\u0090")
+        buf.write("\u0093\5&\24\2\u0091\u0093\5(\25\2\u0092\u0090\3\2\2\2")
+        buf.write("\u0092\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094\u0095\7")
+        buf.write("\21\2\2\u0095!\3\2\2\2\u0096\u0098\5\20\t\2\u0097\u0096")
+        buf.write("\3\2\2\2\u0098\u009b\3\2\2\2\u0099\u0097\3\2\2\2\u0099")
+        buf.write("\u009a\3\2\2\2\u009a\u009d\3\2\2\2\u009b\u0099\3\2\2\2")
+        buf.write("\u009c\u009e\5\22\n\2\u009d\u009c\3\2\2\2\u009d\u009e")
+        buf.write("\3\2\2\2\u009e#\3\2\2\2\u009f\u00a0\5\60\31\2\u00a0\u00a1")
+        buf.write("\7!\2\2\u00a1\u00a2\5\60\31\2\u00a2\u00a3\7!\2\2\u00a3")
+        buf.write("\u00a4\5\60\31\2\u00a4%\3\2\2\2\u00a5\u00a6\7\22\2\2\u00a6")
+        buf.write("\u00ab\5\60\31\2\u00a7\u00a8\7!\2\2\u00a8\u00aa\5$\23")
+        buf.write("\2\u00a9\u00a7\3\2\2\2\u00aa\u00ad\3\2\2\2\u00ab\u00a9")
+        buf.write("\3\2\2\2\u00ab\u00ac\3\2\2\2\u00ac\u00af\3\2\2\2\u00ad")
+        buf.write("\u00ab\3\2\2\2\u00ae\u00b0\7!\2\2\u00af\u00ae\3\2\2\2")
+        buf.write("\u00af\u00b0\3\2\2\2\u00b0\u00b1\3\2\2\2\u00b1\u00b2\5")
+        buf.write("\"\22\2\u00b2\'\3\2\2\2\u00b3\u00b4\7\23\2\2\u00b4\u00b9")
+        buf.write("\5\60\31\2\u00b5\u00b6\7!\2\2\u00b6\u00b8\5$\23\2\u00b7")
+        buf.write("\u00b5\3\2\2\2\u00b8\u00bb\3\2\2\2\u00b9\u00b7\3\2\2\2")
+        buf.write("\u00b9\u00ba\3\2\2\2\u00ba\u00bd\3\2\2\2\u00bb\u00b9\3")
+        buf.write("\2\2\2\u00bc\u00be\7!\2\2\u00bd\u00bc\3\2\2\2\u00bd\u00be")
+        buf.write("\3\2\2\2\u00be\u00bf\3\2\2\2\u00bf\u00c0\5\"\22\2\u00c0")
+        buf.write(")\3\2\2\2\u00c1\u00c2\7\24\2\2\u00c2\u00c3\5\60\31\2\u00c3")
+        buf.write("\u00c4\5\4\3\2\u00c4\u00c5\7\25\2\2\u00c5+\3\2\2\2\u00c6")
+        buf.write("\u00cb\5\60\31\2\u00c7\u00c8\7!\2\2\u00c8\u00ca\5\60\31")
+        buf.write("\2\u00c9\u00c7\3\2\2\2\u00ca\u00cd\3\2\2\2\u00cb\u00c9")
+        buf.write("\3\2\2\2\u00cb\u00cc\3\2\2\2\u00cc\u00cf\3\2\2\2\u00cd")
+        buf.write("\u00cb\3\2\2\2\u00ce\u00c6\3\2\2\2\u00ce\u00cf\3\2\2\2")
+        buf.write("\u00cf-\3\2\2\2\u00d0\u00d1\7\66\2\2\u00d1\u00d2\5,\27")
+        buf.write("\2\u00d2/\3\2\2\2\u00d3\u00d4\b\31\1\2\u00d4\u00d5\7#")
+        buf.write("\2\2\u00d5\u00d6\5\60\31\2\u00d6\u00d7\7$\2\2\u00d7\u00f1")
+        buf.write("\3\2\2\2\u00d8\u00d9\7C\2\2\u00d9\u00da\7#\2\2\u00da\u00db")
+        buf.write("\5,\27\2\u00db\u00dc\7$\2\2\u00dc\u00f1\3\2\2\2\u00dd")
+        buf.write("\u00de\7B\2\2\u00de\u00f1\7C\2\2\u00df\u00e0\7C\2\2\u00e0")
+        buf.write("\u00f1\7B\2\2\u00e1\u00e2\7@\2\2\u00e2\u00f1\7C\2\2\u00e3")
+        buf.write("\u00e4\7C\2\2\u00e4\u00f1\7@\2\2\u00e5\u00e6\7;\2\2\u00e6")
+        buf.write("\u00f1\5\60\31\20\u00e7\u00e8\t\3\2\2\u00e8\u00f1\5\60")
+        buf.write("\31\17\u00e9\u00ef\5\62\32\2\u00ea\u00ef\5\66\34\2\u00eb")
+        buf.write("\u00ef\5\64\33\2\u00ec\u00ef\58\35\2\u00ed\u00ef\7C\2")
+        buf.write("\2\u00ee\u00e9\3\2\2\2\u00ee\u00ea\3\2\2\2\u00ee\u00eb")
+        buf.write("\3\2\2\2\u00ee\u00ec\3\2\2\2\u00ee\u00ed\3\2\2\2\u00ef")
+        buf.write("\u00f1\3\2\2\2\u00f0\u00d3\3\2\2\2\u00f0\u00d8\3\2\2\2")
+        buf.write("\u00f0\u00dd\3\2\2\2\u00f0\u00df\3\2\2\2\u00f0\u00e1\3")
+        buf.write("\2\2\2\u00f0\u00e3\3\2\2\2\u00f0\u00e5\3\2\2\2\u00f0\u00e7")
+        buf.write("\3\2\2\2\u00f0\u00ee\3\2\2\2\u00f1\u0137\3\2\2\2\u00f2")
+        buf.write("\u00f3\f\f\2\2\u00f3\u00f4\7=\2\2\u00f4\u0136\5\60\31")
+        buf.write("\r\u00f5\u00f6\f\13\2\2\u00f6\u00f7\t\4\2\2\u00f7\u0136")
+        buf.write("\5\60\31\f\u00f8\u00f9\f\n\2\2\u00f9\u00fa\t\5\2\2\u00fa")
+        buf.write("\u0136\5\60\31\13\u00fb\u00fc\f\t\2\2\u00fc\u00fe\t\6")
+        buf.write("\2\2\u00fd\u00ff\7\'\2\2\u00fe\u00fd\3\2\2\2\u00fe\u00ff")
+        buf.write("\3\2\2\2\u00ff\u0100\3\2\2\2\u0100\u0136\5\60\31\n\u0101")
+        buf.write("\u0102\f\b\2\2\u0102\u0104\t\7\2\2\u0103\u0105\7\'\2\2")
+        buf.write("\u0104\u0103\3\2\2\2\u0104\u0105\3\2\2\2\u0105\u0106\3")
+        buf.write("\2\2\2\u0106\u0136\5\60\31\t\u0107\u0108\f\7\2\2\u0108")
+        buf.write("\u010a\t\b\2\2\u0109\u010b\7\'\2\2\u010a\u0109\3\2\2\2")
+        buf.write("\u010a\u010b\3\2\2\2\u010b\u010c\3\2\2\2\u010c\u0136\5")
+        buf.write("\60\31\b\u010d\u010e\f\6\2\2\u010e\u010f\t\t\2\2\u010f")
+        buf.write("\u0136\5\60\31\7\u0110\u0111\f\5\2\2\u0111\u0112\t\n\2")
+        buf.write("\2\u0112\u0136\5\60\31\6\u0113\u0114\f\26\2\2\u0114\u0115")
+        buf.write("\7\"\2\2\u0115\u0116\7C\2\2\u0116\u0117\7#\2\2\u0117\u0118")
+        buf.write("\5,\27\2\u0118\u0119\7$\2\2\u0119\u0136\3\2\2\2\u011a")
+        buf.write("\u011b\f\16\2\2\u011b\u011c\7%\2\2\u011c\u011d\5\60\31")
+        buf.write("\2\u011d\u011e\7&\2\2\u011e\u0136\3\2\2\2\u011f\u0120")
+        buf.write("\f\r\2\2\u0120\u0122\7%\2\2\u0121\u0123\5\60\31\2\u0122")
+        buf.write("\u0121\3\2\2\2\u0122\u0123\3\2\2\2\u0123\u0124\3\2\2\2")
+        buf.write("\u0124\u0126\7\'\2\2\u0125\u0127\5\60\31\2\u0126\u0125")
+        buf.write("\3\2\2\2\u0126\u0127\3\2\2\2\u0127\u012c\3\2\2\2\u0128")
+        buf.write("\u012a\7\'\2\2\u0129\u012b\5\60\31\2\u012a\u0129\3\2\2")
+        buf.write("\2\u012a\u012b\3\2\2\2\u012b\u012d\3\2\2\2\u012c\u0128")
+        buf.write("\3\2\2\2\u012c\u012d\3\2\2\2\u012d\u012e\3\2\2\2\u012e")
+        buf.write("\u0136\7&\2\2\u012f\u0130\f\4\2\2\u0130\u0131\7A\2\2\u0131")
+        buf.write("\u0133\5\60\31\2\u0132\u0134\7\'\2\2\u0133\u0132\3\2\2")
+        buf.write("\2\u0133\u0134\3\2\2\2\u0134\u0136\3\2\2\2\u0135\u00f2")
+        buf.write("\3\2\2\2\u0135\u00f5\3\2\2\2\u0135\u00f8\3\2\2\2\u0135")
+        buf.write("\u00fb\3\2\2\2\u0135\u0101\3\2\2\2\u0135\u0107\3\2\2\2")
+        buf.write("\u0135\u010d\3\2\2\2\u0135\u0110\3\2\2\2\u0135\u0113\3")
+        buf.write("\2\2\2\u0135\u011a\3\2\2\2\u0135\u011f\3\2\2\2\u0135\u012f")
+        buf.write("\3\2\2\2\u0136\u0139\3\2\2\2\u0137\u0135\3\2\2\2\u0137")
+        buf.write("\u0138\3\2\2\2\u0138\61\3\2\2\2\u0139\u0137\3\2\2\2\u013a")
+        buf.write("\u013b\t\13\2\2\u013b\63\3\2\2\2\u013c\u013d\7\67\2\2")
+        buf.write("\u013d\65\3\2\2\2\u013e\u013f\7\67\2\2\u013f\u0140\7\"")
+        buf.write("\2\2\u0140\u0141\7\67\2\2\u0141\67\3\2\2\2\u0142\u0143")
+        buf.write("\t\f\2\2\u01439\3\2\2\2 ?AHZ^r}\u0088\u008c\u0092\u0099")
+        buf.write("\u009d\u00ab\u00af\u00b9\u00bd\u00cb\u00ce\u00ee\u00f0")
+        buf.write("\u00fe\u0104\u010a\u0122\u0126\u012a\u012c\u0133\u0135")
+        buf.write("\u0137")
         return buf.getvalue()
 
 
@@ -170,7 +175,7 @@ class wizardParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'Cancel'", "'Continue'", "'Return'", 
+    literalNames = [ "<INVALID>", "'Continue'", "'Return'", "'Cancel'", 
                      "'Case'", "'Default'", "'Elif'", "'Else'", "'For'", 
                      "'EndFor'", "'from'", "'to'", "'by'", "'If'", "'EndIf'", 
                      "'EndSelect'", "'SelectOne'", "'SelectMany'", "'While'", 
@@ -207,34 +212,36 @@ class wizardParser ( Parser ):
     RULE_assignment = 3
     RULE_compoundAssignment = 4
     RULE_controlFlowStmt = 5
-    RULE_caseStmt = 6
-    RULE_defaultStmt = 7
-    RULE_elifStmt = 8
-    RULE_elseStmt = 9
-    RULE_forStmt = 10
-    RULE_forRangeHeader = 11
-    RULE_forInHeader = 12
-    RULE_ifStmt = 13
-    RULE_selectStmt = 14
-    RULE_selectCaseList = 15
-    RULE_optionTuple = 16
-    RULE_selectOne = 17
-    RULE_selectMany = 18
-    RULE_whileStmt = 19
-    RULE_argList = 20
-    RULE_keywordStmt = 21
-    RULE_expr = 22
-    RULE_constant = 23
-    RULE_integer = 24
-    RULE_decimal = 25
-    RULE_string = 26
+    RULE_cancelStmt = 6
+    RULE_caseStmt = 7
+    RULE_defaultStmt = 8
+    RULE_elifStmt = 9
+    RULE_elseStmt = 10
+    RULE_forStmt = 11
+    RULE_forRangeHeader = 12
+    RULE_forInHeader = 13
+    RULE_ifStmt = 14
+    RULE_selectStmt = 15
+    RULE_selectCaseList = 16
+    RULE_optionTuple = 17
+    RULE_selectOne = 18
+    RULE_selectMany = 19
+    RULE_whileStmt = 20
+    RULE_argList = 21
+    RULE_keywordStmt = 22
+    RULE_expr = 23
+    RULE_constant = 24
+    RULE_integer = 25
+    RULE_decimal = 26
+    RULE_string = 27
 
     ruleNames =  [ "parseWizard", "body", "stmt", "assignment", "compoundAssignment", 
-                   "controlFlowStmt", "caseStmt", "defaultStmt", "elifStmt", 
-                   "elseStmt", "forStmt", "forRangeHeader", "forInHeader", 
-                   "ifStmt", "selectStmt", "selectCaseList", "optionTuple", 
-                   "selectOne", "selectMany", "whileStmt", "argList", "keywordStmt", 
-                   "expr", "constant", "integer", "decimal", "string" ]
+                   "controlFlowStmt", "cancelStmt", "caseStmt", "defaultStmt", 
+                   "elifStmt", "elseStmt", "forStmt", "forRangeHeader", 
+                   "forInHeader", "ifStmt", "selectStmt", "selectCaseList", 
+                   "optionTuple", "selectOne", "selectMany", "whileStmt", 
+                   "argList", "keywordStmt", "expr", "constant", "integer", 
+                   "decimal", "string" ]
 
     EOF = Token.EOF
     T__0=1
@@ -352,9 +359,9 @@ class wizardParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_parseWizard)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 54
+            self.state = 56
             self.body()
-            self.state = 55
+            self.state = 57
             self.match(wizardParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -412,25 +419,25 @@ class wizardParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 61
+            self.state = 63
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << wizardParser.T__0) | (1 << wizardParser.T__1) | (1 << wizardParser.T__2) | (1 << wizardParser.T__7) | (1 << wizardParser.T__12) | (1 << wizardParser.T__15) | (1 << wizardParser.T__16) | (1 << wizardParser.T__17) | (1 << wizardParser.T__19) | (1 << wizardParser.T__20) | (1 << wizardParser.T__25) | (1 << wizardParser.T__26) | (1 << wizardParser.T__27) | (1 << wizardParser.LeftParenthesis) | (1 << wizardParser.Break) | (1 << wizardParser.Keyword) | (1 << wizardParser.Number) | (1 << wizardParser.DoubleQuotedString) | (1 << wizardParser.SingleQuotedString) | (1 << wizardParser.Minus) | (1 << wizardParser.Decrement))) != 0) or _la==wizardParser.Increment or _la==wizardParser.Identifier:
-                self.state = 59
+                self.state = 61
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,0,self._ctx)
                 if la_ == 1:
-                    self.state = 57
+                    self.state = 59
                     self.stmt()
                     pass
 
                 elif la_ == 2:
-                    self.state = 58
+                    self.state = 60
                     self.expr(0)
                     pass
 
 
-                self.state = 63
+                self.state = 65
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -490,30 +497,30 @@ class wizardParser ( Parser ):
         localctx = wizardParser.StmtContext(self, self._ctx, self.state)
         self.enterRule(localctx, 4, self.RULE_stmt)
         try:
-            self.state = 68
+            self.state = 70
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 64
+                self.state = 66
                 self.assignment()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 65
+                self.state = 67
                 self.compoundAssignment()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 66
+                self.state = 68
                 self.controlFlowStmt()
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 67
+                self.state = 69
                 self.keywordStmt()
                 pass
 
@@ -569,11 +576,11 @@ class wizardParser ( Parser ):
         self.enterRule(localctx, 6, self.RULE_assignment)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 70
-            self.match(wizardParser.Identifier)
-            self.state = 71
-            self.match(wizardParser.Assign)
             self.state = 72
+            self.match(wizardParser.Identifier)
+            self.state = 73
+            self.match(wizardParser.Assign)
+            self.state = 74
             self.expr(0)
         except RecognitionException as re:
             localctx.exception = re
@@ -642,16 +649,16 @@ class wizardParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 74
+            self.state = 76
             self.match(wizardParser.Identifier)
-            self.state = 75
+            self.state = 77
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << wizardParser.CompoundAdd) | (1 << wizardParser.CompoundSub) | (1 << wizardParser.CompoundMul) | (1 << wizardParser.CompoundDiv) | (1 << wizardParser.CompoundExp) | (1 << wizardParser.CompoundMod))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 76
+            self.state = 78
             self.expr(0)
         except RecognitionException as re:
             localctx.exception = re
@@ -705,6 +712,9 @@ class wizardParser ( Parser ):
         def __init__(self, parser, ctx:ParserRuleContext): # actually a wizardParser.ControlFlowStmtContext
             super().__init__(parser)
             self.copyFrom(ctx)
+
+        def cancelStmt(self):
+            return self.getTypedRuleContext(wizardParser.CancelStmtContext,0)
 
 
         def enterRule(self, listener:ParseTreeListener):
@@ -874,59 +884,114 @@ class wizardParser ( Parser ):
         localctx = wizardParser.ControlFlowStmtContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_controlFlowStmt)
         try:
-            self.state = 86
+            self.state = 88
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [wizardParser.Break]:
                 localctx = wizardParser.BreakContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 78
+                self.state = 80
                 self.match(wizardParser.Break)
                 pass
-            elif token in [wizardParser.T__0]:
+            elif token in [wizardParser.T__2]:
                 localctx = wizardParser.CancelContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 79
-                self.match(wizardParser.T__0)
+                self.state = 81
+                self.cancelStmt()
                 pass
-            elif token in [wizardParser.T__1]:
+            elif token in [wizardParser.T__0]:
                 localctx = wizardParser.ContinueContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 80
-                self.match(wizardParser.T__1)
+                self.state = 82
+                self.match(wizardParser.T__0)
                 pass
             elif token in [wizardParser.T__7]:
                 localctx = wizardParser.ForContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 81
+                self.state = 83
                 self.forStmt()
                 pass
             elif token in [wizardParser.T__12]:
                 localctx = wizardParser.IfContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
-                self.state = 82
+                self.state = 84
                 self.ifStmt()
                 pass
-            elif token in [wizardParser.T__2]:
+            elif token in [wizardParser.T__1]:
                 localctx = wizardParser.ReturnContext(self, localctx)
                 self.enterOuterAlt(localctx, 6)
-                self.state = 83
-                self.match(wizardParser.T__2)
+                self.state = 85
+                self.match(wizardParser.T__1)
                 pass
             elif token in [wizardParser.T__15, wizardParser.T__16]:
                 localctx = wizardParser.SelectContext(self, localctx)
                 self.enterOuterAlt(localctx, 7)
-                self.state = 84
+                self.state = 86
                 self.selectStmt()
                 pass
             elif token in [wizardParser.T__17]:
                 localctx = wizardParser.WhileContext(self, localctx)
                 self.enterOuterAlt(localctx, 8)
-                self.state = 85
+                self.state = 87
                 self.whileStmt()
                 pass
             else:
                 raise NoViableAltException(self)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class CancelStmtContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def expr(self):
+            return self.getTypedRuleContext(wizardParser.ExprContext,0)
+
+
+        def getRuleIndex(self):
+            return wizardParser.RULE_cancelStmt
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterCancelStmt" ):
+                listener.enterCancelStmt(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitCancelStmt" ):
+                listener.exitCancelStmt(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCancelStmt" ):
+                return visitor.visitCancelStmt(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def cancelStmt(self):
+
+        localctx = wizardParser.CancelStmtContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 12, self.RULE_cancelStmt)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 90
+            self.match(wizardParser.T__2)
+            self.state = 92
+            self._errHandler.sync(self)
+            la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
+            if la_ == 1:
+                self.state = 91
+                self.expr(0)
+
 
         except RecognitionException as re:
             localctx.exception = re
@@ -974,14 +1039,14 @@ class wizardParser ( Parser ):
     def caseStmt(self):
 
         localctx = wizardParser.CaseStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_caseStmt)
+        self.enterRule(localctx, 14, self.RULE_caseStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 88
+            self.state = 94
             self.match(wizardParser.T__3)
-            self.state = 89
+            self.state = 95
             self.expr(0)
-            self.state = 90
+            self.state = 96
             self.body()
         except RecognitionException as re:
             localctx.exception = re
@@ -1025,12 +1090,12 @@ class wizardParser ( Parser ):
     def defaultStmt(self):
 
         localctx = wizardParser.DefaultStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_defaultStmt)
+        self.enterRule(localctx, 16, self.RULE_defaultStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 92
+            self.state = 98
             self.match(wizardParser.T__4)
-            self.state = 93
+            self.state = 99
             self.body()
         except RecognitionException as re:
             localctx.exception = re
@@ -1078,14 +1143,14 @@ class wizardParser ( Parser ):
     def elifStmt(self):
 
         localctx = wizardParser.ElifStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_elifStmt)
+        self.enterRule(localctx, 18, self.RULE_elifStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 95
+            self.state = 101
             self.match(wizardParser.T__5)
-            self.state = 96
+            self.state = 102
             self.expr(0)
-            self.state = 97
+            self.state = 103
             self.body()
         except RecognitionException as re:
             localctx.exception = re
@@ -1129,12 +1194,12 @@ class wizardParser ( Parser ):
     def elseStmt(self):
 
         localctx = wizardParser.ElseStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_elseStmt)
+        self.enterRule(localctx, 20, self.RULE_elseStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 99
+            self.state = 105
             self.match(wizardParser.T__6)
-            self.state = 100
+            self.state = 106
             self.body()
         except RecognitionException as re:
             localctx.exception = re
@@ -1189,30 +1254,30 @@ class wizardParser ( Parser ):
     def forStmt(self):
 
         localctx = wizardParser.ForStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 20, self.RULE_forStmt)
+        self.enterRule(localctx, 22, self.RULE_forStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 102
+            self.state = 108
             self.match(wizardParser.T__7)
-            self.state = 103
+            self.state = 109
             self.match(wizardParser.Identifier)
-            self.state = 106
+            self.state = 112
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [wizardParser.T__9]:
-                self.state = 104
+                self.state = 110
                 self.forRangeHeader()
                 pass
             elif token in [wizardParser.In]:
-                self.state = 105
+                self.state = 111
                 self.forInHeader()
                 pass
             else:
                 raise NoViableAltException(self)
 
-            self.state = 108
+            self.state = 114
             self.body()
-            self.state = 109
+            self.state = 115
             self.match(wizardParser.T__8)
         except RecognitionException as re:
             localctx.exception = re
@@ -1259,25 +1324,25 @@ class wizardParser ( Parser ):
     def forRangeHeader(self):
 
         localctx = wizardParser.ForRangeHeaderContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 22, self.RULE_forRangeHeader)
+        self.enterRule(localctx, 24, self.RULE_forRangeHeader)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 111
-            self.match(wizardParser.T__9)
-            self.state = 112
-            self.expr(0)
-            self.state = 113
-            self.match(wizardParser.T__10)
-            self.state = 114
-            self.expr(0)
             self.state = 117
+            self.match(wizardParser.T__9)
+            self.state = 118
+            self.expr(0)
+            self.state = 119
+            self.match(wizardParser.T__10)
+            self.state = 120
+            self.expr(0)
+            self.state = 123
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==wizardParser.T__11:
-                self.state = 115
+                self.state = 121
                 self.match(wizardParser.T__11)
-                self.state = 116
+                self.state = 122
                 self.expr(0)
 
 
@@ -1326,12 +1391,12 @@ class wizardParser ( Parser ):
     def forInHeader(self):
 
         localctx = wizardParser.ForInHeaderContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 24, self.RULE_forInHeader)
+        self.enterRule(localctx, 26, self.RULE_forInHeader)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 119
+            self.state = 125
             self.match(wizardParser.In)
-            self.state = 120
+            self.state = 126
             self.expr(0)
         except RecognitionException as re:
             localctx.exception = re
@@ -1390,35 +1455,35 @@ class wizardParser ( Parser ):
     def ifStmt(self):
 
         localctx = wizardParser.IfStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_ifStmt)
+        self.enterRule(localctx, 28, self.RULE_ifStmt)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 122
-            self.match(wizardParser.T__12)
-            self.state = 123
-            self.expr(0)
-            self.state = 124
-            self.body()
             self.state = 128
+            self.match(wizardParser.T__12)
+            self.state = 129
+            self.expr(0)
+            self.state = 130
+            self.body()
+            self.state = 134
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==wizardParser.T__5:
-                self.state = 125
+                self.state = 131
                 self.elifStmt()
-                self.state = 130
+                self.state = 136
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 132
+            self.state = 138
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==wizardParser.T__6:
-                self.state = 131
+                self.state = 137
                 self.elseStmt()
 
 
-            self.state = 134
+            self.state = 140
             self.match(wizardParser.T__13)
         except RecognitionException as re:
             localctx.exception = re
@@ -1466,24 +1531,24 @@ class wizardParser ( Parser ):
     def selectStmt(self):
 
         localctx = wizardParser.SelectStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_selectStmt)
+        self.enterRule(localctx, 30, self.RULE_selectStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 138
+            self.state = 144
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [wizardParser.T__15]:
-                self.state = 136
+                self.state = 142
                 self.selectOne()
                 pass
             elif token in [wizardParser.T__16]:
-                self.state = 137
+                self.state = 143
                 self.selectMany()
                 pass
             else:
                 raise NoViableAltException(self)
 
-            self.state = 140
+            self.state = 146
             self.match(wizardParser.T__14)
         except RecognitionException as re:
             localctx.exception = re
@@ -1534,25 +1599,25 @@ class wizardParser ( Parser ):
     def selectCaseList(self):
 
         localctx = wizardParser.SelectCaseListContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 30, self.RULE_selectCaseList)
+        self.enterRule(localctx, 32, self.RULE_selectCaseList)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 145
+            self.state = 151
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==wizardParser.T__3:
-                self.state = 142
+                self.state = 148
                 self.caseStmt()
-                self.state = 147
+                self.state = 153
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 149
+            self.state = 155
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==wizardParser.T__4:
-                self.state = 148
+                self.state = 154
                 self.defaultStmt()
 
 
@@ -1607,18 +1672,18 @@ class wizardParser ( Parser ):
     def optionTuple(self):
 
         localctx = wizardParser.OptionTupleContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_optionTuple)
+        self.enterRule(localctx, 34, self.RULE_optionTuple)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 151
+            self.state = 157
             self.expr(0)
-            self.state = 152
+            self.state = 158
             self.match(wizardParser.Comma)
-            self.state = 153
+            self.state = 159
             self.expr(0)
-            self.state = 154
+            self.state = 160
             self.match(wizardParser.Comma)
-            self.state = 155
+            self.state = 161
             self.expr(0)
         except RecognitionException as re:
             localctx.exception = re
@@ -1679,36 +1744,36 @@ class wizardParser ( Parser ):
     def selectOne(self):
 
         localctx = wizardParser.SelectOneContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 34, self.RULE_selectOne)
+        self.enterRule(localctx, 36, self.RULE_selectOne)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 157
-            self.match(wizardParser.T__15)
-            self.state = 158
-            self.expr(0)
             self.state = 163
+            self.match(wizardParser.T__15)
+            self.state = 164
+            self.expr(0)
+            self.state = 169
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 159
+                    self.state = 165
                     self.match(wizardParser.Comma)
-                    self.state = 160
+                    self.state = 166
                     self.optionTuple() 
-                self.state = 165
+                self.state = 171
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
 
-            self.state = 167
+            self.state = 173
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==wizardParser.Comma:
-                self.state = 166
+                self.state = 172
                 self.match(wizardParser.Comma)
 
 
-            self.state = 169
+            self.state = 175
             self.selectCaseList()
         except RecognitionException as re:
             localctx.exception = re
@@ -1769,36 +1834,36 @@ class wizardParser ( Parser ):
     def selectMany(self):
 
         localctx = wizardParser.SelectManyContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 36, self.RULE_selectMany)
+        self.enterRule(localctx, 38, self.RULE_selectMany)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 171
-            self.match(wizardParser.T__16)
-            self.state = 172
-            self.expr(0)
             self.state = 177
+            self.match(wizardParser.T__16)
+            self.state = 178
+            self.expr(0)
+            self.state = 183
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,13,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,14,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 173
+                    self.state = 179
                     self.match(wizardParser.Comma)
-                    self.state = 174
+                    self.state = 180
                     self.optionTuple() 
-                self.state = 179
+                self.state = 185
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,13,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,14,self._ctx)
 
-            self.state = 181
+            self.state = 187
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==wizardParser.Comma:
-                self.state = 180
+                self.state = 186
                 self.match(wizardParser.Comma)
 
 
-            self.state = 183
+            self.state = 189
             self.selectCaseList()
         except RecognitionException as re:
             localctx.exception = re
@@ -1846,16 +1911,16 @@ class wizardParser ( Parser ):
     def whileStmt(self):
 
         localctx = wizardParser.WhileStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 38, self.RULE_whileStmt)
+        self.enterRule(localctx, 40, self.RULE_whileStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 185
+            self.state = 191
             self.match(wizardParser.T__17)
-            self.state = 186
+            self.state = 192
             self.expr(0)
-            self.state = 187
+            self.state = 193
             self.body()
-            self.state = 188
+            self.state = 194
             self.match(wizardParser.T__18)
         except RecognitionException as re:
             localctx.exception = re
@@ -1908,25 +1973,25 @@ class wizardParser ( Parser ):
     def argList(self):
 
         localctx = wizardParser.ArgListContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 40, self.RULE_argList)
+        self.enterRule(localctx, 42, self.RULE_argList)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 198
+            self.state = 204
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,16,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,17,self._ctx)
             if la_ == 1:
-                self.state = 190
+                self.state = 196
                 self.expr(0)
-                self.state = 195
+                self.state = 201
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==wizardParser.Comma:
-                    self.state = 191
-                    self.match(wizardParser.Comma)
-                    self.state = 192
-                    self.expr(0)
                     self.state = 197
+                    self.match(wizardParser.Comma)
+                    self.state = 198
+                    self.expr(0)
+                    self.state = 203
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
@@ -1977,12 +2042,12 @@ class wizardParser ( Parser ):
     def keywordStmt(self):
 
         localctx = wizardParser.KeywordStmtContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 42, self.RULE_keywordStmt)
+        self.enterRule(localctx, 44, self.RULE_keywordStmt)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 200
+            self.state = 206
             self.match(wizardParser.Keyword)
-            self.state = 201
+            self.state = 207
             self.argList()
         except RecognitionException as re:
             localctx.exception = re
@@ -2657,24 +2722,24 @@ class wizardParser ( Parser ):
         _parentState = self.state
         localctx = wizardParser.ExprContext(self, self._ctx, _parentState)
         _prevctx = localctx
-        _startState = 44
-        self.enterRecursionRule(localctx, 44, self.RULE_expr, _p)
+        _startState = 46
+        self.enterRecursionRule(localctx, 46, self.RULE_expr, _p)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 232
+            self.state = 238
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,18,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
             if la_ == 1:
                 localctx = wizardParser.ParenExprContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
 
-                self.state = 204
+                self.state = 210
                 self.match(wizardParser.LeftParenthesis)
-                self.state = 205
+                self.state = 211
                 self.expr(0)
-                self.state = 206
+                self.state = 212
                 self.match(wizardParser.RightParenthesis)
                 pass
 
@@ -2682,13 +2747,13 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.FunctionCallContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 208
+                self.state = 214
                 self.match(wizardParser.Identifier)
-                self.state = 209
+                self.state = 215
                 self.match(wizardParser.LeftParenthesis)
-                self.state = 210
+                self.state = 216
                 self.argList()
-                self.state = 211
+                self.state = 217
                 self.match(wizardParser.RightParenthesis)
                 pass
 
@@ -2696,9 +2761,9 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.PreIncrementContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 213
+                self.state = 219
                 self.match(wizardParser.Increment)
-                self.state = 214
+                self.state = 220
                 self.match(wizardParser.Identifier)
                 pass
 
@@ -2706,9 +2771,9 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.PostIncrementContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 215
+                self.state = 221
                 self.match(wizardParser.Identifier)
-                self.state = 216
+                self.state = 222
                 self.match(wizardParser.Increment)
                 pass
 
@@ -2716,9 +2781,9 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.PreDecrementContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 217
+                self.state = 223
                 self.match(wizardParser.Decrement)
-                self.state = 218
+                self.state = 224
                 self.match(wizardParser.Identifier)
                 pass
 
@@ -2726,9 +2791,9 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.PostDecrementContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 219
+                self.state = 225
                 self.match(wizardParser.Identifier)
-                self.state = 220
+                self.state = 226
                 self.match(wizardParser.Decrement)
                 pass
 
@@ -2736,9 +2801,9 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.NegativeContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 221
+                self.state = 227
                 self.match(wizardParser.Minus)
-                self.state = 222
+                self.state = 228
                 self.expr(14)
                 pass
 
@@ -2746,14 +2811,14 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.NotContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 223
+                self.state = 229
                 _la = self._input.LA(1)
                 if not(_la==wizardParser.T__19 or _la==wizardParser.T__20):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 224
+                self.state = 230
                 self.expr(13)
                 pass
 
@@ -2761,31 +2826,31 @@ class wizardParser ( Parser ):
                 localctx = wizardParser.ValueContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 230
+                self.state = 236
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,17,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,18,self._ctx)
                 if la_ == 1:
-                    self.state = 225
+                    self.state = 231
                     self.constant()
                     pass
 
                 elif la_ == 2:
-                    self.state = 226
+                    self.state = 232
                     self.decimal()
                     pass
 
                 elif la_ == 3:
-                    self.state = 227
+                    self.state = 233
                     self.integer()
                     pass
 
                 elif la_ == 4:
-                    self.state = 228
+                    self.state = 234
                     self.string()
                     pass
 
                 elif la_ == 5:
-                    self.state = 229
+                    self.state = 235
                     self.match(wizardParser.Identifier)
                     pass
 
@@ -2794,102 +2859,76 @@ class wizardParser ( Parser ):
 
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 303
+            self.state = 309
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,28,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,29,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 301
+                    self.state = 307
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,27,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input,28,self._ctx)
                     if la_ == 1:
                         localctx = wizardParser.ExponentiationContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 234
+                        self.state = 240
                         if not self.precpred(self._ctx, 10):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
-                        self.state = 235
+                        self.state = 241
                         self.match(wizardParser.Raise)
-                        self.state = 236
+                        self.state = 242
                         self.expr(11)
                         pass
 
                     elif la_ == 2:
                         localctx = wizardParser.TimesDivideModuloContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 237
+                        self.state = 243
                         if not self.precpred(self._ctx, 9):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
-                        self.state = 238
+                        self.state = 244
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << wizardParser.Divide) | (1 << wizardParser.Times) | (1 << wizardParser.Modulo))) != 0)):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 239
+                        self.state = 245
                         self.expr(10)
                         pass
 
                     elif la_ == 3:
                         localctx = wizardParser.PlusMinusContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 240
+                        self.state = 246
                         if not self.precpred(self._ctx, 8):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
-                        self.state = 241
+                        self.state = 247
                         _la = self._input.LA(1)
                         if not(_la==wizardParser.Minus or _la==wizardParser.Plus):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 242
+                        self.state = 248
                         self.expr(9)
                         pass
 
                     elif la_ == 4:
                         localctx = wizardParser.GreaterContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 243
+                        self.state = 249
                         if not self.precpred(self._ctx, 7):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 7)")
-                        self.state = 244
-                        _la = self._input.LA(1)
-                        if not(_la==wizardParser.GreaterOrEqual or _la==wizardParser.Greater):
-                            self._errHandler.recoverInline(self)
-                        else:
-                            self._errHandler.reportMatch(self)
-                            self.consume()
-                        self.state = 246
-                        self._errHandler.sync(self)
-                        _la = self._input.LA(1)
-                        if _la==wizardParser.Colon:
-                            self.state = 245
-                            self.match(wizardParser.Colon)
-
-
-                        self.state = 248
-                        self.expr(8)
-                        pass
-
-                    elif la_ == 5:
-                        localctx = wizardParser.LesserContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 249
-                        if not self.precpred(self._ctx, 6):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
                         self.state = 250
                         _la = self._input.LA(1)
-                        if not(_la==wizardParser.LesserOrEqual or _la==wizardParser.Lesser):
+                        if not(_la==wizardParser.GreaterOrEqual or _la==wizardParser.Greater):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
@@ -2903,19 +2942,19 @@ class wizardParser ( Parser ):
 
 
                         self.state = 254
-                        self.expr(7)
+                        self.expr(8)
                         pass
 
-                    elif la_ == 6:
-                        localctx = wizardParser.EqualContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
+                    elif la_ == 5:
+                        localctx = wizardParser.LesserContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 255
-                        if not self.precpred(self._ctx, 5):
+                        if not self.precpred(self._ctx, 6):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
                         self.state = 256
                         _la = self._input.LA(1)
-                        if not(_la==wizardParser.Equal or _la==wizardParser.NotEqual):
+                        if not(_la==wizardParser.LesserOrEqual or _la==wizardParser.Lesser):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
@@ -2929,151 +2968,177 @@ class wizardParser ( Parser ):
 
 
                         self.state = 260
+                        self.expr(7)
+                        pass
+
+                    elif la_ == 6:
+                        localctx = wizardParser.EqualContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
+                        self.state = 261
+                        if not self.precpred(self._ctx, 5):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
+                        self.state = 262
+                        _la = self._input.LA(1)
+                        if not(_la==wizardParser.Equal or _la==wizardParser.NotEqual):
+                            self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
+                        self.state = 264
+                        self._errHandler.sync(self)
+                        _la = self._input.LA(1)
+                        if _la==wizardParser.Colon:
+                            self.state = 263
+                            self.match(wizardParser.Colon)
+
+
+                        self.state = 266
                         self.expr(6)
                         pass
 
                     elif la_ == 7:
                         localctx = wizardParser.OrContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 261
+                        self.state = 267
                         if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
-                        self.state = 262
+                        self.state = 268
                         _la = self._input.LA(1)
                         if not(_la==wizardParser.T__21 or _la==wizardParser.T__22):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 263
+                        self.state = 269
                         self.expr(5)
                         pass
 
                     elif la_ == 8:
                         localctx = wizardParser.AndContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 264
+                        self.state = 270
                         if not self.precpred(self._ctx, 3):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
-                        self.state = 265
+                        self.state = 271
                         _la = self._input.LA(1)
                         if not(_la==wizardParser.T__23 or _la==wizardParser.T__24):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 266
+                        self.state = 272
                         self.expr(4)
                         pass
 
                     elif la_ == 9:
                         localctx = wizardParser.DotFunctionCallContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 267
+                        self.state = 273
                         if not self.precpred(self._ctx, 20):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 20)")
-                        self.state = 268
+                        self.state = 274
                         self.match(wizardParser.Dot)
-                        self.state = 269
+                        self.state = 275
                         self.match(wizardParser.Identifier)
-                        self.state = 270
+                        self.state = 276
                         self.match(wizardParser.LeftParenthesis)
-                        self.state = 271
+                        self.state = 277
                         self.argList()
-                        self.state = 272
+                        self.state = 278
                         self.match(wizardParser.RightParenthesis)
                         pass
 
                     elif la_ == 10:
                         localctx = wizardParser.IndexContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 274
+                        self.state = 280
                         if not self.precpred(self._ctx, 12):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
-                        self.state = 275
+                        self.state = 281
                         self.match(wizardParser.LeftBracket)
-                        self.state = 276
+                        self.state = 282
                         self.expr(0)
-                        self.state = 277
+                        self.state = 283
                         self.match(wizardParser.RightBracket)
                         pass
 
                     elif la_ == 11:
                         localctx = wizardParser.SliceContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 279
+                        self.state = 285
                         if not self.precpred(self._ctx, 11):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
-                        self.state = 280
-                        self.match(wizardParser.LeftBracket)
-                        self.state = 282
-                        self._errHandler.sync(self)
-                        _la = self._input.LA(1)
-                        if ((((_la - 20)) & ~0x3f) == 0 and ((1 << (_la - 20)) & ((1 << (wizardParser.T__19 - 20)) | (1 << (wizardParser.T__20 - 20)) | (1 << (wizardParser.T__25 - 20)) | (1 << (wizardParser.T__26 - 20)) | (1 << (wizardParser.T__27 - 20)) | (1 << (wizardParser.LeftParenthesis - 20)) | (1 << (wizardParser.Number - 20)) | (1 << (wizardParser.DoubleQuotedString - 20)) | (1 << (wizardParser.SingleQuotedString - 20)) | (1 << (wizardParser.Minus - 20)) | (1 << (wizardParser.Decrement - 20)) | (1 << (wizardParser.Increment - 20)) | (1 << (wizardParser.Identifier - 20)))) != 0):
-                            self.state = 281
-                            self.expr(0)
-
-
-                        self.state = 284
-                        self.match(wizardParser.Colon)
                         self.state = 286
+                        self.match(wizardParser.LeftBracket)
+                        self.state = 288
                         self._errHandler.sync(self)
                         _la = self._input.LA(1)
                         if ((((_la - 20)) & ~0x3f) == 0 and ((1 << (_la - 20)) & ((1 << (wizardParser.T__19 - 20)) | (1 << (wizardParser.T__20 - 20)) | (1 << (wizardParser.T__25 - 20)) | (1 << (wizardParser.T__26 - 20)) | (1 << (wizardParser.T__27 - 20)) | (1 << (wizardParser.LeftParenthesis - 20)) | (1 << (wizardParser.Number - 20)) | (1 << (wizardParser.DoubleQuotedString - 20)) | (1 << (wizardParser.SingleQuotedString - 20)) | (1 << (wizardParser.Minus - 20)) | (1 << (wizardParser.Decrement - 20)) | (1 << (wizardParser.Increment - 20)) | (1 << (wizardParser.Identifier - 20)))) != 0):
-                            self.state = 285
+                            self.state = 287
                             self.expr(0)
 
 
+                        self.state = 290
+                        self.match(wizardParser.Colon)
                         self.state = 292
                         self._errHandler.sync(self)
                         _la = self._input.LA(1)
+                        if ((((_la - 20)) & ~0x3f) == 0 and ((1 << (_la - 20)) & ((1 << (wizardParser.T__19 - 20)) | (1 << (wizardParser.T__20 - 20)) | (1 << (wizardParser.T__25 - 20)) | (1 << (wizardParser.T__26 - 20)) | (1 << (wizardParser.T__27 - 20)) | (1 << (wizardParser.LeftParenthesis - 20)) | (1 << (wizardParser.Number - 20)) | (1 << (wizardParser.DoubleQuotedString - 20)) | (1 << (wizardParser.SingleQuotedString - 20)) | (1 << (wizardParser.Minus - 20)) | (1 << (wizardParser.Decrement - 20)) | (1 << (wizardParser.Increment - 20)) | (1 << (wizardParser.Identifier - 20)))) != 0):
+                            self.state = 291
+                            self.expr(0)
+
+
+                        self.state = 298
+                        self._errHandler.sync(self)
+                        _la = self._input.LA(1)
                         if _la==wizardParser.Colon:
-                            self.state = 288
+                            self.state = 294
                             self.match(wizardParser.Colon)
-                            self.state = 290
+                            self.state = 296
                             self._errHandler.sync(self)
                             _la = self._input.LA(1)
                             if ((((_la - 20)) & ~0x3f) == 0 and ((1 << (_la - 20)) & ((1 << (wizardParser.T__19 - 20)) | (1 << (wizardParser.T__20 - 20)) | (1 << (wizardParser.T__25 - 20)) | (1 << (wizardParser.T__26 - 20)) | (1 << (wizardParser.T__27 - 20)) | (1 << (wizardParser.LeftParenthesis - 20)) | (1 << (wizardParser.Number - 20)) | (1 << (wizardParser.DoubleQuotedString - 20)) | (1 << (wizardParser.SingleQuotedString - 20)) | (1 << (wizardParser.Minus - 20)) | (1 << (wizardParser.Decrement - 20)) | (1 << (wizardParser.Increment - 20)) | (1 << (wizardParser.Identifier - 20)))) != 0):
-                                self.state = 289
+                                self.state = 295
                                 self.expr(0)
 
 
 
 
-                        self.state = 294
+                        self.state = 300
                         self.match(wizardParser.RightBracket)
                         pass
 
                     elif la_ == 12:
                         localctx = wizardParser.InContext(self, wizardParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 295
+                        self.state = 301
                         if not self.precpred(self._ctx, 2):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
-                        self.state = 296
+                        self.state = 302
                         self.match(wizardParser.In)
-                        self.state = 297
+                        self.state = 303
                         self.expr(0)
-                        self.state = 299
+                        self.state = 305
                         self._errHandler.sync(self)
-                        la_ = self._interp.adaptivePredict(self._input,26,self._ctx)
+                        la_ = self._interp.adaptivePredict(self._input,27,self._ctx)
                         if la_ == 1:
-                            self.state = 298
+                            self.state = 304
                             self.match(wizardParser.Colon)
 
 
                         pass
 
              
-                self.state = 305
+                self.state = 311
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,28,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,29,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -3114,11 +3179,11 @@ class wizardParser ( Parser ):
     def constant(self):
 
         localctx = wizardParser.ConstantContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 46, self.RULE_constant)
+        self.enterRule(localctx, 48, self.RULE_constant)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 306
+            self.state = 312
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << wizardParser.T__25) | (1 << wizardParser.T__26) | (1 << wizardParser.T__27))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -3166,10 +3231,10 @@ class wizardParser ( Parser ):
     def integer(self):
 
         localctx = wizardParser.IntegerContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 48, self.RULE_integer)
+        self.enterRule(localctx, 50, self.RULE_integer)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 308
+            self.state = 314
             self.match(wizardParser.Number)
         except RecognitionException as re:
             localctx.exception = re
@@ -3218,14 +3283,14 @@ class wizardParser ( Parser ):
     def decimal(self):
 
         localctx = wizardParser.DecimalContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 50, self.RULE_decimal)
+        self.enterRule(localctx, 52, self.RULE_decimal)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 310
+            self.state = 316
             self.match(wizardParser.Number)
-            self.state = 311
+            self.state = 317
             self.match(wizardParser.Dot)
-            self.state = 312
+            self.state = 318
             self.match(wizardParser.Number)
         except RecognitionException as re:
             localctx.exception = re
@@ -3271,11 +3336,11 @@ class wizardParser ( Parser ):
     def string(self):
 
         localctx = wizardParser.StringContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 52, self.RULE_string)
+        self.enterRule(localctx, 54, self.RULE_string)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 314
+            self.state = 320
             _la = self._input.LA(1)
             if not(_la==wizardParser.DoubleQuotedString or _la==wizardParser.SingleQuotedString):
                 self._errHandler.recoverInline(self)
@@ -3295,7 +3360,7 @@ class wizardParser ( Parser ):
     def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
         if self._predicates == None:
             self._predicates = dict()
-        self._predicates[22] = self.expr_sempred
+        self._predicates[23] = self.expr_sempred
         pred = self._predicates.get(ruleIndex, None)
         if pred is None:
             raise Exception("No predicate with index:" + str(ruleIndex))

@@ -43,7 +43,7 @@ compoundAssignment:
 // Statements that alter control flow.
 controlFlowStmt:
 	'Break'			# Break
-	| 'Cancel'		# Cancel
+	| cancelStmt	# Cancel
 	| 'Continue'	# Continue
 	| forStmt		# For
 	| ifStmt		# If
@@ -51,7 +51,10 @@ controlFlowStmt:
 	| selectStmt	# Select
 	| whileStmt		# While;
 
-// Describes what do in a select statement if a certain case is hit. expr must be a string,
+// Describe what to do in a cancel statement:
+cancelStmt: 'Cancel' expr?;
+
+// Describes what to do in a select statement if a certain case is hit. expr must be a string,
 // type-check is during semantic analysis.
 caseStmt: 'Case' expr body;
 
