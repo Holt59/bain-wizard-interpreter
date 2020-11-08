@@ -64,7 +64,7 @@ class WizardRunnerState(WizardInterpreterState):
         Returns:
             The name of the selected sub-packages (sorted).
         """
-        return sorted(self._subpackages)
+        return sorted(self._subpackages, key=lambda s: s.lower())
 
     @property
     def plugins(self) -> Sequence[str]:
@@ -72,7 +72,7 @@ class WizardRunnerState(WizardInterpreterState):
         Returns:
             The name of the selected plugins (sorted).
         """
-        return sorted(self._plugins)
+        return sorted(self._plugins, key=lambda s: s.lower())
 
     @property
     def renames(self) -> Mapping[str, str]:

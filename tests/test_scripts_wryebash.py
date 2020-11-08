@@ -93,8 +93,8 @@ def test_better_cities():
         "21 ICExpand",
         "30 All Natural",
         "30 Knights of the Nine Chorrol",
-        "30 OOO",
         "30 Oblivifall",
+        "30 OOO",
         "31 OOO",
         "40 Bravil Vanilla",
     ]
