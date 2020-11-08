@@ -16,7 +16,7 @@ setup(
     # Version of the package:
     version="0.0.1",
     # Find the package automatically (include everything):
-    packages=find_packages(),
+    packages=find_packages(exclude=("tests",)),
     package_data={"wizard": ["py.typed"]},
     # Author information:
     author="Holt59",
