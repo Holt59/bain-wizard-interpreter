@@ -98,3 +98,10 @@ class WizardINITweaks:
             contain multiple edits for the same setting.
         """
         return self._modified
+
+    def __bool__(self) -> bool:
+        """
+        Returns:
+            True if these are any tweaks (modified or disabled settings).
+        """
+        return bool(self._modified) or bool(self._disabled)
