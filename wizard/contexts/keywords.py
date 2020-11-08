@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 from abc import abstractproperty
-from typing import Callable, List, TYPE_CHECKING
+from typing import Callable, List, Optional, Tuple, TYPE_CHECKING
 
 from ..antlr4.wizardParser import wizardParser
 from ..errors import WizardNameError, WizardTypeError
@@ -151,6 +151,41 @@ class WizardSelectSubPackageContext(WizardKeywordContext[ContextState]):
 
 
 class WizardRequireVersionsContext(WizardKeywordContext[ContextState]):
+
+    """
+    The require versions context is a bit special since it probably requires
+    user interaction which is why we parse the arguments inside constructor.
+    """
+
+    _args: Tuple[str, Optional[str], Optional[str], Optional[str]]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self._args = tuple(
+            arg.value if arg.value else None for arg in self._get_args(self._argtypes)
+        )
+
+    # These property are useful to use the interpreter:
+    @property
+    def game_version(self) -> str:
+        return self._args[0]
+
+    @property
+    def script_extender_version(self) -> Optional[str]:
+        return self._args[1]
+
+    @property
+    def graphics_extender_version(self) -> Optional[str]:
+        return self._args[2]
+
+    @property
+    def wrye_bash_version(self) -> Optional[str]:
+        return self._args[3]
+
+    # These two are not used at all but required for mypy or other tools
+    # since otherwise the class is abstract.
+
     @property
     def _visitor(self):
         return self._factory.kvisitor.visitRequireVersions
@@ -188,13 +223,7 @@ class WizardRequireVersionsContext(WizardKeywordContext[ContextState]):
 
     def exec(self) -> WizardInterpreterContext:
         state = self.state.copy()
-        self._visitor(
-            state,
-            *(
-                arg.value if arg.value else None
-                for arg in self._get_args(self._argtypes)
-            ),
-        )
+        self._visitor(state, *self._args)
         return self._factory._copy_parent(self, state)
 
 
