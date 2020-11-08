@@ -185,6 +185,18 @@ class SelectOption:
         """
         return self._image
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SelectOption):
+            return False
+        return (self.name, self.description, self.image) == (
+            other.name,
+            other.description,
+            other.image,
+        )
+
+    def __repr__(self) -> str:
+        return f"SelectOption({self.name}, {self.description}, {self.image})"
+
 
 class ManagerUserInterface:
 

@@ -9,6 +9,7 @@ from antlr4 import InputStream
 from .contexts import (
     WizardInterpreterContext,
     WizardInterpreterContextFactory,
+    WizardTopLevelContext,
     WizardSelectOneContext,
     WizardSelectManyContext,
     WizardTerminationContext,
@@ -131,6 +132,15 @@ class WizardScriptRunner(
     def rewind(self, context: WizardInterpreterContext):
         raise WizardScriptRunner.RewindFlow(context)
 
+    def make_top_level_context(  # type: ignore
+        self,
+        script: Union[InputStream, Path, TextIO, str],
+        state: Optional[WizardRunnerState] = None,
+    ) -> WizardTopLevelContext[WizardRunnerState]:
+        if state is None:
+            state = WizardRunnerState()
+        return super().make_top_level_context(script, state)
+
     def run(
         self, script: Union[InputStream, Path, TextIO, str]
     ) -> Tuple[WizardScriptRunnerStatus, WizardRunnerState]:
@@ -148,9 +158,7 @@ class WizardScriptRunner(
         """
 
         # Run the interpret:
-        ctx: WizardInterpreterContext = self.make_top_level_context(
-            script, WizardRunnerState()
-        )
+        ctx: WizardInterpreterContext = self.make_top_level_context(script)
 
         while True:
 

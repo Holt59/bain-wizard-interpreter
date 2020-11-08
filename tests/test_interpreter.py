@@ -2,8 +2,10 @@
 
 import pytest  # noqa: F401
 
+from wizard.contexts import WizardSelectContext
 from wizard.errors import WizardTypeError, WizardNameError
 from wizard.expr import SubPackages, Value
+from wizard.manager import SelectOption
 
 from .test_utils import InterpreterChecker, RunnerChecker, MockSubPackage
 
@@ -182,6 +184,12 @@ Default
     Break
 EndSelect
 """
+
+    context = runner.make_top_level_context(s)
+    context: WizardSelectContext = runner.exec_until(context, (WizardSelectContext,))
+    assert isinstance(context, WizardSelectContext)
+    assert len(context.options) == 2
+
     runner.onSelect("O1")
     _, r = runner.run(s)
     assert r.variables == {"x": Value(2)}
@@ -247,6 +255,29 @@ EndSelect
     runner.onSelect("O2")
     _, r = runner.run(s)
     assert r.variables == {"x": Value(3)}
+
+    # Defaults
+    s = r"""
+x = 1
+SelectOne "The Description",
+    "O1", "Description O1", "ImgO1", \
+    "|O2", "Description O2", "ImgO2"
+Case "O1"
+    x += 2
+Case "O2"
+    x += 3
+    Break
+EndSelect
+"""
+
+    context = runner.make_top_level_context(s)
+    context: WizardSelectContext = runner.exec_until(context, (WizardSelectContext,))
+    assert isinstance(context, WizardSelectContext)
+    assert context.options == [
+        SelectOption("O1", "Description O1", "ImgO1"),
+        SelectOption("O2", "Description O2", "ImgO2"),
+    ]
+    assert context.default == context.options[1]
 
     # Fallthrough
     s = r"""

@@ -12,6 +12,7 @@ Each folder under tests/data should contain:
 from pathlib import Path
 from typing import List
 
+from wizard.contexts import WizardSelectContext
 from wizard.expr import SubPackages
 
 from .test_utils import MockSubPackage, RunnerChecker
@@ -282,6 +283,12 @@ def test_farmhouse_chimneys():
 
     # Create the runner:
     runner = RunnerChecker(subpackages)
+
+    # Quick test:
+    context = runner.make_top_level_context(script)
+    context: WizardSelectContext = runner.exec_until(context, (WizardSelectContext,))
+    assert isinstance(context, WizardSelectContext)
+    assert len(context.options) == 3
 
     # I had these installed, so I use them to check:
     runner.setReturnValue("dataFileExists", False)

@@ -569,7 +569,7 @@ def parse_select_options(
 
         # Add to defaults:
         if isdef:
-            options.append(options[-1])
+            defaults.append(options[-1])
 
     # Not default in SelectOne -> Select first one.
     if not isinstance(context, wizardParser.SelectManyContext) and not defaults:
