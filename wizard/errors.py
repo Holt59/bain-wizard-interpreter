@@ -76,7 +76,7 @@ class WizardNameError(WizardError):
     _name: str
 
     def __init__(self, context: ParserRuleContext, name):
-        super().__init__(context, f"The name {name} is not defined.")
+        super().__init__(context, f"The name '{name}' is not defined.")
         self._name = name
 
     @property

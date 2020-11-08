@@ -203,7 +203,7 @@ class WizardExpressionVisitor:
     ) -> Value:
         name = ctx.Identifier().getText()
         if name not in state._variables:
-            raise WizardNameError(ctx.Identifier(), name)
+            raise WizardNameError(ctx, name)
         state._variables[ctx.Identifier().getText()] -= Value(1)
         return state._variables[ctx.Identifier().getText()]
 
@@ -214,7 +214,7 @@ class WizardExpressionVisitor:
     ) -> Value:
         name = ctx.Identifier().getText()
         if name not in state._variables:
-            raise WizardNameError(ctx.Identifier(), name)
+            raise WizardNameError(ctx, name)
         state._variables[ctx.Identifier().getText()] += Value(1)
         return state._variables[ctx.Identifier().getText()]
 
@@ -225,7 +225,7 @@ class WizardExpressionVisitor:
     ) -> Value:
         name = ctx.Identifier().getText()
         if name not in state._variables:
-            raise WizardNameError(ctx.Identifier(), name)
+            raise WizardNameError(ctx, name)
         state._variables[ctx.Identifier().getText()] += Value(1)
         return state._variables[ctx.Identifier().getText()]
 
@@ -236,7 +236,7 @@ class WizardExpressionVisitor:
     ) -> Value:
         name = ctx.Identifier().getText()
         if name not in state._variables:
-            raise WizardNameError(ctx.Identifier(), name)
+            raise WizardNameError(ctx, name)
         state._variables[ctx.Identifier().getText()] -= Value(1)
         return state._variables[ctx.Identifier().getText()]
 
@@ -310,7 +310,7 @@ class WizardExpressionVisitor:
                 # Severity check:
                 self._severity.raise_or_warn(
                     Issue.USAGE_OF_NOTSET_VARIABLES,
-                    WizardNameError(ctx.Identifier(), name),
+                    WizardNameError(ctx, name),
                     f"Variable {name} used before being set, default to 0.",
                 )
                 return Value(0)

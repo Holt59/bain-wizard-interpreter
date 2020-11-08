@@ -357,6 +357,12 @@ def test_exceptions():
     with pytest.raises(WizardTypeError):
         c.run("Cancel 2 + 3")
 
+    with pytest.raises(WizardNameError) as ne:
+        c.run("a++")
+    assert ne.value.line == 1
+    assert ne.value.column == 0
+    assert str(ne.value) == "Line 1, Column 0: The name 'a' is not defined."
+
     with pytest.raises(WizardParseError):
         c.run(
             """
