@@ -3,7 +3,7 @@
 import pytest  # noqa: F401
 
 from wizard.contexts import WizardSelectContext, WizardTerminationContext
-from wizard.errors import WizardTypeError, WizardNameError
+from wizard.errors import WizardTypeError, WizardParseError, WizardNameError
 from wizard.expr import SubPackages, Value
 from wizard.manager import SelectOption
 
@@ -356,6 +356,13 @@ def test_exceptions():
 
     with pytest.raises(WizardTypeError):
         c.run("Cancel 2 + 3")
+
+    with pytest.raises(WizardParseError):
+        c.run(
+            """
+x = x ** 3
+"""
+        )
 
     with pytest.raises(WizardTypeError) as te:
         c.run(

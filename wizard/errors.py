@@ -1,12 +1,15 @@
 # -*- encoding: utf-8 -*-
 
-
+from typing import Optional
 from antlr4 import ParserRuleContext
 
 
 class WizardError(Exception):
     """
     Base class for all Wizard errors.
+
+    The only case where there is no context associated is if the parser fails
+    at the beginning.
     """
 
     _ctx: ParserRuleContext
@@ -16,16 +19,24 @@ class WizardError(Exception):
         self._ctx = context
 
     @property
-    def context(self) -> ParserRuleContext:
+    def context(self) -> Optional[ParserRuleContext]:
         return self._ctx
 
     @property
     def line(self) -> int:
+        if not self._ctx:
+            return 0
         return self._ctx.start.line  # type: ignore
+
+    @property
+    def column(self) -> int:
+        if not self._ctx:
+            return 0
+        return self._ctx.start.column  # type: ignore
 
     def __str__(self) -> str:
         return "Line {}, Column {}: {}".format(
-            self._ctx.start.line, self._ctx.start.column, super().__str__()
+            self.line, self.column, super().__str__()
         )
 
 

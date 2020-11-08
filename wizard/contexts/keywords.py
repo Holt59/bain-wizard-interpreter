@@ -52,7 +52,7 @@ class WizardKeywordContext(
 
         return arglist
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         state = self.state.copy()
         self._visitor(
             self, state, *(arg.value for arg in self._get_args(self._argtypes))
@@ -221,7 +221,7 @@ class WizardRequireVersionsContext(WizardKeywordContext[ContextState]):
 
         return arglist
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         state = self.state.copy()
         self._visitor(state, *self._args)
         return self._factory._copy_parent(self, state)

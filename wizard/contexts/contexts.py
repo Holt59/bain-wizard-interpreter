@@ -28,6 +28,8 @@ from ..severity import Issue
 from ..state import ContextState
 from ..value import Value, SubPackage, SubPackages
 
+from .utils import wrap_exceptions
+
 if TYPE_CHECKING:
     from .factory import WizardInterpreterContextFactory
 
@@ -112,12 +114,22 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         return self._state
 
     @abstractmethod
+    def exec_(self) -> "WizardInterpreterContext":
+        """
+        Execute the next 'step' of this context and returns the next context
+        to execute. When done, should return the parent context.
+
+        This method should be implement by all sub-classes representing specific
+        contexts.
+        """
+        pass
+
     def exec(self) -> "WizardInterpreterContext":
         """
         Execute the next 'step' of this context and returns the next context
         to execute. When done, should return the parent context.
         """
-        pass
+        return wrap_exceptions(self.exec_, self.context)
 
 
 class WizardBreakableContext:
@@ -166,7 +178,7 @@ class WizardTerminationContext(
     want to check for "normal" completion, you can check for `not is_return()`.
     """
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         raise NotImplementedError("exec() should not be called on termination context.")
 
     def is_cancel(self) -> bool:
@@ -217,7 +229,7 @@ class WizardTopLevelContext(
     ):
         super().__init__(factory, context, self, state)
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         return self._factory.make_body_context(self.context.body(), self)
 
 
@@ -248,7 +260,7 @@ class WizardCancelContext(
         """
         return self._message
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         return self._factory.make_termination_context(self)
 
 
@@ -260,7 +272,7 @@ class WizardReturnContext(
     Special context that is returned when a 'Return' instruction is encountered.
     """
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         return self._factory.make_termination_context(self)
 
 
@@ -279,7 +291,7 @@ class WizardBodyContext(
         super().__init__(*args, **kwargs)
         self._ichild = 0
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         # Empty block or no more children:
         if not self._context.children or self._ichild == len(self._context.children):
@@ -339,7 +351,7 @@ class WizardBodyContext(
 class WizardBreakContext(
     WizardInterpreterContext[ContextState, wizardParser.BreakContext]
 ):
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         # Find the first loop or case:
         loop_or_case: Optional[WizardInterpreterContext] = self
@@ -360,7 +372,7 @@ class WizardBreakContext(
 class WizardContinueContext(
     WizardInterpreterContext[ContextState, wizardParser.ContinueContext]
 ):
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         # Find the first parent loop:
         loop: Optional[WizardInterpreterContext] = self
@@ -379,7 +391,7 @@ class WizardContinueContext(
 class WizardIfContext(
     WizardInterpreterContext[ContextState, wizardParser.IfStmtContext]
 ):
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         parent = self._factory._copy_parent(self)
 
@@ -461,7 +473,7 @@ class WizardForLoopContext(
                 ctx, f"Cannot iterable over value of type {value.type}."
             )
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         # End of the loop:
         if self._index == len(self._values):
@@ -491,7 +503,7 @@ class WizardWhileLoopContext(
     def continue_(self) -> WizardInterpreterContext:
         return self
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         loop = self._factory._copy_context(self)
 
@@ -509,7 +521,7 @@ class WizardAssignmentContext(
         wizardParser.AssignmentContext,
     ]
 ):
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         parent = self._factory._copy_parent(self)
 
@@ -532,7 +544,7 @@ class WizardCompoundAssignmentContext(
         wizardParser.CompoundAssignmentContext,
     ]
 ):
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         parent = self._factory._copy_parent(self)
 
@@ -672,7 +684,7 @@ class WizardSelectContext(WizardInterpreterContext[ContextState, RuleContext]):
         copy._selected = options
         return copy
 
-    def exec(self) -> "WizardSelectCasesContext":
+    def exec_(self) -> "WizardSelectCasesContext":
         # This completely delegates to the other context:
         return self._factory.make_select_cases_context(
             self._selected, self.context, self.parent
@@ -817,7 +829,7 @@ class WizardSelectCasesContext(
         # We return the context itself to keep evaluating cases:
         return copy
 
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
 
         # Element found in a selectOne, returns to the parent:
         if self._found and not self._ismany and not self._fallthrough:
@@ -870,6 +882,6 @@ class WizardCaseContext(
         Union[wizardParser.CaseStmtContext, wizardParser.DefaultStmtContext],
     ]
 ):
-    def exec(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext:
         # It's the select context job to check if this should be executed:
         return self._factory.make_body_context(self.context.body(), self.parent)

@@ -9,6 +9,7 @@ from .antlr4.wizardLexer import wizardLexer
 from .antlr4.wizardParser import wizardParser
 
 from .contexts import WizardTopLevelContext, WizardInterpreterContextFactory
+from .contexts.utils import wrap_exceptions
 from .expr import WizardExpressionVisitor
 from .functions import make_basic_functions, make_manager_functions
 from .keywords import WizardKeywordVisitor
@@ -103,7 +104,7 @@ def make_parse_wizard_context(
     parser._errHandler = BailErrorStrategy()
 
     # Run the interpret:
-    return parser.parseWizard()  # type: ignore
+    return wrap_exceptions(parser.parseWizard)  # type: ignore
 
 
 @overload
