@@ -4,10 +4,7 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import Optional, TextIO, Tuple, Union
 
-from antlr4 import InputStream, FileStream, CommonTokenStream, BailErrorStrategy
-
-from .antlr4.wizardLexer import wizardLexer
-from .antlr4.wizardParser import wizardParser
+from antlr4 import InputStream
 
 from .contexts import (
     WizardInterpreterContext,
@@ -123,7 +120,7 @@ class WizardScriptRunner(
         )
 
         SeverityContext.__init__(self)
-        WizardInterpreter.__init__(self, subpackages, self, factory)
+        WizardInterpreter.__init__(self, factory)
 
     def context(self) -> WizardInterpreterContext:
         return self._ctx
@@ -150,24 +147,9 @@ class WizardScriptRunner(
             state of the interpreter and result the result.
         """
 
-        # Parse the stream:
-        if isinstance(script, InputStream):
-            stream = script
-        elif isinstance(script, Path):
-            stream = FileStream(script)
-        elif isinstance(script, str):
-            stream = InputStream(script)
-        else:
-            stream = InputStream(script.read())
-
-        lexer = wizardLexer(stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-
         # Run the interpret:
-        ctx: WizardInterpreterContext = self.make_context(
-            parser.parseWizard(), WizardRunnerState()
+        ctx: WizardInterpreterContext = self.make_top_level_context(
+            script, WizardRunnerState()
         )
 
         while True:

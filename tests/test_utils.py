@@ -19,6 +19,7 @@ from wizard.manager import SelectOption
 from wizard.scriptrunner import WizardScriptRunner
 from wizard.severity import SeverityContext
 from wizard.state import WizardInterpreterState
+from wizard.utils import make_basic_context_factory
 from wizard.value import SubPackages
 
 
@@ -77,17 +78,11 @@ class InterpreterChecker(WizardInterpreter):
         subpackages: SubPackages = SubPackages(),
         severity: SeverityContext = MockSeverityContext(),
     ):
-        super().__init__(subpackages, severity)
+        super().__init__(make_basic_context_factory(subpackages, severity))
 
     def run(self, script: str) -> WizardTerminationContext[WizardInterpreterState]:
-        input_stream = InputStream(script)
-        lexer = wizardLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = wizardParser(stream)
-        parser._errHandler = BailErrorStrategy()
-
-        ctx: WizardInterpreterContext = self.make_context(
-            parser.parseWizard(), WizardInterpreterState()
+        ctx: WizardInterpreterContext = self.make_top_level_context(
+            script, WizardInterpreterState()
         )
 
         while not isinstance(ctx, WizardTerminationContext):

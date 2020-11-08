@@ -1,21 +1,16 @@
 # -*- encoding: utf-8 -*-
 
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union, TextIO, overload
 
-from .antlr4.wizardParser import wizardParser
+from antlr4 import InputStream
 
-from .functions import make_basic_functions
 from .contexts import (
     WizardInterpreterContextFactory,
     WizardTopLevelContext,
 )
-from .expr import (
-    SubPackages,
-    WizardExpressionVisitor,
-)
-from .keywords import WizardKeywordVisitor
-from .severity import SeverityContext
 from .state import ContextState, WizardInterpreterState
+from .utils import make_top_level_context
 
 
 class WizardInterpreter:
@@ -29,32 +24,32 @@ class WizardInterpreter:
 
     def __init__(
         self,
-        subpackages: SubPackages,
-        severity: SeverityContext,
-        factory: Optional[WizardInterpreterContextFactory] = None,
+        factory: WizardInterpreterContextFactory,
     ):
         """
         Args:
-            subpackages: The list of SubPackages in the archive.
-            severity: The severity context to use for the expression visitor and the
-                factory.
-            factory: The context factory. If None, a default factory will be used.
+            factory: The context factory.
         """
-
-        if factory is None:
-            evisitor = WizardExpressionVisitor(
-                subpackages, make_basic_functions(), severity
-            )
-            kvisitor: WizardKeywordVisitor[
-                WizardInterpreterState
-            ] = WizardKeywordVisitor(severity)
-            factory = WizardInterpreterContextFactory(evisitor, kvisitor, severity)
         self._factory = factory
 
-    # Main entry:
-    def make_context(
-        self, ctx: wizardParser.ParseWizardContext, state: Optional[ContextState] = None
+    @overload
+    def make_top_level_context(
+        self, script: Union[InputStream, Path, TextIO, str], state: ContextState
     ) -> WizardTopLevelContext[ContextState]:
-        if state is None:
-            state = WizardInterpreterState()  # type: ignore
-        return WizardTopLevelContext(self._factory, ctx, state)  # type: ignore
+        ...
+
+    @overload
+    def make_top_level_context(
+        self, script: Union[InputStream, Path, TextIO, str]
+    ) -> WizardTopLevelContext[WizardInterpreterState]:
+        ...
+
+    def make_top_level_context(
+        self,
+        script: Union[InputStream, Path, TextIO, str],
+        state: Optional[ContextState] = None,
+    ) -> Union[
+        WizardTopLevelContext[ContextState],
+        WizardTopLevelContext[WizardInterpreterState],
+    ]:
+        return make_top_level_context(script, self._factory, state)  # type: ignore
