@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from pathlib import Path
-from typing import Optional, Union, TextIO, overload
+from typing import Optional, Union, BinaryIO, TextIO, overload
+
+import chardet
 
 from antlr4 import InputStream, FileStream, CommonTokenStream, BailErrorStrategy
 
@@ -69,7 +71,7 @@ def make_runner_context_factory(
 
 
 def make_parse_wizard_context(
-    script: Union[InputStream, Path, TextIO, str]
+    script: Union[InputStream, Path, BinaryIO, TextIO, str]
 ) -> wizardParser.ParseWizardContext:
     """
     Create a ParseWizardContext from the given script. Depending on the type of
@@ -91,12 +93,20 @@ def make_parse_wizard_context(
     stream: InputStream
     if isinstance(script, InputStream):
         stream = script
-    elif isinstance(script, Path):
-        stream = FileStream(script)
     elif isinstance(script, str):
         stream = InputStream(script)
     else:
-        stream = InputStream(script.read())
+        if isinstance(script, Path):
+            with open(script, "rb") as fp:
+                data = fp.read()
+        else:
+            data = script.read()  # type: ignore
+        if isinstance(data, bytes):
+            encoding = chardet.detect(data)["encoding"]
+            text = data.decode(encoding)
+        else:
+            text = data
+        stream = InputStream(text)
 
     lexer = wizardLexer(stream)
     stream = CommonTokenStream(lexer)

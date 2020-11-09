@@ -37,6 +37,7 @@ setup(
     license="MIT",
     # Requirements:
     install_requires=[
+        "chardet",
         "antlr4-python3-runtime",
     ],
     extras_require={"dev": dev_requires},
