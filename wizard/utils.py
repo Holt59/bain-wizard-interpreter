@@ -5,7 +5,7 @@ from typing import Optional, Union, BinaryIO, TextIO, overload
 
 import chardet
 
-from antlr4 import InputStream, FileStream, CommonTokenStream, BailErrorStrategy
+from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
 
 from .antlr4.wizardLexer import wizardLexer
 from .antlr4.wizardParser import wizardParser
