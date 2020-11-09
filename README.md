@@ -1,8 +1,6 @@
 # BAIN Wizard Interpreter
 
-A BAIN Wizard Interpreter based on [`wizparse`](https://github.com/wrye-bash/wizparse).
-
-This is a *Work In Progress*, when done, I hope to have a fully functional interpreter that could
+A BAIN Wizard Interpreter based on [`wizparse`](https://github.com/wrye-bash/wizparse) that can
 be used in various settings to run BAIN Wizard installers.
 
 # Basic Usage
@@ -159,7 +157,7 @@ from the original repository that fixes some issues.
 
 ## Run tests
 
-To run the tests, you need the Python 3 ANTLR4 runtime and `pytest`:
+To run the tests,  you need the Python 3 ANTLR4 runtime and `pytest`:
 
 ```bash
 pip install antlr4-python3-runtime pytest
