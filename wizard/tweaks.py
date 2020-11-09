@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional
 
 
 class WizardINISetting:
@@ -110,21 +110,20 @@ class WizardINITweaks:
             )
         )
 
-    def tweaks(
-        self, file: str
-    ) -> Tuple[List[WizardINISettingEdit], List[WizardINISetting]]:
+    def tweaks(self, file: str) -> List[WizardINISetting]:
         """
         Args:
             file: The file to retrieve the tweaks for.
 
         Returns:
-            A tuple (modified, disabled) containing the tweaks for the given file. If
-            the file contains no tweaks, empty list are returned.
+            The union of modified and disabled tweaks for the given file.
         """
         file = file.lower()
-        modified = [m for m in self.modified if m.filename.lower() == file]
-        disabled = [m for m in self.disabled if m.filename.lower() == file]
-        return (modified, disabled)
+        tweaks: List[WizardINISetting] = [
+            m for m in self.modified if m.filename.lower() == file
+        ]
+        tweaks.extend(m for m in self.disabled if m.filename.lower() == file)
+        return tweaks
 
     def __bool__(self) -> bool:
         """
