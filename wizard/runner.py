@@ -13,10 +13,10 @@ from typing import (
 from .contexts import WizardKeywordContext
 from .errors import WizardMissingPackageError, WizardMissingPluginError
 from .expr import WizardExpressionVisitor
-from .inisettings import WizardINISetting, WizardINISettingEdit, WizardINITweaks
 from .keywords import WizardKeywordVisitor
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
+from .tweaks import WizardINISetting, WizardINISettingEdit, WizardINITweaks
 from .value import SubPackage, SubPackages
 
 

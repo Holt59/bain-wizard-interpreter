@@ -15,7 +15,7 @@ required.
 from typing import List
 
 from wizard.manager import SelectOption
-from wizard.scriptrunner import WizardRunner
+from wizard.scriptrunner import WizardScriptRunner
 from wizard.value import SubPackage, SubPackages
 
 

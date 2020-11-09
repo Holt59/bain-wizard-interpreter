@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Tuple
 
 
 class WizardINISetting:
@@ -98,6 +98,33 @@ class WizardINITweaks:
             contain multiple edits for the same setting.
         """
         return self._modified
+
+    def files(self) -> List[str]:
+        """
+        Returns:
+            The list of all files containing INI tweaks (either modified or disabled).
+        """
+        return sorted(
+            set(m.filename for m in self._modified).union(
+                m.filename for m in self._disabled
+            )
+        )
+
+    def tweaks(
+        self, file: str
+    ) -> Tuple[List[WizardINISettingEdit], List[WizardINISetting]]:
+        """
+        Args:
+            file: The file to retrieve the tweaks for.
+
+        Returns:
+            A tuple (modified, disabled) containing the tweaks for the given file. If
+            the file contains no tweaks, empty list are returned.
+        """
+        file = file.lower()
+        modified = [m for m in self.modified if m.filename.lower() == file]
+        disabled = [m for m in self.disabled if m.filename.lower() == file]
+        return (modified, disabled)
 
     def __bool__(self) -> bool:
         """
