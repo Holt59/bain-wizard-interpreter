@@ -25,6 +25,7 @@ from .contexts import (
     WizardCaseContext,
     WizardCompoundAssignmentContext,
     WizardContinueContext,
+    WizardExecContext,
     WizardForLoopContext,
     WizardIfContext,
     WizardInterpreterContext,
@@ -127,6 +128,13 @@ class WizardInterpreterContextFactory:
         self, context: wizardParser.CancelContext, parent: WizardInterpreterContext
     ) -> WizardReturnContext:
         return WizardReturnContext(self, context, parent)
+
+    def make_exec_context(
+        self,
+        context: wizardParser.FunctionCallContext,
+        parent: WizardInterpreterContext,
+    ) -> WizardExecContext:
+        return WizardExecContext(self, context, parent)
 
     def make_body_context(
         self,

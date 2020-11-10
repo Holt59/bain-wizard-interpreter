@@ -335,6 +335,28 @@ Cancel "Cancel."
     assert ctx.message() == "Cancel."
 
 
+def test_exec():
+
+    c = InterpreterChecker()
+
+    s = """
+a = 1
+Exec("a = 3")
+a += 2
+"""
+    ctx = c.run(s)
+    assert ctx.state.variables == {"a": Value(5)}
+
+    with pytest.raises(WizardTypeError):
+        c.run("""Exec(0)""")
+    with pytest.raises(WizardTypeError):
+        c.run("""Exec()""")
+    with pytest.raises(WizardTypeError):
+        c.run("""Exec("a = 3", "b = 4")""")
+    with pytest.raises(WizardTypeError):
+        c.run("""Exec()""")
+
+
 def test_exceptions():
 
     c = InterpreterChecker()

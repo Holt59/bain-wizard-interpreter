@@ -22,7 +22,7 @@ from typing import (
 from antlr4 import ParserRuleContext
 from ..antlr4.wizardParser import wizardParser
 
-from ..errors import WizardNameError, WizardParseError, WizardTypeError
+from ..errors import WizardError, WizardNameError, WizardParseError, WizardTypeError
 from ..manager import SelectOption
 from ..severity import Issue
 from ..state import ContextState
@@ -217,8 +217,7 @@ class WizardTopLevelContext(
 ):
 
     """
-    Special context to be the entry context point. This avoid having Optional[] only for
-    the body context.
+    Special context to be the entry context point.
     """
 
     def __init__(
@@ -226,11 +225,22 @@ class WizardTopLevelContext(
         factory: "WizardInterpreterContextFactory",
         context: wizardParser.ParseWizardContext,
         state: ContextState,
+        parent: Optional[WizardInterpreterContext] = None,
     ):
-        super().__init__(factory, context, self, state)
+        """
+        Args:
+            factory: The factory used to create this context and future contexts.
+            context: The ANTLR4 context.
+            state: The starting state for this context.
+            parent: If not None, it means that this context was created from an Exec()
+                expression and the parent should be the enclosing body.
+        """
+        super().__init__(factory, context, self if parent is None else parent, state)
 
     def exec_(self) -> WizardInterpreterContext:
-        return self._factory.make_body_context(self.context.body(), self)
+        # We forward the parent, which is either self (no parent) or the parent body
+        # for Exec().
+        return self._factory.make_body_context(self.context.body(), self.parent)
 
 
 class WizardCancelContext(
@@ -307,6 +317,13 @@ class WizardBodyContext(
 
         # Expression - Standard context:
         if isinstance(child, wizardParser.ExprContext):
+            # Specific handling of exec()
+            if (
+                isinstance(child, wizardParser.FunctionCallContext)
+                and child.Identifier().getText() == "Exec"
+            ):
+                return self._factory.make_exec_context(child, body)
+
             self._factory.evisitor.visitExpr(child, body.state)
             return body
 
@@ -386,6 +403,33 @@ class WizardContinueContext(
             )
 
         return self._factory._copy_context(loop.continue_(), self.state)
+
+
+class WizardExecContext(
+    WizardInterpreterContext[ContextState, wizardParser.FunctionCallContext]
+):
+    def exec_(self) -> WizardInterpreterContext:
+        # Import here otherwise we have circular imports:
+        from ..utils import make_parse_wizard_context
+
+        state = self.state.copy()
+
+        # Parse the expression:
+        args: List[wizardParser.ExprContext] = list(self.context.argList().expr())
+        if len(args) != 1:
+            raise WizardTypeError(
+                self.context, f"Exec() expect exactly one argument, found {len(args)}."
+            )
+        script = self._factory.evisitor.visitExpr(args[0], state, str).value
+
+        try:
+            context = make_parse_wizard_context(script)
+        except WizardError as we:
+            # If an error occurs, the WizardError does not have a context, set it:
+            we._ctx = self.context
+            raise we
+
+        return WizardTopLevelContext(self._factory, context, state, self.parent)
 
 
 class WizardIfContext(

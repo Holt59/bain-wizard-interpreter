@@ -87,6 +87,13 @@ class WizardExpressionVisitor:
     ) -> Value:
 
         name = ctx.Identifier().getText()
+
+        # Specific handle for Exec:
+        if name == "Exec":
+            raise WizardNameError(ctx, "Exec() cannot be used in a complex expression.")
+        if name == "EndExec":
+            raise WizardNameError(ctx, "EndExec() should not be used explicitly.")
+
         function: Callable[[WizardInterpreterState, List[Value]], Value]
         if name in self._functions:
             function = self._functions[name]
