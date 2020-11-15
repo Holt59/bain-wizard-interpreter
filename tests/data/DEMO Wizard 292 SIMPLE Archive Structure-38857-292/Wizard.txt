@@ -1,0 +1,1158 @@
+;### BAIN DEMO Wizard SIMPLE Archive Structure by Metallicow ;###
+
+; This wizard is spaced(4), NOT tabbed. Keep it that way.
+
+; ';'   is a comment.
+; ';;'  is commented out code.
+; ;### is a documentation errrr...somethingstring. Wraped with no semi-colon at the end ###
+;#----------------------------------------------------------------------------- Is a usefull/useless divider
+
+;;;;;;;;;;;;;;;
+;;; Startup ;;;
+;;;;;;;;;;;;;;;
+
+RequireVersions "1.2.0.416","","","292" ; PatchedOblivion,OBSE Version,OBGE Version,WryeBash Version
+
+ResetAllEspmNames
+DeSelectAll
+;; SelectAll
+
+;#-----------------------------------------------------------------------------
+
+BlankMod_Readme = str("Name: ~Your Modname goes here.~ \nVersion: The version of you mod goes here. Ex. v2.5.1 \nDate: ~The date goes here: Ex. April 1st, 2011~ \nCategory: ~Utilities, Weapons & Armor, Misc, Landscape Changes, etc go here.~ \nRequirements: ~Optional. List of required mods/dependancies other than Morrowind/Oblivion.esm. If anything other than the official expansions are required, give the details.~ \nAuthor(s): ~Author(s) Names go here.~ \nSource: ~Linky goes here.~ \nForums: ~Linky goes here.~ \n \nOverview/Description \n========= \n~This is where you talk about what your mod is/does. This should be fairly short (1-3 paragraphs). If you need more space, add more sections between Installation and Version.~ \n \nContents \n========= \n~You may want to cut this section out if your readme is very short. Also, you can make the contents further down in the readme.~ \n \nLocation \n========= \n~Some will find it hard to find the content you provide in the mod. Provide info on how to acquire that stuff here, or just a getting started HINT.hint.~ \n \nDetails \n========= \n~The details of the mod go here.~ \n \nInstall \n========= \n~Optional. It's now generally assumed that players know how to install mods. So this section is primarily useful for unusual install instructions.~ \n \nUninstall \n========= \n~Optional. It's now generally assumed that players know how to uninstall mods. So this section is primarily useful for unusual uninstall instructions.~ \n \nUpgrade \n========= \n~Specific information about upgrading from a previous version of your mod~ \n \nIncompatibility \n========= \n~Lets face it. Your mod is probably not compatible with everything. List the known conflicts here.~ \n \nKnown Issues or Bugs \n========= \n~List the known Issues or bugs with your mod here~ \n \nVersion History/Changelog \n========= \n~Version notes go here.~ \n \n== 0.01 Bugfix [1/21/2007] \n* Fixed global thermonuclear destruction bug. My bad. \n \n== 0.00 Initial Release [1/21/2007] \n* Yay! Finally got it out the door! \n \nContact \n========= \n~Contact info. Email address, website, preferred forums, etc.~ \n \nCredits \n========= \n~Everyone likes a credit \n- Joe. For teaching me something \n~GIVE Credit where it is due~ \n \nTools Used \n========= \n~Hyperlinking to the tools used helps others find useful tools. \n~TES Constuction Set (Hyperlink) \n~Nifskope (Hyperlink) \n~Blender (Hyperlink) \n \n \nLicensing/Legal \n========= \n~Optional. If a mod has resources, and they are under a different license, note that here.~ \n \n \nCourtesies \n========= \nWhile the license above may  **allows** modification and redistribution, I'd **prefer** to keep it under my control for now. So, please try to contact me before modifying or redistributing it. \n \n \nNotes \n========= \nThis Blank_README is based off Wrye's Readme. \n")
+
+bOverview = False
+bTestBooleanValue = False
+
+NUMBER = 777
+
+Note "Heck, can OBMM do all this? No, Thought so. OBMM just installs everything & doesn't ask before doing it either! Opps maybe I didn't want to overwrite my vanilla resources. Oh, well, they're gone now. Reinstall again. LOL \n"
+
+;#-----------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Overview Yes/No Question ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+SelectOne "SelectOne: Would you like to read a overview of the package contents before continuing with the installation wizard?",\
+        "|Yes","","Wizard Images\\Yes.jpg",\
+        "No","","Wizard Images\\No.jpg"
+    Case "Yes"
+        bOverview = True
+    Break
+    Case "No"
+        bOverview = False
+    Break
+EndSelect
+
+;#-----------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;
+;;; The Overview ;;;
+;;;;;;;;;;;;;;;;;;;;
+
+If bOverview ;= True
+    SelectOne "Click on the selections to view the package's infos/descriptions.",\
+        "|Start Here_Readme","Welcome to the wxMCow(lol) errrm.. I mean wxWizard WizBAIN DEMO! \n\n-This is a DEMO Archive for testing BAIN Wizard Functionality. It is a Simple Archive Structure.\n\nRun this installation wizard a few times to get a idea of how certain keywords in the wizard scripting language work. Feel free to unpack the archive to a project to look at the wizard.txt also. Play around with it, Edit it, Learn, but most importantly, have fun :) and ask questions if you are lost(there shouldn't many questions tho, considering the work put into this. lol. There has been a lot of effort documenting all of this so that users/authors can quickly learn wizard scripting(by example).) \n\nClick the 'Next' button to continue with the wizard's installation, or click on the 'Back' button to go back a step in the installation wizard. \n\nIf you come across any bugs or problems in this DEMO please report it to Lojack's \"Wrye Bash Wizards\" Thread on the Official Forums. \nOr if you have a suggestion on an improvement to the DEMO, or just want to say thanks, we like that also. \n\nThank you for taking an interest in BAIN wizard installs. We hope that you will enjoy your stay at the Installers Tab. XD","Wizard Images\\StartHere.png",\
+        "Description of Mods-Subpackages-Numbering-Other Info","There are usually no subpackages for a simple structure archive, but you could list some of it's plugins/contents here like so if you like... \n\n00Core Dummy: \n-01 Dummy: Bla bla bla \n-02 Dummy: Bla bla bla \n--03 Dummy: Bla bla bla \n--04 Dummy: Bla bla bla \n--05 Dummy: Bla bla bla \n--06 Dummy: Bla bla bla \n\n10 Dummy: Bla bla bla","",\
+        "Known Conflicts/Bugs","None known of so far...\nOr operator Error. \n\n","Wizard Images\\KnownConflictsBugs.png",\
+        "Credits \& Authors","Wrye - For BAIN. Woooooooot!\nLojack - For the wonderful BAIN wizard installer feature.\nMetallicow - For starting this simple wizard archive to help show others wishing to learn how the basics of scripted wizard installs works.","Wizard Images\\CreditsAuthors.png",\
+        "Wizard.txt Notes","BAIN 'wizard.txt's can ONLY be edited while in a project folder or outside of the bash installers folder(EX. on the desktop,etc).\nThey CANNOT be edited while inside an archive(package). \n\n","",\
+        "About Wizard Images/Screenshots","If you hover your mouse over the image, your cursor will change to a magnifying glass cursor. If you double click on the image, it will open the image up in your default image browser.\n\nThe 'Wizard Images' folder in an archive will not be installed. It also will not show up in the wizard finish page or in the installers tab, just as omod conversion data doesn't. It is 'silently' skipped.\nThe Screenshots folder in an archive may be installed if you have that option selected in the installers tab. \n\nAlso, the installer will look for an image to use in your archive first, then if it doesn't exist looks in the wizard images folder in the mopy folder. So for example if you want to call the standard yes/no.jpg images in your script(which aren't included in the DEMO, yet show on the first page(SelectOne dialog) overview yes/no question), you can and they will show up even if they are not included in your archive. Note that BAIN will toss these images into the docs folder upon install, so if you want your folder structure to remain as a screenshots folder, then the structure should be as follows: \n1. Data/Docs/MyMod/Screenshots\n2. Data/Docs/Screenshots \n3. or similar.\nBAIN will only ignore the Screenshots folder at the head of the Data directory if that option is checked. These images need to be in a directory named 'Screenshots'. If you do not want screenshots to be installed, then don't stick them in the Docs directory. This is the prefered way, otherwise you will get the screenies installed anyway if all you wanted was the Docs(txts,etc.).","Wizard Images\\AboutScreenshots.png",\
+        "Common Scripting Mistakes","1. Incorrect Case. If 'If' is spelled as 'if', then the Case is wrong.\n2. Extra spaces at the end of lines.          \n3. Mispelled Keywords. SelectOne is spelled as 'SelectOne' NOT as 'Sellekt1'\n4. If you need to show a Backslash charactor( \\ ), each backslash chararctor is written as two backslashes( \\\\ ) in the wizard.txt, just as is with python programming. There are a few exceptions where they need to be double escaped(see wizard notes.). \n5. Missing Called Image(I think this only applies with Wrye Bash 291 and before)","Wizard Images\\CommonScriptingMistakes.png",\
+        "Correct Case","==========\nDialogs\n==========\nSelectOne\nSelectMany\nCancel\n\n==========\nFunctions\n==========\nCompareObVersion\nCompareOBSEVersion\nCompareOBGEVersion\nCompareWBVersion\nDataFileExists\nGetEspmStatus\nEditINI\nExec\nstr\nint\nfloat\nlen\nendswith\nstartswith\nlower\nfind\nrfind\nGetFilename\nGetFolder\n\n==========\nKeywords\n==========\nSelectSubPackage\nDeSelectSubPackage\nSelectEspm\nDeSelectEspm\nSelectAll\nDeSelectAll\nSelectAllEspms\nDeSelectAllEspms\nRenameEspm\nResetEspmName\nResetAllEspmNames\nNote\nIf\nElif\nElse\nEndIf\nWhile\nFor\nContinue\nBreak\nEndWhile\nEndFor\nCase\nDefault\nEndSelect\nReturn\nCancel\nRequireVersions\n\n==========\nOperators\n==========\n=\n+\n-\n*\n/\n^\n+=\n-=\n&\nand\n|\nor\n!\nnot\nin\n==\n!=\n>=\n>\n<=\n<\n\n==========\nCase Insensitive Operators\n==========\n==:\n!=:\n>=:\n<=:\nin:\n\n==========\nBuilt-In Constants\n==========\nTrue\nFalse\n\n==========\nEscape Sequences\n==========\n\\t\n\\n\n","",\
+        "Other Notes","Metallicow's TES4WizBAIN utility is useful in helping you make wizards for your projects or just BAIN'n your mods in general. \nIt can be downloaded at http://www.tesnexus.com/downloads/file.php?id=37511 \n\nutumno created a BAIN wizard Script Highlighter for NotePad++ \nIt can be downloaded at http://www.tesnexus.com/downloads/file.php?id=32654 \n\nAlso Note as of WryeBash 292 the installers tab shows visual indicator wand icons for archives that contain an wizard.txt installation script. If you have that option checked in the BAIN Installers Tab, then this archive should have a wizard's wand icon showing.","",\
+        "[LISTz] BAIN Ready Mods With Wizards(WIZBAINs)","================\nA list of some mods that are WIZBAIN-Ready: (TESNexus)\n================\n\nAnimated Window Lighting System and Chimneys - AWLS \nBananasplit Better Cities \nLush and Gaudy Landscape and Grass and Tree Mod \nMetallicow Cursor Mod \nOBGE Liquid Water \nOpen Cities Reborn \nSensual Walks \nUnique Landscapes Compilation \nWeather - All Natural \n\n================\nAnd a list of some do it yourselfers: (which may include some ready-to-gos)\n================ \n\nBain Conversion Files \nBAIN Wizard Installation Project \nFast and Easy Frans WIZBAIN Archive Maker -ENGLISH ONLY- \nThe Wiz Pile \n\n","",\
+        "Licensing/Legal","The Wizard Images/Screenshots in this DEMO Archive can be used/added into your own personal projects if you choose! If you do choose to include any of the images in your projects, a credit to the wrye bash team would be appreciated, but not required (thank you ,thenk you) \n\nFeel free to edit this DEMO Test WIZBAIN Archive to improve it and make it more helpful to those wanting to learn wizard scripting. (Lojack, Metallicow, Whoever...) \n\n","Wizard Images\\ModdersResources.png",\
+        "Language","Language or Nationality this BAIN wizard was written in. \n\nEnglish (USA)","Wizard Images\\EnglishUSA.png"
+    EndSelect
+EndIf
+
+;#-----------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;
+;;; The Testing ;;;
+;;;;;;;;;;;;;;;;;;;
+
+;; SelectOne "SelectOne: What would you like to test?",\
+SelectMany "SelectMany: Test Options - What would you like to test?",\
+        "|Default Option","|\n\n''|Default Option''\n\nThe default charactor. Add it to the beginning of the choices descriptions so that an option is checked/selected by default. \nOnly use it once for a SelectOne Dialog. \nIt can be used many times for a SelectMany Dialog.","Wizard Images\\DefaultOption.png",\
+        "Test Image Types","Test to see whether various image formats will show in a wizard install.","",\
+        "Wizard Images","These are a display of the Wizard Images included in this archive, that can be used in your own wizard projects,etc.","Wizard Images\\ModdersResources.png",\
+        "ERROR!","This dialog will be shown if the wizard encounters an error in the wizard file. The wizard will then quit.","Wizard Images\\Error.jpg",\
+        "Cancel","Cancels the wizard, with an optional text to display in a dialog as to why the wizard was canceled.","Wizard Images\\Cancel.jpg",\
+        "Return","Signals completion of the wizard. This will jump right to the finish page. ","",\
+        "RequireVersions","In this Demo we will Force the RequireVersions Screen to show. \n\nTests the users system agains version requirements you specify. If the requirements are not met, a warning dialog will be shown asking if you wish to continue anyway.","Wizard Images\\Versions.jpg",\
+        "SelectOne","A SelectOne Dialog","Wizard Images\\SelectOne.jpg",\
+        "SelectMany","A SelectMany Dialog","Wizard Images\\SelectMany.jpg",\
+        "SelectAll","Cause all sub-packages, esps, and esms to be selected for installation. This is equivilant to first checking all sub-packages in the BAIN window, then checking all esps and esms in the BAIN window.","",\
+        "DeSelectAll","You must have the SelectAll Test option above checked to test this option. \nCause all sub-packages, esps, and esms to be de-selected from installation. This is equivilant to first un-checking all esps and esms in the BAIN window, then un-checking all sub-packages in the BAIN window. \n","",\
+        "SelectEspm","Cause the specified esp or esm to be selected for installation. This is equivilant to checking the esp or esm from the BAIN window. Dummy07.esp is set to be selected.","",\
+        "SelectAllEspms","Cause all esps and esms to be selected for installation. This is equivilant to checking all esps and esms in the BAIN window.","",\
+        "DeSelectEspm","You must have the SelectAll or SelectAllEspms Test options above checked to test this option. \nCause the specified esp or esm to be deselected from installation. This is equivilant to un-checking the esp or esm from the BAIN window. Dummy21.esp is set to be deselected. \n","",\
+        "DeSelectAllEspms","You must have the SelectAll or SelectAllEspms Test options above checked to test this option. \nCause all esps and esms to be de-selected from installation. This is equivilant to un-checking all esps and esms in the BAIN window. \n","",\
+        "For Loop","We will count from 0 to 10 by increments of 2, stopping at 10","",\
+        "While Loop","Our count will start at 0. \nWhile our count is less than 5, we will keep on iterating, stopping at 5 or above. \n\nDon't be a dummy and write a recursive loop. Bash WILL Crash, Not Rhyme if you do.","",\
+        "RenameEspm","Change the installed name of an esp or esm. \n\nDummy15.esp is set to be renamed to RenamedDummy15.esp \nDummy25.esp is set to be renamed to RenamedDummy25.esp","",\
+        "ResetEspmName","You must have the RenameEspm Test option above checked to test this option. \nIt will reset RenamedDummy25.esp back to Dummy25.esp","",\
+        "ResetAllEspmNames","You must have the RenameEspm Test option above checked to test this option. \nIt will reset all renamed espm names back to default up to the point it was called in the script. \n\nYou can then begin to rename espms again after the point ResetAllEspmNames was called in the script.","",\
+        "RenameEspm After ResetEspmName/ResetAllEspmNames","You must have the RenameEspm & ResetEspmName or ResetAllEspmNames Test options above checked to test this option. \n\n Set to rename Dummy25.esp to RenamedAgain25.esp after Rename & ResetEspmName does it thing.","",\
+        "Note","Add a note to the user to be displayed at the end of the wizard, on the finish page. The '- ' will be added automatically.","",\
+        "Test Boolean Value","At the start of the wizard bTestBooleanValue = False \n\nIf you check this selection it will change it to bTestBooleanValue = True \n\nA note will be added to the finish screen as to its Truth.","Wizard Images\\Truth.png",\
+        "Escape Sequences","Escape sequences are special sequences of character you can put in a string to get a different character out when used in the wizard.'\t': Insert a Tab. '\n': Insert a newline character.","",\
+        "Test A Long Header Message","Test how long the dialog header message can be with a SelectOne/SelectMany Dialog","",\
+        "EditINI (Oblivion.ini)","EditINI('Oblivion.ini', 'General', 'bBorderRegionsEnabled', 0) \n\nThis will disable border regions in your Oblivion.ini \nThis will allow you to go outside of the vanilla boundaries","",\
+        "EditINI (DummyINI.ini)","Examples: \nset MiniMapIni.iResWidth to 640 ;From Kyoma's MiniMap Mod \nset tnoMMO.visibleDistance to 2500 ;From TheNiceOne's MapMarkerOverhaul \n\nIf you select this option the wizard will generate a INI Tweak to change: \nset DummyValue1 to 1 \nset DummyValue7 to 7 \nTO \nset DummyValue1 to 1000 \nset DummyValue7 to 7777 \n\nThe generated INI Tweak should be applied to the Dummy.ini that will be installed. It resides in the Data/Ini directory(folder). \nThe INI Tweak will be placed into the Data/INI Teaks Directory(folder) \nNOTE: Upon uninstallation of a mod through BAIN, any generated INI Tweaks will not be removed, as they were never part of the original archive. Included INI Tweaks(in the archive/project) will, as they are part of the original archive before installing. \n\nOther Notes: \nMod Authors/Script writers should always create a INI Tweak by hand that has all the default values for the ini and include that in the download. That way when/if reinstalling the generated tweak will be overwritten and also this gives the user the option to revert back to default settings quickly, if necessary, without uninstalling/reinstalling the BAIN archive. \n","",\
+        "EditINI (CustomDummy.ini)","A specialized approach to an ini tweak that contains tweaks for 2 different ini's in one ini tweak. This type of tweak is more for advanced users to make themselves and probably should not be included in a mods download wizard. \n\nLet's say... if you wanted a tweak that would perform a script like ini tweak, but also wanted to add disable border regions in Oblivion.ini tweak in one tweak this option will do it. \nNote that you will have to change the currently edit(ing) ini twice in the INI Edits tab and apply each tweak to the seperate ini's.\nThis just creates a tweak that will work on both types of ini's (Script-like & Batch). Dummy.ini and Oblivion.ini","",\
+        "Exec","Test the Exec function. Exec runs a line of code you give to it. In this case a simple SelectOne Dialog. \n\nFor the Wizard Images part of the Exec you actually need to 'double escape' any escape sequences here, since it'll be run through as a string twice. \nExample: 'Wizard Images\\\\\\\\IceCream.jpg' \nIt looks a bit weird to write it like that though. The '\\n' (or '\\t') doesn't need to get double escaped, because you'll actually get the newline character in the resultant string the first time.","",\
+        "str", BlankMod_Readme ,"",\
+        "int","Used to convert a value to an integer, for example converting a value held in a string to a integer value. \n \n* Usage: \n  * int(value) \n* Arguments: \n  * value: any value. An integer, decimal, variable, constant, or string. \n* Return: \n  * Integer value of value, if possible. For example int('65') would return 65. \n  * 0 if integer conversion is not possible.","",\
+        "float","Used to convert a value to decimal, for example converting a value held in a string to a decimal value. \n \n* Usage: \n  * float(value) \n* Arguments: \n  * value: any value. An integer, decimal, variable, constant, or string. \n* Return: \n  * Decimal value of value, if possible. For example, float('2.4') would return 2.4. \n  * 0.0 if decimal conversion is not possible.","",\
+        "len","Used to find the length of a string. \n \n* Usage: \n  * len(string) \n* Arguments: \n  * string: a string, variable, or constant. \n* Return: \n  * Length of the string if possible. \n  * 0 if length calculation was not possible.","",\
+        "CompareObVersion","Used to test the installed version of OBGE against one you specify. If the new version of OBGE/OGE is installed, this will be used for the comparison. Otherwise, this will be compared to the old version or debugged version if installed. \n \n* Usage: \n  * CompareOBGEVersion(version_string) \n* Arguments: \n  * version_string: a string formatted to hold a file version number, like ''1.2.3.93''. For example OBGEv2 version 3 would be represented as ''3.0.0.0'', while the old OBGE would be ''0.1.1.0'' \n* Return: \n  * -1: Installed OBGE version is less than the version specified in version_string \n  * 0: Installed OBGE version is the same as the version specified in version_string \n  * 1: Installed OBGE version is higher than the version specified in version_string","",\
+        "CompareOBSEVersion","Used to test the installed version of OBGE against one you specify. If the new version of OBGE/OGE is installed, this will be used for the comparison. Otherwise, this will be compared to the old version or debugged version if installed. \n \n* Usage: \n  * CompareOBGEVersion(version_string) \n* Arguments: \n  * version_string: a string formatted to hold a file version number, like ''1.2.3.93''. For example OBGEv2 version 3 would be represented as ''3.0.0.0'', while the old OBGE would be ''0.1.1.0'' \n* Return: \n  * -1: Installed OBGE version is less than the version specified in version_string \n  * 0: Installed OBGE version is the same as the version specified in version_string \n  * 1: Installed OBGE version is higher than the version specified in version_string","",\
+        "CompareOBGEVersion","Used to test the current version of Wrye Bash agains one you specify. \n \n* Usage: \n  * CompareWBVersion(version_number) \n* Arguments: \n  * version_number: a number representing the Wrye Bash version you want to check. For example Wrye Bash version 284 could be intered as either 284 or ''284''. \n* Return: \n  * -1: Installed Wrye Bash version is less than the version specified in version_number. \n  * 0: Installed Wrye Bash version is the same as the version specified in version_number. \n  * 1: Installed Wrye Bash version is higher than the version specified in version_number.","",\
+        "CompareWBVersion","Tests for the existance of a file in the Data directory. \n \n* Usage: \n  * DataFileExists(file_name) \n* Arguments: \n  * file_name: a string or variable holding a string, specifying the path relative to the Data directory to test. For example using ''testesp.esp'' would test for ''...path to oblivion...\Data\testesp.esp'' \n* Return: \n  * True: The file exists \n  * False: The file does not exist","",\
+        "GetEspmStatus","Tests the current status of an esp or espm in the Data directory. This function takes esp/m ghosting into account when testing the status. \n \n* Usage: \n  * GetEspmStatus(file_name) \n* Arguments: \n  * file_name: a string or variable holding a string, specifying the path relative to the Data directory for the esp or esm to test. \n* Return: \n  * -1: The esp/m does not exist \n  * 0: The esp/m is not active, imported, or merged (Inactive) \n  * 1: The esp/m is not active, but has portions imported into the Bashed Patch (Imported) \n  * 2: The esp/m is active (Active) \n  * 3: The esp/m is merged into the Bashed Patch (Merged)","",\
+        "GetFilename","For a string that contains a path, returns the filename part in that string. \n\nWe will test this string. \n\"C:\\Program Files\\Bethesda Softworks\\Oblivion\\Oblivion.exe\"","",\
+        "GetFolder","For a string that contains a path, returns the folder part of the string. \n\nWe will test this string. \n\"Data\\Oblivion.esm\"\n\nWe will also test\n\"This\\Is\\An\\Example\\somefile.ext\"","",\
+        "endswith","Test what a string ends with. \n\nWe will test \nendswithString = \"What does this string end with?\"","",\
+        "startswith","Test what a string starts with. \n\nWe will test \nstartswithString = \"What does this string start with?\"","",\
+        "Math Operators","Addition (+) \nAdds two values, variables, etc together \n \nSubtraction (-) \nSubtracts two values, variables, etc. \n \nMultiplication (*) \nMultiplies two values, variables, etc together. \n \nDivision (/) \nDivides two values, variables, etc. \n \nExponentiation (^) \nRaised one value to the power of another value ","",\
+        "Comparison Operators","In the Demo, NUMBER = 777 \n\nWe will test \nEqual ( == ) , Not Equal ( != ) , Greater Than or Equal ( >= ) , Greater Than ( > ) , Less Than or Equal ( <= ) , Less Than ( < )","",\
+        "lower","LowerString = str('CONVERT A STRING TO lower CASE.') \n\nThe result will be shown as a Note on the Final Screen.","",\
+        "Indexing","Indexing is used to access specific parts of a sequence like item. Currently, only strings and string variables can be indexed. If you are familiar with Python's indexing syntax, then this will be familiar to you. \n \n* Usage: \n  * string[start:stop:step] \n* Arguments: \n  * start: index to start at. If not specified, indexing will begin at index 0. \n  * stop: index to stop at. If not specified, but the colon(:) is supplied, indexing will stop at the end of the string. Otherwise, only one character will be indexed. \n  * step: how to increment when indexing. For example, a value of 2 would make the indexing return every second item. If not specified, a value of 1 will be used. \n  * Negative values for start and stop will be relative to the end of the sequence. For example, -1 would mean the first character from the end of the sequence. \n \n    Case ''Indexing'' \n        IndexString = str('Hello from wxPython! errr wxLojacks wizard wizard lol') \n        Note ''Hello''[0] ;returns ''H'' \n        Note ''Hello''[0:] ;return ''Hello'' \n        Note ''Hello''[:] ;returns ''Hello'' \n        Note ''Hello''[0:2] ;returns ''He'' \n        Note ''Hello''[-1] ;returns ''o'' \n        Note ''Hello''[1:3] ;returns ''el'' \n        Note ''Hello''[-2:] ;returns ''lo''  \n        Note IndexString[-0:] ;returns ''Hello from wxPython! errr wxLojacks wizard wizard lol'' \n        Note IndexString[-1:-54:-1] ;returns ''lol draziw draziw skcajoLxw rrre !nohtyPxw morf olleH'' \n        Note IndexString[0:999:2] ;returns ''Hlofo xyhn rrwLjcswzr iadll'' \n        Break","",\
+        "Character Display","Character Display Test\n ~!@#$%^&*()_+`1234567890-=,./;'[]\\ <>\?:{}|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ \n\n ''Quote'' -Used double single hash \n\nEscape Characters \n \\\\ in script displays \\ in runtime \n \\? in script displays \? in runtime","",\
+        "Description Box Length","1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 -100characters\n\n12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 -200 characters\n\n123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 -300 Characters\n\nLorem ipsum dolor sit amet, neptunus spatia tribulatione ad per animum pares terris respexit est Apollonius. Quae ad nomine Maria cum suam ut libertatem deum rogus aegritudinis causet. Diana praesentatis ne a civitas exulto haec sed haec sed dominum oculos. Verenam operibus furiam conclusoque sponte profundo Solodorum ait in. Erige me vero rex Dionysiadi me testatur in. Iubet feci qui auri eos Communicatio mihi. Caelum cantabat ad nomine Stranguillio cum unde tu secum navium propinares in lucem exempli.\nEis fictas fundatur sicut autem est cum unde! Occurrit erat bene ventis nescis haec. Dicentem Austri ventriculum defunctae cubiculo forma in. Perlecto tota actiones exsolvi cum autem illud cenam ita factum ait in fuerat se est Apollonius. Care genitorem ipsam mecum liberalia revertere in deinde cepit roseo, coniunx minus adamavi quod eam sed dominum depressit filia navem. Iubeo singulas cotidie enim ad nomine sed haec. Tharsia filiam vel dolens eos. Acceptis codicello lenonem ita factum ei primum subsannio. Aderit omnia claustrum Bone de his e circa tua cupididate flebili Miserere.\nPeto potest ei auri eos est cum unde tu. Interpellastis Iuravi potest ei quoque luctare non ait Cumque persequatur sic nec appellarer in! Antiocho mittat est amet consensit cellula filia puella. Quadragesimae tunc lacrimas effunditis magister. Rogo ultimum ad te ad quia ad per te finis laeta gavisus ait Cumque ego. Item agnovit sit aliquip ipsa codicellos. Quamdiu Alleva me testatur in deinde duas recitare, aliquid ipsa quod tamen sed quod eam in. Ardalio nos determinationem suos Tyrium coniugem. Spongia non dum veniens indica enim est cum suam non coepit cognitionis huius. Elige ipsa codicellos aperiri sacras mari perdidisse usque vero diam ille eum in modo compungi mulierem. Civitate tuam celat in deinde duas recitare ex sic. Notus pie facit una civitatis intelligitur sicut gaudio, alia qui enim me vero diam nostra praedicabilium subsannio. Tyri aliquam inlido laetare in rei sensibilium iussit sed dominum depressit filia navem aspectum cui de tuae illa mihi.\nPrius componitur suscepit in rei finibus veteres hoc contra piissimi deo adoptavit cum suam vidit ad per. Pentapolitanas Cyrenensi reversus generum in deinde vero cum magna duobus auro fulgida nimia duplex caput. Cyrenensi reversus generum dixit regem adventu nihil puella ut a patriam ei sed quod tamen adnuente rediens eam ad per. Quamdiu corpore aliquis virginis plus poterat ad nomine Stranguillio sit dolor exposuisset secundum philosophus nonummy nigro perfusam intelligit te. Suum in rei completo litus Ephesum peteret sua coniuge rex. Dabit es sed haec in deinde cepit roseo. Quaestiones proponitur caelum cantabat ad per te princeps, exire est se in modo invenit iuvenem discessum.\nBoreas ingreditur est cum autem nobiscum. Numquid pecunias quam dolore cruciatus in rei civibus. Zurciaca diebus lectulum venalia possis vitae. Quicumque altera quod ait regem consolatus dum autem est Apollonius mihi cum autem quod una litus tuos ratio omnes. Theophilo litore nullum habere matrem. Christianis aedificatur ergo quod una. Opto in lucem exempli paupers coniunx minus appropinquavit est cum obiectum dixit regem ut casus. Advenientibus aliorum cognitio sestertia habeatis Apollonio dares ipsum ait est Apollonius ut casus turbata minim venisse in fuerat accidens inquit fidem emam. Inde agitans diam ' deo adiuves finem. Famulus sui coniungens in modo compungi. Ingreditur est se sed esse deprecor potest meum in fuerat construeret cena reges undis Tharsiam in fuerat accidens suos Tyrium! Mea vero diam omni completum ad quia quod eam eos! Filia navem auditum ait regem Ardalio nos filiae, taliarchum in lucem in deinde cupis ei sed. Peractoque convocatis ad suis alteri si non dum, se sed haec sed haec sed haec.","",\
+        "|Another Way To Dynamically Change Dialog Choices","See the wizard.txt for example of how this was implemented.","",\
+        "Wizard Indentation","Lets see if we can get away with writing some rather ugly code. ughhhh. fealley dizzy already.","",\
+        "Wrye Links","Wrye Bash Download@ http://tesnexus.com/downloads/file.php?id=22368 \n\nWrye Bash Readme@ http://wryemusings.com/Wrye%20Bash.html\n(at time a fair bit outdated... most up to date readme in the download - the file named Wrye Bash.html in the mopy folder) Hint,Hint: Click the ? mark icon in the tool laucher bar.\n\nWrye Bash Wiki@ http://www.uesp.net/wiki/Tes4Mod:Wrye_Bash \n\nWrye Bash # 67@ http://forums.bethsoft.com/index.php?/topic/1196710-wrye-bash-thread-67/ \n\n","Wizard Images\\ZookeepersWarningArt.png",\
+        "Official/DLC Content Check","DataFileExists: Tests for the existance of a file in the Data directory. \nThis does NOT check if it is active in your load order. \n\nChecks in your Oblivion/Data Directory for Official Bethesda Oblivion Content. \n","Wizard Images\\Bethesda.jpg",\
+        "ESM Check","DataFileExists: Tests for the existance of a file in the Data directory. \nThis does NOT check if it is active in your load order. \n\nThis just checks for a few released esps. 'Cobl Main.esm' being one of them. \n","",\
+        "ESP Check","DataFileExists: Tests for the existance of a file in the Data directory. \nThis does NOT check if it is active in your load order. \n\nThis just checks for a few released esms. 'Unofficial Oblivion Patch.esp' being one of them. \n","",\
+        "OBSE Plugins Check","DataFileExists: Tests for the existance of a .dll file in the Data\OBSE\Plugins directory. \n\nThis just checks for a few released OBSE plugins. Elys universal silent voice 'Elys_USV.dll' being one of them. \n",""
+    Case "Default Option"
+        Break
+    Case "Test Image Types"
+        SelectOne "Click on the various selections to test an image type. Not all of the images will be viewable, usless in a project state.",\
+            "png","Screenshot is a 800x640 png","Screenshots\\Screenshot01.png",\
+            "jpg","Screenshot is a 1280x1024 jpg","Screenshots\\Screenshot02.jpg",\
+            "bmp","Screenshot is a 320x256 bmp","Screenshots\\Screenshot03.bmp",\
+            "gif","Screenshot is a 640x512 gif","Screenshots\\Screenshot04.gif",\
+            "tif","Screenshot is a 1000x800 tif","Screenshots\\Screenshot05.tif",\
+            "tga","Screenshot is a 128x112 tga","Screenshots\\Screenshot06.tga",\
+            "ico","Screenshot is a 64x64 ico","Screenshots\\Screenshot07.ico",\
+            "ico","Screenshot is a 16x16 to 256x256 ico","Screenshots\\Screenshot08.ico",\
+            "dds","Screenshot is a 512x512 dds","Screenshots\\Screenshot09.dds",\
+            "psd","Screenshot is a 768x614 psd","Screenshots\\Screenshot10.psd",\
+            "NO Extension jpg","Screenshot is a 256x256 jpg without any extension. \nNotice you can not click on the image to open it up in your default image viewer when in project status. This image may not show up if in archived status","Screenshots\\Screenshot11",\
+            "pxr","Screenshot is a 1280x1024 pxr","Screenshots\\Screenshot023.pxr",\
+            "raw","Screenshots\\Screenshot024.raw","Screenshots\\Screenshot024.raw",\
+            "Doesn't Exist Image type1","GorblyGookhskgfhsdfhgsdhrt.jpg \n\nHey, at least the wizard doesn't crash anymore :)","GorblyGookhskgfhsdfhgsdhrt.jpg",\
+            "Doesn't Exist Image type2","Wizard Images\\DoesntExist.png \n\nHey, at least the wizard doesn't crash anymore :)","Wizard Images\\DoesntExist.png",\
+            "Some Image type","","",\
+            "Some Image type","","",\
+            "png","Screenshot is a 1280x1024 png","Screenshots\\Screenshot25.png"
+        EndSelect
+        Break
+    Case "Wizard Images"
+        SelectOne "Wizard Images", \
+            "|AboutScreenshots.png"       ,"Use this if you need to explain some special meaning in your screenshots/wizard images. Overview Pic"           , "Wizard Images\\AboutScreenshots.png",\
+            "Bethesda.jpg"                ,"The Bethesda Logo from the startup intro. Use to denote that Official Content may be Required."                 , "Wizard Images\\Bethesda.jpg",\
+            "Cancel.jpg"                  ,"From the Wrye Bash Readme Wizard Documentation. Not much use for a user."                                       , "Wizard Images\\Cancel.jpg",\
+            "CommonScriptingMistakes.png" ,"Let's face it. Everyone screws up at one time or another. Used for the DEMO. Some use for a user. but idunno."  , "Wizard Images\\CommonScriptingMistakes.png",\
+            "CreditsAuthors.png"          ,"Use this to give credit where it is due in your overview. This image should make it into the default bash DL."  , "Wizard Images\\CreditsAuthors.png",\
+            "DefaultOption.png"           ,"Used for the Default character pic in the DEMO. Not much use for a user."                                       , "Wizard Images\\DefaultOption.png",\
+            "EnglishUSA.png"              ,"A different 256x256 png of the American flag. Used to overide the default 128x128 one in the mopy dir"          , "Wizard Images\\EnglishUSA.png",\
+            "Error.jpg"                   ,"From the Wrye Bash Readme Wizard Documentation. Not much use for a user."                                       , "Wizard Images\\Error.jpg",\
+            "faq.png"                     ,"Use for Frequently asked questions section in the overview part of your wizard. I don't like responding to reoccuring dumb questions that could be answered by reading the readme(which should be included in the wizard. Maybe you do, but I don't!)", "Wizard Images\\faq.png",\
+            "Finish.jpg"                  ,"From the Wrye Bash Readme Wizard Documentation. Not much use for a user."                                       , "Wizard Images\\Finish.jpg",\
+            "IceCream.jpg"                ,"I think Lojack likes IceCream!"                                                                                 , "Wizard Images\\IceCream.jpg",\
+            "IHateIceCream.jpg"           ,"Sheogorath says: \"Or does he...?\""                                                                            , "Wizard Images\\IHateIceCream.jpg",\
+            "KnownConflictsBugs.png"      ,"Please Note any known conflicts or bugs as this makes it easier on not only you but the user also."             , "Wizard Images\\KnownConflictsBugs.png",\
+            "LastCompilationUpdate.png"   ,"If your wiz/mod is a compilation, adding this is a nice touch. Note the date of the last script/mod update etc" , "Wizard Images\\LastCompilationUpdate.png",\
+            "ModdersResources.png"        ,"If your mod is a modders resource, please use this image in your overview as to clear confusion."               , "Wizard Images\\ModdersResources.png",\
+            "NeedPic.png"                 ,"This pic was made for missing images, not really needed anymore after 292."                                     , "Wizard Images\\NeedPic.png",\
+            "Requirements1.png"           ,"Oblivion. Standard Stuff."                                                                                      , "Wizard Images\\Requirements1.png",\
+            "Requirements2.png"           ,"Oblivion & Shivering Isles. A 'Game Of The Year' install will work."                                            , "Wizard Images\\Requirements2.png",\
+            "Requirements3.png"           ,"Oblivion & Shivering Isles & OBSE. Requires Oblivion Script Extender."                                          , "Wizard Images\\Requirements3.png",\
+            "Requirements4.png"           ,"Oblivion & Shivering Isles & OBSE & OBGE. Also requires Oblivion Graphics Extender."                            , "Wizard Images\\Requirements4.png",\
+            "Requirements5.png"           ,"Oblivion & Shivering Isles & OBSE & OBGE & Pluggy. Heck, you may as well require everything(or almost)"         , "Wizard Images\\Requirements5.png",\
+            "SelectMany.jpg"              ,"From the Wrye Bash Readme Wizard Documentation. Not much use for a user."                                       , "Wizard Images\\SelectMany.jpg",\
+            "SelectOne.jpg"               ,"From the Wrye Bash Readme Wizard Documentation. Not much use for a user."                                       , "Wizard Images\\SelectOne.jpg",\
+            "StartHere.png"               ,"Might as well start somewhere. With a clean slate."                                                             , "Wizard Images\\StartHere.png",\
+            "Truth.png"                   ,"Not everything is as it seems sometimes. Could be used by users, but for what purpose... I dunno"               , "Wizard Images\\Truth.png",\
+            "WebLinks.png"                ,"Hey, I'd like to know where to get all this stuff. Answer that in the Overview with this pic."                  , "Wizard Images\\WebLinks.png",\
+            "WIPz.png"                    ,"Use to denote that your mod may still be a 'work-in-progress'. It may not be feature complete, etc."            ,"Wizard Images\\WIPz.png",\
+            "Versions.jpg"                ,"From the Wrye Bash Readme Wizard Documentation. Not much use for a user."                                       , "Wizard Images\\Versions.jpg",\
+            "ZookeepersWarningArt.png"    ,"Ahhhhh. Last but not least, we pay tribute to the fingerless Zookeeper. Use this image very wisely."            , "Wizard Images\\ZookeepersWarningArt.png"
+        EndSelect
+        Break
+    Case "ERROR!"
+If something is wrong with this line of script. \n Note "Something definitely got borked. Hmmm" \n                           Else Consult a scripting grimoire | the wise man on the mountain | a magical wizard or a guru that goes by the handle of 'Lojack' | maybe even a monkey, but definitely NOT Metalio Bovinus because he is utterly incapable of writing custum scriptz; \n EndIf
+        Break
+    Case "Cancel"
+        Cancel "Testing the Cancel function."
+        Break
+    Case "Return"
+        Return
+        Break
+    Case "RequireVersions"
+        RequireVersions "1.9.0.416","0.0.99.0","9.9.9.0","995" ; Force RequireVersions Screen
+        ;; RequireVersions "1.2.0.416","0.0.20.5","3.0.0.0","292" ; Latest versions as of this script writing
+        Break
+    Case "SelectOne"
+        SelectOne "SelectOne: This is a SelectOne Dialog.",\
+            "Dummy01.esp","one"         ,"",\
+            "Dummy02.esp","two"         ,"",\
+            "Dummy03.esp","three"       ,"",\
+            "Dummy04.esp","four"        ,"",\
+            "Dummy05.esp","five"        ,"",\
+            "Dummy06.esp","six"         ,"",\
+            "Dummy07.esp","seven"       ,"",\
+            "Dummy08.esp","eight"       ,"",\
+            "Dummy09.esp","nine"        ,"",\
+            "Dummy10.esp","ten"         ,"",\
+            "Dummy11.esp","eleven"      ,"",\
+            "Dummy12.esp","twelve"      ,"",\
+            "Dummy13.esp","thirteen"    ,"",\
+            "Dummy14.esp","fourteen"    ,"",\
+            "Dummy15.esp","fifteen"     ,"",\
+            "Dummy16.esp","sixteen"     ,"",\
+            "Dummy17.esp","seventeen"   ,"",\
+            "Dummy18.esp","eighteen"    ,"",\
+            "Dummy19.esp","nineteen"    ,"",\
+            "Dummy20.esp","twenty"      ,"",\
+            "Dummy21.esp","twenty one"  ,"",\
+            "Dummy22.esp","twenty two"  ,"",\
+            "Dummy23.esp","twenty three","",\
+            "Dummy24.esp","twenty four" ,"",\
+            "Dummy25.esp","twenty five" ,""
+            Case "Dummy01.esp"
+                SelectEspm "Dummy01.esp"
+                Break
+            Case "Dummy02.esp"
+                SelectEspm "Dummy02.esp"
+                Break
+            Case "Dummy03.esp"
+                SelectEspm "Dummy03.esp"
+                Break
+            Case "Dummy04.esp"
+                SelectEspm "Dummy04.esp"
+                Break
+            Case "Dummy05.esp"
+                SelectEspm "Dummy05.esp"
+                Break
+            Case "Dummy06.esp"
+                SelectEspm "Dummy06.esp"
+                Break
+            Case "Dummy07.esp"
+                SelectEspm "Dummy07.esp"
+                Break
+            Case "Dummy08.esp"
+                SelectEspm "Dummy08.esp"
+                Break
+            Case "Dummy09.esp"
+                SelectEspm "Dummy09.esp"
+                Break
+            Case "Dummy10.esp"
+                SelectEspm "Dummy10.esp"
+                Break
+            Case "Dummy11.esp"
+                SelectEspm "Dummy11.esp"
+                Break
+            Case "Dummy12.esp"
+                SelectEspm "Dummy12.esp"
+                Break
+            Case "Dummy13.esp"
+                SelectEspm "Dummy13.esp"
+                Break
+            Case "Dummy14.esp"
+                SelectEspm "Dummy14.esp"
+                Break
+            Case "Dummy15.esp"
+                SelectEspm "Dummy15.esp"
+                Break
+            Case "Dummy16.esp"
+                SelectEspm "Dummy16.esp"
+                Break
+            Case "Dummy17.esp"
+                SelectEspm "Dummy17.esp"
+                Break
+            Case "Dummy18.esp"
+                SelectEspm "Dummy18.esp"
+                Break
+            Case "Dummy19.esp"
+                SelectEspm "Dummy19.esp"
+                Break
+            Case "Dummy20.esp"
+                SelectEspm "Dummy20.esp"
+                Break
+            Case "Dummy21.esp"
+                SelectEspm "Dummy21.esp"
+                Break
+            Case "Dummy22.esp"
+                SelectEspm "Dummy22.esp"
+                Break
+            Case "Dummy23.esp"
+                SelectEspm "Dummy23.esp"
+                Break
+            Case "Dummy24.esp"
+                SelectEspm "Dummy24.esp"
+                Break
+            Case "Dummy25.esp"
+                SelectEspm "Dummy25.esp"
+                Break
+        EndSelect
+        Break
+    Case "SelectMany"
+        SelectMany "SelectMany: This is a SelectMany Dialog.",\
+            "Dummy01.esp","","",\
+            "Dummy02.esp","","",\
+            "Dummy03.esp","","",\
+            "Dummy04.esp","","",\
+            "Dummy05.esp","","",\
+            "Dummy06.esp","","",\
+            "Dummy07.esp","","",\
+            "Dummy08.esp","","",\
+            "Dummy09.esp","","",\
+            "Dummy10.esp","","",\
+            "Dummy11.esp","","",\
+            "Dummy12.esp","","",\
+            "Dummy13.esp","","",\
+            "Dummy14.esp","","",\
+            "Dummy15.esp","","",\
+            "Dummy16.esp","","",\
+            "Dummy17.esp","","",\
+            "Dummy18.esp","","",\
+            "Dummy19.esp","","",\
+            "Dummy20.esp","","",\
+            "Dummy21.esp","","",\
+            "Dummy22.esp","","",\
+            "Dummy23.esp","","",\
+            "Dummy24.esp","","",\
+            "Dummy25.esp","",""
+            Case "Dummy01.esp"
+                SelectEspm "Dummy01.esp"
+                Break
+            Case "Dummy02.esp"
+                SelectEspm "Dummy02.esp"
+                Break
+            Case "Dummy03.esp"
+                SelectEspm "Dummy03.esp"
+                Break
+            Case "Dummy04.esp"
+                SelectEspm "Dummy04.esp"
+                Break
+            Case "Dummy05.esp"
+                SelectEspm "Dummy05.esp"
+                Break
+            Case "Dummy06.esp"
+                SelectEspm "Dummy06.esp"
+                Break
+            Case "Dummy07.esp"
+                SelectEspm "Dummy07.esp"
+                Break
+            Case "Dummy08.esp"
+                SelectEspm "Dummy08.esp"
+                Break
+            Case "Dummy09.esp"
+                SelectEspm "Dummy09.esp"
+                Break
+            Case "Dummy10.esp"
+                SelectEspm "Dummy10.esp"
+                Break
+            Case "Dummy11.esp"
+                SelectEspm "Dummy11.esp"
+                Break
+            Case "Dummy12.esp"
+                SelectEspm "Dummy12.esp"
+                Break
+            Case "Dummy13.esp"
+                SelectEspm "Dummy13.esp"
+                Break
+            Case "Dummy14.esp"
+                SelectEspm "Dummy14.esp"
+                Break
+            Case "Dummy15.esp"
+                SelectEspm "Dummy15.esp"
+                Break
+            Case "Dummy16.esp"
+                SelectEspm "Dummy16.esp"
+                Break
+            Case "Dummy17.esp"
+                SelectEspm "Dummy17.esp"
+                Break
+            Case "Dummy18.esp"
+                SelectEspm "Dummy18.esp"
+                Break
+            Case "Dummy19.esp"
+                SelectEspm "Dummy19.esp"
+                Break
+            Case "Dummy20.esp"
+                SelectEspm "Dummy20.esp"
+                Break
+            Case "Dummy21.esp"
+                SelectEspm "Dummy21.esp"
+                Break
+            Case "Dummy22.esp"
+                SelectEspm "Dummy22.esp"
+                Break
+            Case "Dummy23.esp"
+                SelectEspm "Dummy23.esp"
+                Break
+            Case "Dummy24.esp"
+                SelectEspm "Dummy24.esp"
+                Break
+            Case "Dummy25.esp"
+                SelectEspm "Dummy25.esp"
+                Break
+        EndSelect
+        Break
+    Case "SelectAll"
+        SelectAll
+        Break
+    Case "DeSelectAll"
+        DeSelectAll
+        Break
+    Case "SelectEspm"
+        SelectEspm "Dummy07.esp"
+        Break
+    Case "SelectAllEspms"
+        SelectAllEspms
+        Break
+    Case "DeSelectEspm"
+        DeSelectEspm "Dummy21.esp"
+        Break
+    Case "DeSelectAllEspms"
+        DeSelectAllEspms
+        Break
+    Case "For Loop"
+        ;### This should count 0 2 4 6 8 10 on the finish screen. ###
+        ; i = iteration.
+        startvalue = 0
+        endvalue = 10
+        For i from startvalue to endvalue by 2 ; For varname from start_value to end_value [by increment_value]
+            Note i
+            If i < 10
+                Note "We haven't got to 10 yet :("
+                Continue
+            Else
+                Note "We got to 10 :)"
+                Break
+            EndIf
+        EndFor
+        Break
+    Case "While Loop"
+        ;### If you write a recursive loop, bash will crash, not just rhyme. XD ###
+        ;### This should count from 1 to 5 on the finish screen. ###
+        count = 0
+        ; count = 10 ; Anything 5 or above will not run the while loop.
+        While count < 5
+            count = count + 1
+            Note count
+            If count < 5
+                Note "We haven't got to 5 yet :("
+                Continue
+            Else
+                Note "We got to 5 :)"
+                Break
+            EndIf
+        EndWhile
+        Break
+    Case "RenameEspm"
+        SelectEspm "Dummy15.esp"
+        RenameEspm "Dummy15.esp","RenamedDummy15.esp"
+        SelectEspm "Dummy25.esp"
+        RenameEspm "Dummy25.esp","RenamedDummy25.esp"
+        Break
+    Case "ResetEspmName"
+        ResetEspmName "Dummy25.esp"
+        Break
+    Case "ResetAllEspmNames"
+        ResetAllEspmNames
+        Break
+    Case "RenameEspm After ResetEspmName/ResetAllEspmNames"
+        RenameEspm "Dummy25.esp","RenamedAgainDummy25.esp"
+    Case "Note"
+        ;### Notes can be written many different ways. If you are familiar to Python programming it is basically the same thing as print ('Hello World!'), but only shows at the end of the wizard on the finish screen. ###
+        ;### This is a note. It's just commented out! ###
+        
+        Note "This is a test note."
+
+        i = 2
+        NoteString = i
+        Note str(NoteString) + " This is another way to write a Note" \
+        + "\n- Noote" \
+        + "\n" \
+        + "\n- Nooote"
+
+        Exec("Note 'Exec(Note)'")
+
+        NotePart1 = 'This is part1 of this note. '
+        NotePart2 = 'This is part2 of this note. '
+        Note NotePart1 + NotePart2
+
+        Break
+    Case "Test Boolean Value"
+        ;### Here we will change the bTestBooleanValue defined at the beginning of the script, so that it will produce a different message at the finish screen as the truth of the value is checked below. ###
+        bTestBooleanValue = True
+        Break
+    Case "Escape Sequences"
+        ;### Escape sequences are ticky to recognise in a script at times. Keep that in mind. ###
+        Note "Escape Sequences- A tab is acheived by a backslash character immediately followed with the letter t."
+        Note "Escape Sequences- A newline break is acheived by a backslash character immediately followed with the letter n."
+        Note "Inserting a tab \t here."
+        Note "Inserting a newline break \n here."
+        Break
+    Case "Test A Long Header Message"
+        SelectMany "This is a looooooooooooooooooooooooooooong Message. Lets see how far it can go! Wooooooooooooooooot! Install Wizards are AWESOME! One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten. Bla Bla Blaaaaaaaaaaaaaaaaaaaaaa \nNEWLINE Character. Etc..., etc..., etcccccccccccccccccccccccccccc... \nAwwwww that's nice. Let go to town with it. \n\nNEWLINE NEWLINEx2 \n\n\nNEWLINE NEWLINE NEWLINEx3 \n\n\n\nNEWLINE NEWLINE NEWLINE NEWLINEx4 \n\nabcdefghijklmnopqrstuvwxy&&z, Now I know my abcs, next time won't you type with me. \n&&&& in script, dispays one ampersand && in runtime with the dialog header, just as with Python. ampersssssand \n\n",\
+            "|Testing the Dialog Message Header length","See the notes option for more info about this.","",\
+            "Notes on dialog header length","Since the wizard window is resizeable, the length of each line seem to be limited by the minimum wizard window size, which is \nself.SetPageSize((600,500))\n in belt.py (600 being the width,500 being the height)","",\
+            "Screenie test!","Lets test how a screenie reacts with all of this grrrrrrrrrrreatness!","Screenshots\\Screenshot22.jpg"
+        EndSelect
+        Break
+    Case "EditINI (Oblivion.ini)"
+        EditINI('Oblivion.ini', 'General', 'bBorderRegionsEnabled', 0); Disabled
+        ;; EditINI('Oblivion.ini', 'General', 'bBorderRegionsEnabled', 1); Enabled
+        Break
+    Case "EditINI (DummyINI.ini)"
+        ;; SelectEspm "DummyINI.esp"
+        EditINI('Dummy.ini', 'set', 'DummyValue1', 1000)
+        EditINI('Dummy.ini', 'set', 'DummyValue7', 7777)
+        Break
+    Case "EditINI (CustomDummy.ini)"
+        ;### If you wanted a tweak that would perform a script like ini tweak, but also wanted to add disable border regions in Oblivion.ini tweak also this line would include that tweak. ###
+        ;### Note that you will have to change the ini twice in the INI Edits tab and apply each tweak to the seperate ini's. ###
+        ;### This just creates a tweak that will work on both types of ini's (Script-like & Batch). Dummy.ini and Oblivion.ini ###
+        EditINI('CustomDummy.ini', 'set', 'DummyValue5', 5050)
+        EditINI('CustomDummy.ini', 'General', 'bBorderRegionsEnabled', 0)
+        Break
+    Case "Exec"
+        ; Escape Characters \\'(Single Quote) , \\"(Double Qoute) , \\\\(Wizard Images)
+        bExecTruth = WhereIsTheTruthInThat
+        Exec("SelectOne 'bExecTruth Example: Yes/No Question\\n\\nbExecTruth = WhereIsTheTruthInThat', '|Yes', 'Select this to turn bExecTruth = True', 'Wizard Images\\\\Yes.jpg', 'No', 'Select this to turn bExecTruth = False', 'Wizard Images\\\\No.jpg'\nCase 'Yes'\nbExecTruth = True\nBreak\nCase 'No'\nbExecTruth = False\nBreak\nEndSelect")
+        Note "bExecTruth = " + str(bExecTruth)
+
+        Exec("SelectOne 'Do you like icecream?', '|Yes', 'Select this if you like icecream!', 'Wizard Images\\\\IceCream.jpg', 'No', 'Select this if you do not like icecream.', 'Wizard Images\\\\IHateIceCream.jpg'\nCase 'Yes'\nNote 'You like icecream!'\nBreak\nCase 'No'\nNote 'Why don\\'t you like icecream?'\nBreak\nEndSelect")
+        Break
+    Case "str"
+        WizardString = str("This is a wizard string")
+        Note WizardString
+        Note str("This is a wizard string")   ; The BlankMod_Readme that shows in the str description field above is a string also.
+        Break
+    Case "int"
+        FiveFiveFive = 555
+        IntString = 'IntString'
+        Integer1 = int('343')
+        Note Integer1
+        Integer2 = int('3.43')
+        Note Integer2
+        Integer3 = int(FiveFiveFive)
+        Note Integer3
+        Note IntString
+        Break
+    Case "float"
+        RootBeerFloat = float("Barq's")
+        ;; Note "RootBeerFloat = float(\"Barq's\")" ;' reason for comment:utumno apparently forgot escape sequences coloring for the Notepad++ color gizmo
+        Note "RootBeerFloat = float(''Barq's'')" ; '' for a double quote
+        Note RootBeerFloat
+        Note "Note float('2.4')"
+        Note float('2.4')
+        Break
+    Case "len"
+        LengthString = "What is the length of this string?"
+        Note 'LengthString = "What is the length of this string?"'
+        Note len(LengthString)
+        LengthString2 = "WizBAIN"
+        Note 'LengthString2 = "WizBAIN"'
+        Note len(LengthString2)
+        Break
+    Case "CompareObVersion"
+        If CompareObVersion('1.2.0.416') == -1
+            Note "Installed Oblivion version is less than the version specified('1.2.0.416')"
+        Elif CompareObVersion('1.2.0.416') == 0
+            Note "Installed Oblivion version is the same as than the version specified('1.2.0.416')"
+        Elif CompareObVersion('1.2.0.416') == 1
+            Note "Installed Oblivion version is higher than the version specified('1.2.0.416')"
+        EndIf
+
+        ObVer = CompareObVersion('1.2.0.416')
+        Note str("CompareObVersion('1.2.0.416') = ") + str(ObVer)
+        Break
+    Case "CompareOBSEVersion"
+        If CompareOBSEVersion('0.0.20.5') == -1
+            Note "Installed Oblivion Script Extender version is less than the version specified('0.0.20.5')"
+        Elif CompareOBSEVersion('0.0.20.5') == 0
+            Note "Installed Oblivion Script Extender version is the same as than the version specified('0.0.20.5')"
+        Elif CompareOBSEVersion('0.0.20.5') == 1
+            Note "Installed Oblivion Script Extender version is higher than the version specified('0.0.20.5')"
+        EndIf
+
+        OBSEVer = CompareOBSEVersion('0.0.20.5')
+        Note str("CompareOBSEVersion('0.0.20.5') = ") + str(OBSEVer)
+        Break
+    Case "CompareOBGEVersion"
+        If CompareOBGEVersion('3.0.0.0') == -1
+            Note "Installed Oblivion Graphics Extender version is less than the version specified('3.0.0.0')"
+        Elif CompareOBGEVersion('3.0.0.0') == 0
+            Note "Installed Oblivion Graphics Extender version is the same as than the version specified('3.0.0.0')"
+        Elif CompareOBGEVersion('3.0.0.0') == 1
+            Note "Installed Oblivion Graphics Extender version is higher than the version specified('3.0.0.0')"
+        EndIf
+
+        OBGEVer = CompareOBGEVersion('3.0.0.0')
+        Note str("CompareOBGEVersion('3.0.0.0') = ") + str(OBGEVer)
+        Break
+    Case "CompareWBVersion"
+        If CompareWBVersion('292') == -1
+            Note "Installed Wrye Bash version is less than the version specified('292')"
+        Elif CompareWBVersion('292') == 0
+            Note "Installed Wrye Bash version is the same as than the version specified('292')"
+        Elif CompareWBVersion('292') == 1
+            Note "Installed Wrye Bash version is higher than the version specified('292')"
+        EndIf
+
+        WBVer = CompareWBVersion('292')
+        Note str("CompareWBVersion('292') = ") + str(WBVer)
+        Break
+    Case "GetEspmStatus"
+        DoesntExist = GetEspmStatus('DoesntExist.esp')
+        Note "Doesn't Exist Test ; -1"
+        Note str("GetEspmStatus('DoesntExist.esp') = ") + str(DoesntExist) + "\n"                   ; -1: The esp/m does not exist
+
+        Inactive = GetEspmStatus('Bashed Patch, 0.esp')
+        Note "Inactive Test ; 0"
+        Note str("GetEspmStatus('Bashed Patch, 0.esp') = ") + str(Inactive) + "\n"                  ; 0: The esp/m is not active, imported, or merged (Inactive)
+
+        ActivePortionsImported = GetEspmStatus('Harvest [Flora].esp')
+        Note "Active But Has Portions Imported Test ; 1"
+        Note str("GetEspmStatus('Harvest [Flora].esp') = ") + str(ActivePortionsImported) + "\n"    ; 1: The esp/m is not active, but has portions imported into the Bashed Patch (Imported)
+
+        Active = GetEspmStatus('Oblivion.esm')
+        Note "Active Test ; 2"
+        Note str("GetEspmStatus('Oblivion.esm') = ") + str(Active) + "\n"                           ; 2: The esp/m is active (Active)
+
+        MergedIntoBashedPatch = GetEspmStatus('KotN Wayshrine Fix.esp')
+        Note "Merged Into Bashed Patch Test ; 3"
+        Note str("GetEspmStatus('KotN Wayshrine Fix.esp') = ") + str(MergedIntoBashedPatch) + "\n"  ; 3: The esp/m is merged into the Bashed Patch (Merged)
+
+        Note "Bashed Patch Status"
+        If GetEspmStatus('Bashed Patch, 0.esp') == -1
+            Note "GetEspmStatus('Bashed Patch, 0.esp') = -1"
+        Elif GetEspmStatus('Bashed Patch, 0.esp') == 0
+            Note "GetEspmStatus('Bashed Patch, 0.esp') = 0"
+        Elif GetEspmStatus('Bashed Patch, 0.esp') == 1
+            Note "GetEspmStatus('Bashed Patch, 0.esp') = 1"
+        Elif GetEspmStatus('Bashed Patch, 0.esp') == 2
+            Note "GetEspmStatus('Bashed Patch, 0.esp') = 2"
+        Elif GetEspmStatus('Bashed Patch, 0.esp') == 3
+            Note "GetEspmStatus('Bashed Patch, 0.esp') = 3"
+        EndIf
+        Break
+    Case "GetFilename"
+        Note GetFilename("C:\\Program Files\\Bethesda Softworks\\Oblivion\\Oblivion.exe") ;Returns Oblivion.exe
+
+        If GetFilename("C:\\Program Files\\Bethesda Softworks\\Oblivion\\Oblivion.exe") == "Oblivion.exe"
+            Note "Yes, I returned 'Oblivion.exe'"
+        Else
+            Note "No, I did NOT return 'Oblivion.exe'"
+        EndIf
+        Break
+    Case "GetFolder"
+        Note GetFolder("Data\\Oblivion.esm") ;Returns Data
+    
+        If GetFolder("Data\\Oblivion.esm") == "Data"
+            Note "Yes, I returned 'Data'"
+        Else
+            Note "No, I did NOT return 'Data'"
+        EndIf
+        
+        secondexample = GetFolder("This\\Is\\An\\Example\\somefile.ext") == "This\\Is\\An\\Example"
+        If secondexample
+            Note str('GetFolder("This\\Is\\An\\Example\\somefile.ext") == ') + str(secondexample)
+        Else
+            Note str('GetFolder("This\\Is\\An\\Example\\somefile.ext") == ') + str(secondexample)
+        EndIf
+        Break
+    Case "endswith"
+        endswithString = "What does this string end with"
+        If endswith(endswithString,"with?","")
+            Note "It endswith 'with?'"
+        Else
+            Note "Nope"
+        EndIf
+        Break
+    Case "startswith"
+        startswithString = "What does this string start with?"
+
+        If startswith(startswithString,"What","does this","HUH?","ribbit","")
+            Note "It startswith 'What'"
+        Else
+            Note "Nope"
+        EndIf
+        
+        isfalse = startswith(startswithString,"Hmmmm","dang","False","NO","Match")
+        Note 'startswith(startswithString,"Hmmmm","dang","False","NO","Match") = ' + str(isfalse)
+        
+        istrue = startswith(startswithString,"mooo","?htiw","trats","gnirts","What does this")
+        Note 'startswith(startswithString,"mooo","?htiw","trats","gnirts","What does this") = ' + str(istrue)
+        
+        Break
+    Case "Math Operators"
+        Note "Addition: 1+2+3+4="
+        Note 1+2+3+4
+        Note "Subtraction: 100-57="
+        Note 100-57
+        Note "Multiplication: 5*5="
+        Note 5*5
+        Note "Division: 100/5="
+        Note 100/5
+        Note "Exponentiation: 10^2="
+        Note 10^2
+        Note "Order of Operations: 3+6*2= Will evaluate to 15 as expected, not 18."
+        Note 3+6*2
+        Break
+    Case "Comparison Operators"
+        Note "NUMBER == 100"
+        Note NUMBER == 100
+        Note "NUMBER != 100"
+        Note NUMBER != 100
+        Note "NUMBER >= 100"
+        Note NUMBER >= 100
+        Note "NUMBER > 100"
+        Note NUMBER > 100
+        Note "NUMBER <= 100"
+        Note NUMBER <= 100
+        Note "NUMBER < 100"
+        Note NUMBER < 100
+        Break
+    Case "lower"
+        LowerString = str('CONVERT A STRING TO lower CASE.')
+        Note lower(LowerString)
+        Break
+    Case "Indexing"
+        IndexString = str('Hello from wxPython! errr wxLojacks wizard wizard lol')
+        Note "Hello"[0]             ;returns "H"
+        Note "Hello"[0:]            ;return "Hello"
+        Note "Hello"[:]             ;returns "Hello"
+        Note "Hello"[0:2]           ;returns "He"
+        Note "Hello"[-1]            ;returns "o"
+        Note "Hello"[1:3]           ;returns "el"
+        Note "Hello"[-2:]           ;returns "lo"
+        Note IndexString[-0:]       ;returns "Hello from wxPython! errr wxLojacks wizard wizard lol"
+        Note IndexString[-1:-54:-1] ;returns "lol draziw draziw skcajoLxw rrre !nohtyPxw morf olleH"
+        Note IndexString[0:999:2]   ;returns "Hlofo xyhn rrwLjcswzr iadll"
+        Break
+    Case "Character Display"
+        Note "	Tab"
+        Note ""; Spacer with dash
+        Note "Character Display Test ~!@#$%^&*()_+ `1234567890-="
+        Note "Character Display Test ,.\?/;'[]\\ <>:{}|"    ;Escape Characters \\ \?
+        Note "Character Display Test abcdefghijklmnopqrstuvwxyz"
+        Note "Character Display Test ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        Note 'Character Display Test "Real Quotes"'
+        Note "Character Display Test ''Double-single Hash Quotes''"
+        Break
+    Case "Another Way To Dynamically Change Dialog Choices"
+        SelectOne "What do you want to set bDynamicDialogTruth to? \nYour choice will change the next dialogs header message accordingly.", \
+            "|True", "Set bDynamicDialogTruth = True", "Wizard Images\\Truth.png",\
+            "False", "Set bDynamicDialogTruth = False", "Wizard Images\\Truth.png"
+            Case "True"
+                bDynamicDialogTruth = True  ; By changing this value to True/False will change the Header message.
+                Break
+            Case "False"
+                bDynamicDialogTruth = False ; By changing this value to True/False will change the Header message.
+                Break
+        EndSelect
+        
+        Choice1 =           "This is Choice1"
+        Description1 =      ""
+        Image1 =            ""
+        Choice2 =           "|This is Choice2"
+        Description2 =      "By changing bDynamicDialogTruth value to True/False will change the Header message and also Choice3 Description"
+        Image2 =            "Wizard Images\\Truth.png"
+        Choice3str =        str("This is Choice3str")
+        Description3str =   str("This is Description3str")
+        Image3str =         str("")
+        
+        If bDynamicDialogTruth ;= True
+            Header = "Another way to dynamically show a header. \nbDynamicDialogTruth = True \nHomework: I expect you to make a fancy wizard for your mod and package it correctly for BAIN. Mwahahaha"
+            Description3str =   str("This is Description3str True \nInstead of having a bool value, you could set the variable to a number and have a whole bunch of different choices etc...")
+        Else ;bDynamicDialogTruth = False
+            Header = "Another way to dynamically show a header. \n\nbDynamicDialogTruth = False \n\nHomework: I expect you to make a fancy wizard for your mod and package it correctly for BAIN. \n\nMooo-wa-ha-ha-ha"
+            Description3str =   str("This is Description3str False. \nInstead of having a bool value, you could set the variable to a number and have a whole bunch of different choices etc...")
+        EndIf
+
+        SelectMany str(Header), \
+            str(Choice1), str(Description1), str(Image1),\
+            str(Choice2), str(Description2), str(Image2),\
+            Choice3str, Description3str, Image3str
+        EndSelect
+
+        Break
+    ;### This one wins the ugly code of the year award. ###
+                                                                                                                                                                                                                                                                                                                                                                                                                             Case "Wizard Indentation"
+                                                                                                                                                                                                                                                                                                                                                                                                                        Note "This is really really UGLY code. Your lucky a Python isn't around to squeeze the life out of you and your script also!"
+    Note "Does wizard indentation matter? No, It doesn't."
+         Note "Writing consistant code is a requirement for Python. It is not required for wizard script. Please strive for consistancy with your scripts(otherwise you may get bit, and also it is.....UGLY(yep you guessed it!)). This isn't some alien language. Try to treat it with some respect."
+Note "Does wizard indentation matter? No, It doesn't."
+               Break
+    Case "Wrye Links"
+        Note "Wrye Bash Readme@ http://wryemusings.com/Wrye%20Bash.html (at time a fair bit outdated... most up to date readme in the download - the file named Wrye Bash.html in the mopy folder) \n Wrye Bash Wiki@ http://www.uesp.net/wiki/Tes4Mod:Wrye_Bash \n Wrye's Cathedral & Parlor Paper@ http://wryemusings.com/Cathedral%20vs.%20Parlor.html"
+        Break
+    Case "Official/DLC Content Check"
+        Note ""; Spacer
+        Note "OFFICIAL/DLC CONTENT=========================================="
+        Note ""; Spacer
+
+        If DataFileExists("Oblivion.esm")
+            Note "The Core Program (Oblivion.esm) Is detected."
+        EndIf
+
+        If DataFileExists("DLCShiveringIsles.esp")
+            Note "Shivering Isles detected."
+        EndIf
+
+        If DataFileExists("Knights.esp")
+            Note "Knights of the Nine (KotN) detected."
+        EndIf
+
+        If DataFileExists("DLCHorseArmor.esp")
+            Note "Official Content (DLC - HorseArmor) detected."
+        EndIf
+
+        If DataFileExists("DLCOrrery.esp")
+            Note "Official Content (DLC - Orrery) detected."
+        EndIf
+
+        If DataFileExists("DLCVileLair.esp")
+            Note "Official Content (DLC - VileLair) detected."
+        EndIf
+
+        If DataFileExists("DLCMehrunesRazor.esp")
+            Note "Official Content (DLC - MehrunesRazor) detected."
+        EndIf
+
+        If DataFileExists("DLCSpellTomes.esp")
+            Note "Official Content (DLC - SpellTomes) detected."
+        EndIf
+
+        If DataFileExists("DLCThievesDen.esp")
+            Note "Official Content (DLC - ThievesDen) detected."
+        EndIf
+
+        If DataFileExists("DLCBattlehornCastle.esp")
+            Note "Official Content (DLC - BattlehornCastle) detected."
+        EndIf
+
+        If DataFileExists("DLCFrostcrag.esp")
+            Note "Official Content (DLC - Frostcrag) detected."
+        EndIf
+        Break
+    Case "ESM Check"
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;===========================================;;
+        ;;===EEEEEEEEE===SSSSSSS===MMMMM=====MMMMM===;;
+        ;;===EEE========SSS====SSS==MMMMMM=MMMMMM====;;
+        ;;===EEE========SSS=========MMM=MMMMM=MMM====;;
+        ;;===EEEEEEEE====SSSSSSSS===MMM==MMM==MMM====;;
+        ;;===EEE===============SSS==MMM===M===MMM====;;
+        ;;===EEE========SSS====SSS==MMM=======MMM====;;
+        ;;===EEEEEEEEE===SSSSSSS===MMMM=======MMMM===;;
+        ;;===========================================;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+        Note ""; Spacer
+        Note "ESMs======================================================"
+        Note ""; Spacer
+
+        ;; If DataFileExists("ModName.esp")
+           ;; Note "ModName detected."
+        ;; EndIf
+
+        If DataFileExists("All Natural Base.esm")
+            Note "All Natural detected."
+        EndIf
+
+        If DataFileExists("Armamentarium.esm")
+            Note "Armamentarium detected."
+        EndIf
+
+        If DataFileExists("Artifacts.esm")
+            Note "Artifacts detected."
+        EndIf
+
+        If DataFileExists("Better Cities Resources.esm")
+            Note "Better Cities detected."
+        EndIf
+
+        If DataFileExists("Cobl Main.esm")
+            Note "Common Oblivion (Cobl) detected."
+        EndIf
+
+        If DataFileExists("Mart's Monster Mod.esm")
+            Note "MMM detected."
+        EndIf
+
+        If DataFileExists("Qarls_Harvest.esm")
+            Note "Qarl's Harvest detected."
+        EndIf
+
+        Break
+    Case "ESP Check"
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;=====================================;;
+        ;;===EEEEEEE=====SSSSSS====PPPPPPP=====;;
+        ;;===EEEEEEE====SS====S====PPPPPPPP====;;
+        ;;===EEE========SSS========PPP===PPP===;;
+        ;;===EEEEEE======SSSS======PPP==PPP====;;
+        ;;===EEEEEE=======SSSS=====PPPPPP======;;
+        ;;===EEE============SSS====PPP=========;;
+        ;;===EEEEEEE====S====SS====PPP=========;;
+        ;;===EEEEEEE====SSSSSS=====PPP=========;;
+        ;;=====================================;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+        Note ""; Spacer
+        Note "ESPs======================================================"
+        Note ""; Spacer
+
+        ;; If DataFileExists("ModName.esp")
+           ;; Note "ModName detected."
+        ;; EndIf
+
+        If DataFileExists("Map Marker Overhaul.esp")
+            Note "Map Marker Overhaul(MMO) detected."
+            Note "    *This changes standard map markers and makes the in-game map customizable."
+        EndIf
+
+        If DataFileExists('TheOubliette.esp')
+            Note "The Oubliette detected."
+            Note "    *Load after Better Cities Imperial City while playing this."
+        EndIf
+
+        If DataFileExists("RenGuardOverhaul.esp")
+            Note "Reneer's Guard Overhaul detected."
+            Note "    *This might cause CTD's with Underdark, Reaper's Coldstone, Etc...."
+            Note "    *This mod is NOT compatible with Reneer's Disguises mod."
+        EndIf
+
+        If DataFileExists("Unofficial Oblivion Patch.esp")
+            Note "Unofficial Oblivion Patch detected."
+            Note "    *This fixes a ton of bugs."
+        EndIf
+
+        If DataFileExists("WindowLightingSystem.esp")
+            Note "Animated Window Lighting System(AWLS) detected."
+            Note "    *This lights up windows at night & adds chimney smoke to chimneys."
+        EndIf
+
+        If DataFileExists("za_bankmod.esp")
+            Note "za_bankmod.esp detected."
+            Note "    *BBC has a replacer esp named the same."
+        EndIf
+
+        Break
+    Case "OBSE Plugins Check"
+        If DataFileExists ("OBSE\\Plugins\\Elys_USV.dll")
+            Note "Elys Universal Silent Voice is installed :)"
+        Else
+            Note "Elys Universal Silent Voice is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\ConScribe.dll")
+            Note "ConScribe is installed :)"
+        Else
+            Note "ConScribe is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\CustomSpellIcons.dll")
+            Note "Custom Spell Icons is installed :)"
+        Else
+            Note "Custom Spell Icons is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\EnhancedMusicControl.dll")
+            Note "Enhanced Music Control is installed :)"
+        Else
+            Note "Enhanced Music Control is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\FastExit2.dll")
+            Note "Fast Exit 2 is installed :)"
+        Else
+            Note "Fast Exit 2 is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\FastExit3.dll")
+            Note "Fast Exit 3 is installed :)"
+        Else
+            Note "Fast Exit 3 is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\NifSE.dll")
+            Note "NifSE is installed :)"
+        Else
+            Note "NifSE is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\obge.dll")
+            Note "Oblivion Graphics Extender v1 is installed :)"
+        Else
+            Note "Oblivion Graphics Extender v1 is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\OBGEv2.dll")
+            Note "Oblivion Graphics Extender v2 is installed :)"
+        Else
+            Note "Oblivion Graphics Extender v2 is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\OBSE_Elys_Pluggy.dll")
+            Note "Pluggy is installed :)"
+        Else
+            Note "Pluggy is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\OBSE_Kyoma_MenuQue.dll")
+            Note "MenuQue is installed :)"
+        Else
+            Note "MenuQue is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\sr_Oblivion_Stutter_Remover.dll")
+            Note "Oblivion Stutter Remover is installed :)"
+        Else
+            Note "Oblivion Stutter Remover is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\weOCPS.dll")
+            Note "Windom Earle's Oblivion Crash Prevention System is installed :)"
+        Else
+            Note "Windom Earle's Oblivion Crash Prevention System is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\AVUncapper.dll")
+            Note "Actor Value Uncapper is installed :)"
+        Else
+            Note "Actor Value Uncapper is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\AVUncapper_CS.dll")
+            Note "Actor Value Uncapper CS is installed :)"
+        Else
+            Note "Actor Value Uncapper CS is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\OBME.dll")
+            Note "Oblivion Magic Extender is installed :)"
+        Else
+            Note "Oblivion Magic Extender is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\OBME_CS.dll")
+            Note "Oblivion Magic Extender CS is installed :)"
+        Else
+            Note "Oblivion Magic Extender CS is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\algohol.dll")
+            Note "ALGOHOL is installed :)"
+        Else
+            Note "ALGOHOL is NOT installed :("
+        EndIf
+
+        If DataFileExists ("OBSE\\Plugins\\Construction Set Extender.dll")
+            Note "Construction Set Extender is installed :)"
+        Else
+            Note "Construction Set Extender is NOT installed :("
+        EndIf
+
+        ; A one-liner version
+        Exec("Note DataFileExists ('OBSE\\\\Plugins\\\\Construction Set Extender.dll')") ;Returns Boolean Value(True or False)
+        ;;HMMMM Doesn't Like Note... HMMMM;; Exec("If DataFileExists ('OBSE\\\\Plugins\\\\Construction Set Extender.dll'), Note 'Construction Set Extender is installed :)', Else, Note 'Construction Set Extender is NOT installed :(', EndIf")
+        Exec("ISinstalled = Note 'Construction Set Extender is installed :)',NOTinstalled = Note 'Construction Set Extender is NOT installed :)', If DataFileExists ('OBSE\\\\Plugins\\\\Construction Set Extender.dll'), ISinstalled, Else, NOTinstalled, EndIf")
+
+        Break
+EndSelect
+
+;#-----------------------------------------------------------------------------
+
+
+;### The default option character will make the Next button pop up automatically, instead of disabled until you click on the blank options. ###
+;### Blank spacer options need at least one whitespace character. ###
+SelectOne "You will see this message unless you checked Return. For testing the Return function.",\
+    "| ","The default option character will make the Next button pop up automatically, instead of disabled until you click on the blank options. \n\nThere are two options here for a SelectOne Dialog. Both options are 1 space and do nothing. The default character is set for the first option. If the default character is removed, then the next button will be disabled until you select an option.","",\
+    " ","The default option character will make the Next button pop up automatically, instead of disabled until you click on the blank options. \n\nThere are two options here for a SelectOne Dialog. Both options are 1 space and do nothing. The default character is set for the first option. If the default character is removed, then the next button will be disabled until you select an option.",""
+EndSelect
+
+If bTestBooleanValue ;=True
+    Note "\n bTestBooleanValue = True"
+Else
+    Note "\n bTestBooleanValue = False"
+EndIf
+
+;#=====================================================================================================================
+
+; To correctly view the ASCII Art below,
+; The default format>font is:
+; Lucida Console , Regular , 10pt or something....
+
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMO8I??+=III=~~I$$$8OZ$$88DNNNMDD8DNNNNNNNNDNNNNDNMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMOI=:~=?$:,..,~~I7?=~==:... ................~~$7DNMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMND$+O?7DZ8$~.::?:+ZI$8$78O8:~,,,.,:.,.::?ZD7Z8ONMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMND8DNO8Z+DNM8MMMNZNMN8NMMMMMMMMO7,?ZM8NO8NNMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMNDDDDDNNDDNMOMMM8NMMMMMNNMMN8NDMDM,+I?O8DNMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMNMDO8NDO8DDDODD8OMMMMMMMMMMMMMDMMNDZD7$8ZDM8MMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMNND8OZ7+OMMNDMNMNMMMMMMMMMMMMMMNMMDNODO88NDMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMDO$ZZZ$Z8N8MDMMMMMMMMMMMMMMMMMMNMMODO=I=I8ZNMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMNZO8I7$ONNMDNDMMMMMMMMMMMMMMMMMMMMN8==I?:.~OMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMNN?I$II7NMN8NNMMMMMMMMMMMMMMMMMMMMMDDMD7Z7$Z8MMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMD$7+??$$MN8DDNNMMMMMMMMMMMMMMMMMMMNNNDD8$D7$+DMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMD$7ZI7OMMMNMMMMMMMMMMMMMMMMMMMMMMMMDN$O$ZNZ$ONMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMM8ZOI7ZO?NNMMMNMMMMMMMMMMMMMMMMMMMMMM8DZZI?+ZDZNDMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMNDOOOI+?MDMMMMMMMMMMMMMMMMMMMMMMMMMNNMMN8ODNNO?DMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMN8O7I7~Z8MMNMMMMMMMMMMMMMMMMMMMMMMMMMNDDD$~8?ZM8MMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMDNO$IO8DNDMMMMMMMMMMMM$D=7ZNMMMMMMMMNMMM88ON8MDDDMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMDDDOODD88DMMMMMMMMMMM7::7+.~NMMMMMMMMMDNNN8I$ZZ8DMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMNDDD8NZN88DMMMMMMMMMMNO?OZ=...IMMMMMMMNNO8DDOIN8ONMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMOOZOZDMMDMMMMMMMMMMDZZ:Z?,.$$MMMMMMMMM8DNDZ=78DNNMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMDDDMMDM8NMMMMMMMMMMNO8DDZ7Z?+OMMMMMMMMMN$Z=ZMNDNMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMNNNDDDDNNMMMMMMMMMMND8DDO8888NMMMMMMMMNDDZDDIODMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMNNN888ZZMMMMMMMMMMMMNNMOO8D8ONZMMMMMMMMDO8ZOZ88ONMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMNNDN8NDDMMMMMMMMMMMMMNMNDDN8MMMMMMMMMMNMMDNOIDMMNMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMNDZOZZO8NMMMMMMMMMMMMDMMNNNDMMMMMMMMMMM8DNZ$OO8DDMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMNN88$D8DDMMMMMMMMMMMMMMNMMMMMMMMMMMMMMMMDM8ZOZDDNDMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMNDDM88OMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMOMNODDD8NDMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMM8D$D$ZOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMD8DZZMMNMNMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMND8Z$8NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMDDO8DMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMNMMO$NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM88OOODZMDMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMD8ZODMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNN7$NMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMN$$$NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMOZZMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMNMD8OMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNONODONMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMNNO??MMMMMMMMMMMMMMMMMMMMMMMMMMMMM88ODMMMDMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMDM+=?8MMMMMMMMMMMMMMMMMMMMMMMMMMMMM88MMNMNMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMNDM+=+8MMMMMMMMMMMMMMMMMMMMMMMMMMMD$OOMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMN?=~MMMMMMMMMMMMMMMMMMMMMMMMMMDO7NDNMNMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMNI:DNMMMMMMMMMMMMMMMMMMMMMMMN8$8DNMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMM?87ZNMMMMMMMMMMMMMMMMMMMMMM7O7MMNMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMN7I8MMMMMMMMMMMMMMMMMMMMMNI77MNMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMO+DNMMMMMMMMMMMMMMMMMMNO8$ZNNNMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMNMD$8MMMMMMMMMMMMMMMMMMO8$ODMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMOOZOMMMMMMMMMMMMMMMD??DNMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM8NMMMMMMMMMMMMMMM?ZNNMNMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN$Z8NMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN8OMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM7MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMDMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+;MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+
+Note "\n\nThis concludeds the simple structure WIZBAIN Demo(unless testing an INI option). Have a nice day :)"
+
+;#End of Wizard Script.

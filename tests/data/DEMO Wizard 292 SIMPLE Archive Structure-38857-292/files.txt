@@ -1,0 +1,76 @@
+
+Screenshots/Screenshot11
+Screenshots/Screenshot04.gif
+Wizard Images/Bethesda.jpg
+Wizard Images/Cancel.jpg
+Wizard Images/Error.jpg
+Wizard Images/Finish.jpg
+Wizard Images/IceCream.jpg
+Wizard Images/IHateIceCream.jpg
+Screenshots/Screenshot02.jpg
+Screenshots/Screenshot22.jpg
+Wizard Images/SelectMany.jpg
+Wizard Images/SelectOne.jpg
+Wizard Images/Versions.jpg
+Wizard Images/AboutScreenshots.png
+Wizard Images/CommonScriptingMistakes.png
+Wizard Images/CreditsAuthors.png
+Wizard Images/DefaultOption.png
+Wizard Images/EnglishUSA.png
+Wizard Images/faq.png
+Wizard Images/KnownConflictsBugs.png
+Wizard Images/LastCompilationUpdate.png
+Wizard Images/ModdersResources.png
+Wizard Images/NeedPic.png
+Wizard Images/Requirements1.png
+Wizard Images/Requirements2.png
+Wizard Images/Requirements3.png
+Wizard Images/Requirements4.png
+Wizard Images/Requirements5.png
+Screenshots/Screenshot01.png
+Screenshots/Screenshot25.png
+Wizard Images/StartHere.png
+Wizard Images/Truth.png
+Wizard Images/WebLinks.png
+Wizard Images/WIPz.png
+Wizard Images/ZookeepersWarningArt.png
+Screenshots/Screenshot03.bmp
+Screenshots/Screenshot07.ico
+Screenshots/Screenshot08.ico
+Screenshots/Screenshot10.psd
+Wizard.txt
+INI Tweaks/BAINwillUninstallMe.ini
+INI/DummyINI.ini
+Docs/TestRtfInDocsFolder.rtf
+Textures/DummyTexture.dds
+Textures/DummyTexture_n.dds
+Screenshots/Screenshot09.dds
+Dummy01.esp
+Dummy02.esp
+Dummy03.esp
+Dummy04.esp
+Dummy05.esp
+Dummy06.esp
+Dummy07.esp
+Dummy08.esp
+Dummy09.esp
+Dummy10.esp
+Dummy11.esp
+Dummy12.esp
+Dummy13.esp
+Dummy14.esp
+Dummy15.esp
+Dummy16.esp
+Dummy17.esp
+Dummy18.esp
+Dummy19.esp
+Dummy20.esp
+Dummy21.esp
+Dummy22.esp
+Dummy23.esp
+Dummy24.esp
+Dummy25.esp
+Screenshots/Screenshot023.pxr
+Screenshots/Screenshot24.raw
+Screenshots/Screenshot06.tga
+Screenshots/Screenshot05.tif
