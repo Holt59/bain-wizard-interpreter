@@ -205,7 +205,8 @@ class RunnerChecker(WizardScriptRunner):
 
         if not isinstance(self._next_opts[0], str):
             raise ValueError(
-                f"Next option for selectOne() is not a string (desc. = {description})."
+                "MOCK: Next option for selectOne() is not a string "
+                f"(desc. = {description})."
             )
 
         name = self._next_opts.pop(0)
@@ -228,7 +229,8 @@ class RunnerChecker(WizardScriptRunner):
 
         if not isinstance(self._next_opts[0], list):
             raise ValueError(
-                f"Next option for selectMany() is not a list (desc. = {description})."
+                "MOCK: Next option for selectMany() is not a list "
+                f"(desc. = {description})."
             )
 
         opts = self._next_opts.pop(0)
