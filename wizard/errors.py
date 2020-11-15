@@ -1,7 +1,14 @@
 # -*- encoding: utf-8 -*-
 
 from typing import Optional
-from antlr4 import ParserRuleContext
+
+from antlr4 import Parser, ParserRuleContext, Token
+from antlr4.error.Errors import (
+    RecognitionException,
+    NoViableAltException,
+    InputMismatchException,
+    FailedPredicateException,
+)
 
 
 class WizardError(Exception):
@@ -24,20 +31,80 @@ class WizardError(Exception):
 
     @property
     def line(self) -> int:
-        if not self._ctx:
-            return 0
         return self._ctx.start.line  # type: ignore
 
     @property
     def column(self) -> int:
-        if not self._ctx:
-            return 0
         return self._ctx.start.column  # type: ignore
 
-    def __str__(self) -> str:
-        return "Line {}, Column {}: {}".format(
-            self.line, self.column, super().__str__()
+    # The messageXXX are taken from ANTLR4 error strategy (reportXXX):
+
+    def escapeWSAndQuote(self, s: str) -> str:
+        s = s.replace("\n", "\\n")
+        s = s.replace("\r", "\\r")
+        s = s.replace("\t", "\\t")
+        return "'" + s + "'"
+
+    def getTokenErrorDisplay(self, t: Token):
+        if t is None:
+            return "<no token>"
+        s = t.text
+        if s is None:
+            if t.type == Token.EOF:
+                s = "<EOF>"
+            else:
+                s = "<" + str(t.type) + ">"
+        return self.escapeWSAndQuote(s)
+
+    def messageNoViableAlternative(
+        self, recognizer: Parser, e: NoViableAltException
+    ) -> str:
+        tokens = recognizer.getTokenStream()
+        if tokens is not None:
+            if e.startToken.type == Token.EOF:
+                input = "<EOF>"
+            else:
+                input = tokens.getText(e.startToken, e.offendingToken)
+        else:
+            input = "<unknown input>"
+        return "no viable alternative at input " + self.escapeWSAndQuote(input)
+
+    def messageInputMismatch(
+        self, recognizer: Parser, e: InputMismatchException
+    ) -> str:
+        msg: str = (
+            "mismatched input "
+            + self.getTokenErrorDisplay(e.offendingToken)
+            + " expecting "
+            + e.getExpectedTokens().toString(
+                recognizer.literalNames, recognizer.symbolicNames
+            )
         )
+        return msg
+
+    def messageFailedPredicate(self, recognizer, e) -> str:
+        ruleName = recognizer.ruleNames[recognizer._ctx.getRuleIndex()]
+        return f"rule {ruleName} {e.message}"
+
+    @property
+    def message(self) -> str:
+        if not self.args or not isinstance(self.args[0], RecognitionException):
+            return super().__str__()
+
+        e = self.args[0]
+        recognizer = e.recognizer
+
+        if isinstance(e, NoViableAltException):
+            return self.messageNoViableAlternative(recognizer, e)
+        elif isinstance(e, InputMismatchException):
+            return self.messageInputMismatch(recognizer, e)
+        elif isinstance(e, FailedPredicateException):
+            return self.messageFailedPredicate(recognizer, e)
+        else:
+            return f"unknown recognition error type: {type(e).__name__}"
+
+    def __str__(self) -> str:
+        return f"Line {self.line}, Column {self.column}: {self.message}"
 
 
 class WizardParseError(WizardError):

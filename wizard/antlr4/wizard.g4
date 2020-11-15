@@ -42,12 +42,12 @@ compoundAssignment:
 /* = CONTROL FLOW = */
 // Statements that alter control flow.
 controlFlowStmt:
-	'Break'			# Break
+	Break			# Break
 	| cancelStmt	# Cancel
-	| 'Continue'	# Continue
+	| Continue		# Continue
 	| forStmt		# For
 	| ifStmt		# If
-	| 'Return'		# Return
+	| Return		# Return
 	| selectStmt	# Select
 	| whileStmt		# While;
 
@@ -62,16 +62,16 @@ caseStmt: 'Case' expr body;
 defaultStmt: 'Default' body;
 
 // An elif statement, parsed like a regular if statement.
-elifStmt: 'Elif' expr body;
+elifStmt: Elif expr body;
 
 // An else statement, parsed like an if statement without a guard expression.
-elseStmt: 'Else' body;
+elseStmt: Else body;
 
 // A for loop. There are two possible types of for loop that differ only in their headers. They each
 // begin with the keyword For, followed by an iteration variable a and then the header. Finally, a
 // body and an EndFor keyword terminate the for loop.
 forStmt:
-	'For' Identifier (forRangeHeader | forInHeader) body 'EndFor';
+	'For' Identifier (forRangeHeader | forInHeader) body EndFor;
 
 // The header of a for loop of the form 'For a from b to c [by d]', where: a is the iteration
 // variable, as specified in forStmt b is the start value c is the end value d (optional) is the
@@ -83,10 +83,10 @@ forRangeHeader: 'from' expr 'to' expr ('by' expr)?;
 forInHeader: In expr;
 
 // An if statement may have any number of elif statements, but at most one else statement.
-ifStmt: 'If' expr body elifStmt* elseStmt? 'EndIf';
+ifStmt: 'If' expr body elifStmt* elseStmt? EndIf;
 
 // There are two types of Select statement.
-selectStmt: (selectOne | selectMany) 'EndSelect';
+selectStmt: (selectOne | selectMany) EndSelect;
 
 // The two types differ only in their initial keyword. We copy their signature here to simplify the
 // semantic analysis. Note that we check whether or not the selectCaseList is valid and all these
@@ -100,7 +100,7 @@ selectMany:
 	'SelectMany' expr (Comma optionTuple)* Comma? selectCaseList;
 
 // A simple while loop. Runs until the guard is false.
-whileStmt: 'While' expr body 'EndWhile';
+whileStmt: 'While' expr body EndWhile;
 
 /* = Keyword STATEMENTS = */
 // A keyword statement is just a keyword followed by a comma-separated list of arguments. Note that
@@ -213,6 +213,14 @@ Assign: EQ_SIGN;
 
 // Control Flow Keywords
 Break: 'Break';
+Elif: 'Elif';
+Else: 'Else';
+EndIf: 'EndIf';
+EndFor: 'EndFor';
+EndWhile: 'EndWhile';
+EndSelect: 'EndSelect';
+Continue: 'Continue';
+Return: 'Return';
 
 // Keywords Note the alternatives that are kept for backwards compatibility.
 Keyword:

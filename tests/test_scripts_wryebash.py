@@ -12,7 +12,10 @@ Each folder under tests/data should contain:
 from pathlib import Path
 from typing import List
 
+import pytest
+
 from wizard.contexts import WizardSelectContext
+from wizard.errors import WizardParseError
 from wizard.expr import SubPackages
 from wizard.scriptrunner import WizardScriptRunnerStatus
 
@@ -357,3 +360,38 @@ Otherwise, right-click the installer again and choose Install""",
     assert result.notes == notes
     assert result.subpackages == packages
     assert result.plugins == plugins
+
+
+def test_demo_wizard():
+
+    # You can get this one Nexus: https://www.nexusmods.com/skyrimspecialedition/mods/38857 # noqa: E501
+    folder = Path("tests/data/DEMO Wizard 292 SIMPLE Archive Structure-38857-292")
+
+    # Read the script:
+    with open(folder.joinpath("wizard.txt"), "r") as fp:
+        script = fp.read()
+
+    # Read the subpackages:
+    subpackages = read_subpackages(folder.joinpath("files.txt"))
+
+    # Create the runner:
+    runner = RunnerChecker(subpackages)
+
+    # Quick test:
+    runner.onSelects(["No", ["ERROR!"]])
+    with pytest.raises(WizardParseError) as ex:
+        runner.run(script)
+    assert ex.value.line == 192
+
+    # Should not raise anything:
+    runner.onSelects(["No", ["Cancel"]])
+    status, result = runner.run(script)
+    assert status == WizardScriptRunnerStatus.CANCEL
+
+    runner.onSelects(["No", ["Return"]])
+    status, result = runner.run(script)
+    assert status == WizardScriptRunnerStatus.RETURN
+
+    runner.onSelects(["No", ["RequireVersions"]])
+    status, result = runner.run(script)
+    assert status == WizardScriptRunnerStatus.COMPLETE

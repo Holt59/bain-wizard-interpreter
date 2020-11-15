@@ -1,11 +1,20 @@
 # -*- encoding: utf-8 -*-
 
 from pathlib import Path
-from typing import Optional, Union, BinaryIO, TextIO, overload
+from typing import Iterable, Optional, Union, BinaryIO, TextIO, overload
 
 import chardet
 
-from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
+from antlr4 import (
+    InputStream,
+    CommonTokenStream,
+    Parser,
+    Token,
+)
+from antlr4.error.Errors import RecognitionException
+from antlr4.error.ErrorListener import ErrorListener, ConsoleErrorListener
+from antlr4.error.ErrorStrategy import DefaultErrorStrategy
+from antlr4.IntervalSet import IntervalSet
 
 from .antlr4.wizardLexer import wizardLexer
 from .antlr4.wizardParser import wizardParser
@@ -20,6 +29,97 @@ from .runner import WizardRunnerExpressionVisitor, WizardRunnerKeywordVisitor
 from .severity import SeverityContext
 from .state import ContextState, WizardInterpreterState
 from .value import SubPackages
+
+
+class WizardErrorStrategy(DefaultErrorStrategy):
+
+    """
+    Custom error strategy that tries to recover for broken Wizard scripts.
+
+    This class is inspired by DefaultErrorStrategy but is really experimental.
+    Basically, it should recover by broken scripts by closing enclosing control
+    block, e.g. if the body of a If is broken, we try to look for a Elif, Else
+    or EndIf and skip everything in-between.
+    """
+
+    # "Block" contexts are context for which we need to consume the last token when
+    # recovering to move to the next rule. This is basically the contexts for all the
+    # rules that contains a EndXXX token at the end.
+    BlockContexts = {
+        wizardParser.IfStmtContext: wizardLexer.EndIf,
+        wizardParser.ForStmtContext: wizardLexer.EndFor,
+        wizardParser.SelectStmtContext: wizardLexer.EndSelect,
+        wizardParser.WhileStmtContext: wizardLexer.EndWhile,
+    }
+
+    def recover(self, recognizer: Parser, e: RecognitionException):
+
+        # Mark the context (and "some" parent contexts):
+        recognizer._ctx.exception = e
+
+        # Try to do custom recovery using control-flow:
+        controlRecoverSet = self.getControlRecoverySet(recognizer)
+        index = recognizer._input.index
+        state = recognizer.state
+
+        if controlRecoverSet.intervals:
+            self.consumeUntil(recognizer, controlRecoverSet)
+
+        # Same state, nothing was done, fallback to parent:
+        if recognizer.state == state and recognizer._input.index == index:
+            super().recover(recognizer, e)
+        else:
+
+            # Something was consumed, but do we have to consume the next token
+            # to close the statement? Yes if the current context if a "block"
+            # context and the next context its close token:
+            for tctx, tok in self.BlockContexts.items():
+                if (
+                    isinstance(recognizer._ctx, tctx)
+                    and recognizer.getTokenStream().LA(1) == tok
+                ):
+                    recognizer.consume()
+                    break
+
+        return recognizer.getTokenStream().LT(1)
+
+    def getControlRecoverySet(self, recognizer: Parser):
+        ctx = recognizer._ctx
+        recoverSet = IntervalSet()
+
+        while ctx is not None and ctx.invokingState >= 0:
+
+            # If statement (for Else we only want EndIf):
+            if isinstance(
+                ctx, (wizardParser.IfStmtContext, wizardParser.ElifStmtContext)
+            ):
+                recoverSet.addOne(wizardLexer.Elif)
+                recoverSet.addOne(wizardLexer.Else)
+                recoverSet.addOne(wizardLexer.EndIf)
+            elif isinstance(ctx, wizardParser.ElseStmtContext):
+                recoverSet.addOne(wizardLexer.EndIf)
+
+            # For/While statement:
+            elif isinstance(ctx, wizardParser.ForStmtContext):
+                recoverSet.addOne(wizardLexer.EndFor)
+            elif isinstance(ctx, wizardParser.WhileStmtContext):
+                recoverSet.addOne(wizardLexer.EndWhile)
+
+            # Case/Default context:
+            elif isinstance(
+                ctx,
+                (wizardParser.CaseStmtContext, wizardParser.DefaultStmtContext),
+            ):
+                recoverSet.addOne(wizardLexer.Break)
+
+            # Select context:
+            elif isinstance(ctx, wizardParser.SelectStmtContext):
+                recoverSet.addOne(wizardLexer.EndSelect)
+
+            ctx = ctx.parentCtx
+        recoverSet.removeOne(Token.EPSILON)
+
+        return recoverSet
 
 
 def make_basic_context_factory(
@@ -71,7 +171,9 @@ def make_runner_context_factory(
 
 
 def make_parse_wizard_context(
-    script: Union[InputStream, Path, BinaryIO, TextIO, str]
+    script: Union[InputStream, Path, BinaryIO, TextIO, str],
+    wrap_excs: bool = True,
+    error_listeners: Iterable[ErrorListener] = [],
 ) -> wizardParser.ParseWizardContext:
     """
     Create a ParseWizardContext from the given script. Depending on the type of
@@ -84,6 +186,8 @@ def make_parse_wizard_context(
 
     Args:
         script: The script to create a context for.
+        wrap_excs: If True, exceptions will be converted to Wizard exceptions (when
+            possible).
 
     Returns:
         A ParseWizardContext extracted from the given script.
@@ -108,13 +212,21 @@ def make_parse_wizard_context(
             text = data
         stream = InputStream(text)
 
+    # Create the lexer and disable console logs:
     lexer = wizardLexer(stream)
+    lexer.removeErrorListener(ConsoleErrorListener.INSTANCE)
+
     stream = CommonTokenStream(lexer)
+
+    # Create the parser with a custom error strategy:
     parser = wizardParser(stream)
-    parser._errHandler = BailErrorStrategy()
+    parser.removeErrorListener(ConsoleErrorListener.INSTANCE)
+    parser._errHandler = WizardErrorStrategy()
 
     # Run the interpret:
-    return wrap_exceptions(parser.parseWizard)  # type: ignore
+    if wrap_excs:
+        return wrap_exceptions(parser.parseWizard)  # type: ignore
+    return parser.parseWizard()  # type: ignore
 
 
 @overload
@@ -122,6 +234,7 @@ def make_top_level_context(
     script: Union[InputStream, Path, TextIO, str],
     factory: WizardInterpreterContextFactory,
     state: ContextState,
+    **kwargs
 ) -> WizardTopLevelContext[ContextState]:
     ...
 
@@ -130,6 +243,7 @@ def make_top_level_context(
 def make_top_level_context(
     script: Union[InputStream, Path, TextIO, str],
     factory: WizardInterpreterContextFactory,
+    **kwargs
 ) -> WizardTopLevelContext[WizardInterpreterState]:
     ...
 
@@ -138,6 +252,7 @@ def make_top_level_context(
     script: Union[InputStream, Path, TextIO, str],
     factory: WizardInterpreterContextFactory,
     state: Optional[ContextState] = None,
+    **kwargs
 ) -> Union[
     WizardTopLevelContext[ContextState], WizardTopLevelContext[WizardInterpreterState]
 ]:
@@ -150,12 +265,13 @@ def make_top_level_context(
         factory: The factory for the top-level context.
         state: The state for the top-level context. If None, a WizardInterpreterState()
             will be used.
+        **kwargs: Extra named parameters that are passed to `make_parse_wizard_context`.
 
     Returns:
         A ParseWizardContext extracted from the given script.
     """
 
-    ctx = make_parse_wizard_context(script)
+    ctx = make_parse_wizard_context(script, **kwargs)
 
     if state is None:
         return WizardTopLevelContext(factory, ctx, WizardInterpreterState())

@@ -6,7 +6,7 @@ import re
 from typing import overload, Callable, Mapping, List, Optional, Type
 
 from .antlr4.wizardParser import wizardParser
-from .errors import WizardTypeError, WizardIndexError, WizardNameError
+from .errors import WizardTypeError, WizardIndexError, WizardNameError, WizardParseError
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
 from .value import (  # noqa: F401
@@ -102,11 +102,12 @@ class WizardExpressionVisitor:
             function = getattr(self, "visit" + name)
             is_visit = True
         else:
-            raise WizardNameError(ctx.Identifier(), name)
+            raise WizardNameError(ctx, name)
 
         values: List[Value] = []
-        for ex in ctx.argList().expr():
-            values.append(self.visitExpr(ex, state))
+        if ctx.argList():
+            for ex in ctx.argList().expr():
+                values.append(self.visitExpr(ex, state))
 
         if is_visit:
             return Value(function(state, *(value.value for value in values)))
@@ -121,10 +122,11 @@ class WizardExpressionVisitor:
 
         mname = "{}.{}".format(values[0].type, ctx.Identifier().getText())
         if mname not in self._functions:
-            raise WizardNameError(ctx.Identifier(), mname)
+            raise WizardNameError(ctx, mname)
 
-        for ex in ctx.argList().expr():
-            values.append(self.visitExpr(ex, state))
+        if ctx.argList():
+            for ex in ctx.argList().expr():
+                values.append(self.visitExpr(ex, state))
 
         return self._functions[mname](state, values)
 
@@ -386,6 +388,10 @@ class WizardExpressionVisitor:
         Returns:
             The result of the given expression.
         """
+
+        if ctx.exception:
+            raise WizardParseError(ctx, ctx.exception)
+
         try:
             value = getattr(self, "visit" + type(ctx).__name__[:-7])(ctx, state)
         except TypeError as te:

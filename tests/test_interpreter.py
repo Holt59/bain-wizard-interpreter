@@ -385,13 +385,6 @@ def test_exceptions():
     assert ne.value.column == 0
     assert str(ne.value) == "Line 1, Column 0: The name 'a' is not defined."
 
-    with pytest.raises(WizardParseError):
-        c.run(
-            """
-x = x ** 3
-"""
-        )
-
     with pytest.raises(WizardTypeError) as te:
         c.run(
             """x = 1
@@ -400,3 +393,48 @@ x += str(s)
 """
         )
     assert te.value.line == 3
+
+
+def test_recover():
+
+    c = InterpreterChecker()
+
+    # Note: This is actually parsed as "If True.a = False", hence this matches
+    # a member-function, and the parser expects "True.a(...)".
+    with pytest.raises(WizardParseError) as te:
+        c.run(
+            """If True
+.a = False
+Else
+a = 10
+EndIf
+"""
+        )
+    assert te.value.line == 1
+
+    # Should recover from the broken line:
+    ctx = c.run(
+        """
+If False
+    a .= False  ; broken
+Else
+    a = 10
+EndIf
+"""
+    )
+    assert ctx.state.variables == {"a": Value(10)}
+
+    # Should recover from the broken line:
+    ctx = c.run(
+        """
+a = 1
+If False
+    a .= False  ; broken
+Elif a > 4
+    b = "For" 4 65  ; broken
+Else
+    a = 10
+EndIf
+"""
+    )
+    assert ctx.state.variables == {"a": Value(10)}

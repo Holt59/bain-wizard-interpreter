@@ -3,7 +3,7 @@
 from typing import Callable, Optional, TypeVar
 
 from antlr4 import ParserRuleContext
-from antlr4.error.Errors import ParseCancellationException
+from antlr4.error.Errors import ParseCancellationException, InputMismatchException
 
 from ..errors import (
     WizardError,
@@ -30,6 +30,10 @@ def wrap_exceptions(
         raise ex
     # Wrap parser exceptions:
     except ParseCancellationException as ex:
+        # Try to find a context:
+        if context is None and isinstance(ex.args[0], InputMismatchException):
+            context = ex.args[0].ctx
+
         raise WizardParseError(context, ex)
     # Wrap "known" exceptions:
     except TypeError as te:

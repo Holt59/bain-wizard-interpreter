@@ -129,6 +129,8 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         Execute the next 'step' of this context and returns the next context
         to execute. When done, should return the parent context.
         """
+        if self.context.exception:
+            raise WizardParseError(self.context, self.context.exception)
         return wrap_exceptions(self.exec_, self.context)
 
 
