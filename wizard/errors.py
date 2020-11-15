@@ -160,7 +160,7 @@ class WizardMissingPackageError(WizardError):
     _name: str
 
     def __init__(self, context: ParserRuleContext, name: str):
-        super().__init__(f"Trying to activate missing '{name}' sub-package.")
+        super().__init__(context, f"Trying to activate missing '{name}' sub-package.")
         self._name = name
 
     @property
@@ -173,7 +173,7 @@ class WizardMissingPluginError(WizardError):
     _name: str
 
     def __init__(self, context: ParserRuleContext, name: str):
-        super().__init__(f"Trying to activate missing '{name}' plugin.")
+        super().__init__(context, f"Trying to activate missing '{name}' plugin.")
         self._name = name
 
     @property

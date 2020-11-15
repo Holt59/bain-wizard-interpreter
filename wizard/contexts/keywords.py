@@ -243,9 +243,9 @@ class WizardNoteContext(WizardKeywordContext[ContextState]):
                 Issue.USAGE_OF_ANYTHING_IN_NOTE,
                 WizardTypeError(
                     self.context,
-                    "'Note' keyword expected string, found {args[0].type}.",
+                    f"'Note' keyword expected string, found {args[0].type}.",
                 ),
-                "'Note' keyword expected string, found {args[0].type)}.",
+                f"'Note' keyword expected string, found {args[0].type}.",
             )
         return [Value(str(args[0].value))]
 
