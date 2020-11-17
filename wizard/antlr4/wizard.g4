@@ -237,7 +237,7 @@ Keyword:
 	| 'ResetPluginName'
 	| 'ResetEspmName'
 	| 'ResetAllEspmNames'
-	| 'ResetAllPlugins'
+	| 'ResetAllPluginNames'
 	| 'SelectAll'
 	| 'SelectAllPlugins'
 	| 'SelectAllEspms'
