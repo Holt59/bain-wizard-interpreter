@@ -20,10 +20,10 @@ from .test_utils import RunnerChecker
 def test_wizparse_scripts():
 
     # List the scripts:
-    scripts = list(Path("vendor/wizparse/tests").glob("*.txt"))
+    scripts = list(Path("vendor/wizparse/tests/expect-success").glob("*.txt"))
 
     # test.txt is not valid:
-    scripts.remove(Path("vendor/wizparse/tests/test.txt"))
+    scripts.remove(Path("vendor/wizparse/tests/expect-success/test.txt"))
 
     # Create an interpreter with a mock-manager:
     c = RunnerChecker()

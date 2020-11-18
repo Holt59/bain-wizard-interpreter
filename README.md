@@ -149,11 +149,8 @@ from the [`wizparse`](https://github.com/wrye-bash/wizparse) repository.
 To generate the file, you need `antlr4`, and you simply have to run:
 
 ```bash
-java -jar antlr-4.8-complete.jar -visitor -Dlanguage=Python3 -o ./wizard/antlr4 ./wizard/antlr4/wizard.g4
+java -jar antlr-4.8-complete.jar -visitor -Dlanguage=Python3 -o ./wizard/antlr4 ./vendor/wizparse/wizards/wizard.g4
 ```
-
-**Note:** Currently, the `./wizard/antlr4/wizard.g4` is a slightly modified version of the file
-from the original repository that fixes some issues.
 
 ## Run tests
 

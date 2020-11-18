@@ -1,4 +1,4 @@
-# Generated from ./wizard/antlr4/wizard.g4 by ANTLR 4.8
+# Generated from ./vendor/wizparse/wizards/wizard.g4 by ANTLR 4.8
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO
@@ -35,9 +35,9 @@ def serializedATN():
         buf.write("\3\35\3\36\3\36\3\37\3\37\3 \3 \3 \3!\3!\3!\3\"\3\"\3")
         buf.write("\"\3#\3#\3#\3$\3$\3$\3%\3%\3%\3&\3&\3\'\3\'\3(\3(\3)\3")
         buf.write(")\3)\3*\3*\3*\3+\3+\3,\3,\3,\3-\3-\3.\3.\3.\3/\3/\3\60")
-        buf.write("\3\60\3\60\3\60\3\60\3\60\3\61\3\61\3\61\3\61\3\61\3\62")
-        buf.write("\3\62\3\62\3\62\3\62\3\63\3\63\3\63\3\63\3\63\3\63\3\64")
-        buf.write("\3\64\3\64\3\64\3\64\3\64\3\64\3\65\3\65\3\65\3\65\3\65")
+        buf.write("\3\60\3\60\3\60\3\60\3\60\3\61\3\61\3\61\3\61\3\61\3\61")
+        buf.write("\3\61\3\61\3\61\3\62\3\62\3\62\3\62\3\62\3\63\3\63\3\63")
+        buf.write("\3\63\3\63\3\64\3\64\3\64\3\64\3\64\3\64\3\64\3\65\3\65")
         buf.write("\3\65\3\65\3\65\3\65\3\66\3\66\3\66\3\66\3\66\3\66\3\66")
         buf.write("\3\66\3\66\3\66\3\67\3\67\3\67\3\67\3\67\3\67\3\67\3\67")
         buf.write("\3\67\38\38\38\38\38\38\38\39\39\39\39\39\39\39\39\39")
@@ -97,7 +97,7 @@ def serializedATN():
         buf.write("M\u0135\3\2\2\2O\u0137\3\2\2\2Q\u0139\3\2\2\2S\u013c\3")
         buf.write("\2\2\2U\u013f\3\2\2\2W\u0141\3\2\2\2Y\u0144\3\2\2\2[\u0146")
         buf.write("\3\2\2\2]\u0149\3\2\2\2_\u014b\3\2\2\2a\u0151\3\2\2\2")
-        buf.write("c\u0156\3\2\2\2e\u015b\3\2\2\2g\u0161\3\2\2\2i\u0168\3")
+        buf.write("c\u015a\3\2\2\2e\u015f\3\2\2\2g\u0164\3\2\2\2i\u016b\3")
         buf.write("\2\2\2k\u0171\3\2\2\2m\u017b\3\2\2\2o\u0184\3\2\2\2q\u029a")
         buf.write("\3\2\2\2s\u029c\3\2\2\2u\u02a0\3\2\2\2w\u02a4\3\2\2\2")
         buf.write("y\u02ae\3\2\2\2{\u02b8\3\2\2\2}\u02ba\3\2\2\2\177\u02bc")
@@ -169,23 +169,23 @@ def serializedATN():
         buf.write("\u0147\5O(\2\u0147\u0148\5=\37\2\u0148\\\3\2\2\2\u0149")
         buf.write("\u014a\5=\37\2\u014a^\3\2\2\2\u014b\u014c\7D\2\2\u014c")
         buf.write("\u014d\7t\2\2\u014d\u014e\7g\2\2\u014e\u014f\7c\2\2\u014f")
-        buf.write("\u0150\7m\2\2\u0150`\3\2\2\2\u0151\u0152\7G\2\2\u0152")
-        buf.write("\u0153\7n\2\2\u0153\u0154\7k\2\2\u0154\u0155\7h\2\2\u0155")
-        buf.write("b\3\2\2\2\u0156\u0157\7G\2\2\u0157\u0158\7n\2\2\u0158")
-        buf.write("\u0159\7u\2\2\u0159\u015a\7g\2\2\u015ad\3\2\2\2\u015b")
-        buf.write("\u015c\7G\2\2\u015c\u015d\7p\2\2\u015d\u015e\7f\2\2\u015e")
-        buf.write("\u015f\7K\2\2\u015f\u0160\7h\2\2\u0160f\3\2\2\2\u0161")
-        buf.write("\u0162\7G\2\2\u0162\u0163\7p\2\2\u0163\u0164\7f\2\2\u0164")
-        buf.write("\u0165\7H\2\2\u0165\u0166\7q\2\2\u0166\u0167\7t\2\2\u0167")
-        buf.write("h\3\2\2\2\u0168\u0169\7G\2\2\u0169\u016a\7p\2\2\u016a")
-        buf.write("\u016b\7f\2\2\u016b\u016c\7Y\2\2\u016c\u016d\7j\2\2\u016d")
-        buf.write("\u016e\7k\2\2\u016e\u016f\7n\2\2\u016f\u0170\7g\2\2\u0170")
+        buf.write("\u0150\7m\2\2\u0150`\3\2\2\2\u0151\u0152\7E\2\2\u0152")
+        buf.write("\u0153\7q\2\2\u0153\u0154\7p\2\2\u0154\u0155\7v\2\2\u0155")
+        buf.write("\u0156\7k\2\2\u0156\u0157\7p\2\2\u0157\u0158\7w\2\2\u0158")
+        buf.write("\u0159\7g\2\2\u0159b\3\2\2\2\u015a\u015b\7G\2\2\u015b")
+        buf.write("\u015c\7n\2\2\u015c\u015d\7k\2\2\u015d\u015e\7h\2\2\u015e")
+        buf.write("d\3\2\2\2\u015f\u0160\7G\2\2\u0160\u0161\7n\2\2\u0161")
+        buf.write("\u0162\7u\2\2\u0162\u0163\7g\2\2\u0163f\3\2\2\2\u0164")
+        buf.write("\u0165\7G\2\2\u0165\u0166\7p\2\2\u0166\u0167\7f\2\2\u0167")
+        buf.write("\u0168\7H\2\2\u0168\u0169\7q\2\2\u0169\u016a\7t\2\2\u016a")
+        buf.write("h\3\2\2\2\u016b\u016c\7G\2\2\u016c\u016d\7p\2\2\u016d")
+        buf.write("\u016e\7f\2\2\u016e\u016f\7K\2\2\u016f\u0170\7h\2\2\u0170")
         buf.write("j\3\2\2\2\u0171\u0172\7G\2\2\u0172\u0173\7p\2\2\u0173")
         buf.write("\u0174\7f\2\2\u0174\u0175\7U\2\2\u0175\u0176\7g\2\2\u0176")
         buf.write("\u0177\7n\2\2\u0177\u0178\7g\2\2\u0178\u0179\7e\2\2\u0179")
-        buf.write("\u017a\7v\2\2\u017al\3\2\2\2\u017b\u017c\7E\2\2\u017c")
-        buf.write("\u017d\7q\2\2\u017d\u017e\7p\2\2\u017e\u017f\7v\2\2\u017f")
-        buf.write("\u0180\7k\2\2\u0180\u0181\7p\2\2\u0181\u0182\7w\2\2\u0182")
+        buf.write("\u017a\7v\2\2\u017al\3\2\2\2\u017b\u017c\7G\2\2\u017c")
+        buf.write("\u017d\7p\2\2\u017d\u017e\7f\2\2\u017e\u017f\7Y\2\2\u017f")
+        buf.write("\u0180\7j\2\2\u0180\u0181\7k\2\2\u0181\u0182\7n\2\2\u0182")
         buf.write("\u0183\7g\2\2\u0183n\3\2\2\2\u0184\u0185\7T\2\2\u0185")
         buf.write("\u0186\7g\2\2\u0186\u0187\7v\2\2\u0187\u0188\7w\2\2\u0188")
         buf.write("\u0189\7t\2\2\u0189\u018a\7p\2\2\u018ap\3\2\2\2\u018b")
@@ -244,14 +244,14 @@ def serializedATN():
         buf.write("\u0228\7o\2\2\u0228\u029b\7g\2\2\u0229\u022a\7T\2\2\u022a")
         buf.write("\u022b\7g\2\2\u022b\u022c\7u\2\2\u022c\u022d\7g\2\2\u022d")
         buf.write("\u022e\7v\2\2\u022e\u022f\7C\2\2\u022f\u0230\7n\2\2\u0230")
-        buf.write("\u0231\7n\2\2\u0231\u0232\7G\2\2\u0232\u0233\7u\2\2\u0233")
-        buf.write("\u0234\7r\2\2\u0234\u0235\7o\2\2\u0235\u0236\7P\2\2\u0236")
-        buf.write("\u0237\7c\2\2\u0237\u0238\7o\2\2\u0238\u0239\7g\2\2\u0239")
-        buf.write("\u029b\7u\2\2\u023a\u023b\7T\2\2\u023b\u023c\7g\2\2\u023c")
-        buf.write("\u023d\7u\2\2\u023d\u023e\7g\2\2\u023e\u023f\7v\2\2\u023f")
-        buf.write("\u0240\7C\2\2\u0240\u0241\7n\2\2\u0241\u0242\7n\2\2\u0242")
-        buf.write("\u0243\7R\2\2\u0243\u0244\7n\2\2\u0244\u0245\7w\2\2\u0245")
-        buf.write("\u0246\7i\2\2\u0246\u0247\7k\2\2\u0247\u0248\7p\2\2\u0248")
+        buf.write("\u0231\7n\2\2\u0231\u0232\7R\2\2\u0232\u0233\7n\2\2\u0233")
+        buf.write("\u0234\7w\2\2\u0234\u0235\7i\2\2\u0235\u0236\7k\2\2\u0236")
+        buf.write("\u0237\7p\2\2\u0237\u0238\7P\2\2\u0238\u0239\7c\2\2\u0239")
+        buf.write("\u023a\7o\2\2\u023a\u023b\7g\2\2\u023b\u029b\7u\2\2\u023c")
+        buf.write("\u023d\7T\2\2\u023d\u023e\7g\2\2\u023e\u023f\7u\2\2\u023f")
+        buf.write("\u0240\7g\2\2\u0240\u0241\7v\2\2\u0241\u0242\7C\2\2\u0242")
+        buf.write("\u0243\7n\2\2\u0243\u0244\7n\2\2\u0244\u0245\7G\2\2\u0245")
+        buf.write("\u0246\7u\2\2\u0246\u0247\7r\2\2\u0247\u0248\7o\2\2\u0248")
         buf.write("\u0249\7P\2\2\u0249\u024a\7c\2\2\u024a\u024b\7o\2\2\u024b")
         buf.write("\u024c\7g\2\2\u024c\u029b\7u\2\2\u024d\u024e\7U\2\2\u024e")
         buf.write("\u024f\7g\2\2\u024f\u0250\7n\2\2\u0250\u0251\7g\2\2\u0251")
@@ -284,7 +284,7 @@ def serializedATN():
         buf.write("\2\2\2\u029a\u01d2\3\2\2\2\u029a\u01e4\3\2\2\2\u029a\u01e8")
         buf.write("\3\2\2\2\u029a\u01f4\3\2\2\2\u029a\u01fe\3\2\2\2\u029a")
         buf.write("\u020d\3\2\2\2\u029a\u021c\3\2\2\2\u029a\u0229\3\2\2\2")
-        buf.write("\u029a\u023a\3\2\2\2\u029a\u024d\3\2\2\2\u029a\u0256\3")
+        buf.write("\u029a\u023c\3\2\2\2\u029a\u024d\3\2\2\2\u029a\u0256\3")
         buf.write("\2\2\2\u029a\u0266\3\2\2\2\u029a\u0274\3\2\2\2\u029a\u0280")
         buf.write("\3\2\2\2\u029a\u028a\3\2\2\2\u029br\3\2\2\2\u029c\u029d")
         buf.write("\7^\2\2\u029d\u029e\n\2\2\2\u029et\3\2\2\2\u029f\u02a1")
@@ -366,13 +366,13 @@ class wizardLexer(Lexer):
     NotEqual = 41
     Assign = 42
     Break = 43
-    Elif = 44
-    Else = 45
-    EndIf = 46
+    Continue = 44
+    Elif = 45
+    Else = 46
     EndFor = 47
-    EndWhile = 48
+    EndIf = 48
     EndSelect = 49
-    Continue = 50
+    EndWhile = 50
     Return = 51
     Keyword = 52
     Number = 53
@@ -399,8 +399,8 @@ class wizardLexer(Lexer):
             "'by'", "'If'", "'SelectOne'", "'SelectMany'", "'While'", "'!'", 
             "'not'", "'|'", "'or'", "'&'", "'and'", "'False'", "'True'", 
             "'SubPackages'", "','", "'.'", "'('", "')'", "'['", "']'", "':'", 
-            "'Break'", "'Elif'", "'Else'", "'EndIf'", "'EndFor'", "'EndWhile'", 
-            "'EndSelect'", "'Continue'", "'Return'", "'/'", "'-'", "'+'", 
+            "'Break'", "'Continue'", "'Elif'", "'Else'", "'EndFor'", "'EndIf'", 
+            "'EndSelect'", "'EndWhile'", "'Return'", "'/'", "'-'", "'+'", 
             "'^'", "'*'", "'%'", "'in'" ]
 
     symbolicNames = [ "<INVALID>",
@@ -408,8 +408,8 @@ class wizardLexer(Lexer):
             "RightParenthesis", "LeftBracket", "RightBracket", "Colon", 
             "CompoundAdd", "CompoundSub", "CompoundMul", "CompoundDiv", 
             "CompoundExp", "CompoundMod", "Equal", "GreaterOrEqual", "Greater", 
-            "LesserOrEqual", "Lesser", "NotEqual", "Assign", "Break", "Elif", 
-            "Else", "EndIf", "EndFor", "EndWhile", "EndSelect", "Continue", 
+            "LesserOrEqual", "Lesser", "NotEqual", "Assign", "Break", "Continue", 
+            "Elif", "Else", "EndFor", "EndIf", "EndSelect", "EndWhile", 
             "Return", "Keyword", "Number", "DoubleQuotedString", "SingleQuotedString", 
             "Divide", "Minus", "Plus", "Raise", "Times", "Modulo", "Decrement", 
             "In", "Increment", "Identifier", "WHITESPACE" ]
@@ -423,8 +423,8 @@ class wizardLexer(Lexer):
                   "CompoundDiv", "CompoundExp", "CompoundMod", "GT_SIGN", 
                   "LT_SIGN", "EXMARK", "Equal", "GreaterOrEqual", "Greater", 
                   "LesserOrEqual", "Lesser", "NotEqual", "Assign", "Break", 
-                  "Elif", "Else", "EndIf", "EndFor", "EndWhile", "EndSelect", 
-                  "Continue", "Return", "Keyword", "ESC", "Number", "DoubleQuotedString", 
+                  "Continue", "Elif", "Else", "EndFor", "EndIf", "EndSelect", 
+                  "EndWhile", "Return", "Keyword", "ESC", "Number", "DoubleQuotedString", 
                   "SingleQuotedString", "Divide", "Minus", "Plus", "Raise", 
                   "Times", "Modulo", "Decrement", "In", "Increment", "Identifier", 
                   "WHITESPACE" ]

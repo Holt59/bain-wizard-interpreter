@@ -1,4 +1,4 @@
-# Generated from ./wizard/antlr4/wizard.g4 by ANTLR 4.8
+# Generated from ./vendor/wizparse/wizards/wizard.g4 by ANTLR 4.8
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -60,24 +60,24 @@ def serializedATN():
         buf.write("\2GI\5.\30\2HD\3\2\2\2HE\3\2\2\2HF\3\2\2\2HG\3\2\2\2I")
         buf.write("\7\3\2\2\2JK\7C\2\2KL\7,\2\2LM\5\60\31\2M\t\3\2\2\2NO")
         buf.write("\7C\2\2OP\t\2\2\2PQ\5\60\31\2Q\13\3\2\2\2R[\7-\2\2S[\5")
-        buf.write("\16\b\2T[\7\64\2\2U[\5\30\r\2V[\5\36\20\2W[\7\65\2\2X")
-        buf.write("[\5 \21\2Y[\5*\26\2ZR\3\2\2\2ZS\3\2\2\2ZT\3\2\2\2ZU\3")
-        buf.write("\2\2\2ZV\3\2\2\2ZW\3\2\2\2ZX\3\2\2\2ZY\3\2\2\2[\r\3\2")
-        buf.write("\2\2\\^\7\3\2\2]_\5\60\31\2^]\3\2\2\2^_\3\2\2\2_\17\3")
-        buf.write("\2\2\2`a\7\4\2\2ab\5\60\31\2bc\5\4\3\2c\21\3\2\2\2de\7")
-        buf.write("\5\2\2ef\5\4\3\2f\23\3\2\2\2gh\7.\2\2hi\5\60\31\2ij\5")
-        buf.write("\4\3\2j\25\3\2\2\2kl\7/\2\2lm\5\4\3\2m\27\3\2\2\2no\7")
-        buf.write("\6\2\2or\7C\2\2ps\5\32\16\2qs\5\34\17\2rp\3\2\2\2rq\3")
-        buf.write("\2\2\2st\3\2\2\2tu\5\4\3\2uv\7\61\2\2v\31\3\2\2\2wx\7")
-        buf.write("\7\2\2xy\5\60\31\2yz\7\b\2\2z}\5\60\31\2{|\7\t\2\2|~\5")
-        buf.write("\60\31\2}{\3\2\2\2}~\3\2\2\2~\33\3\2\2\2\177\u0080\7A")
-        buf.write("\2\2\u0080\u0081\5\60\31\2\u0081\35\3\2\2\2\u0082\u0083")
-        buf.write("\7\n\2\2\u0083\u0084\5\60\31\2\u0084\u0088\5\4\3\2\u0085")
+        buf.write("\16\b\2T[\7.\2\2U[\5\30\r\2V[\5\36\20\2W[\7\65\2\2X[\5")
+        buf.write(" \21\2Y[\5*\26\2ZR\3\2\2\2ZS\3\2\2\2ZT\3\2\2\2ZU\3\2\2")
+        buf.write("\2ZV\3\2\2\2ZW\3\2\2\2ZX\3\2\2\2ZY\3\2\2\2[\r\3\2\2\2")
+        buf.write("\\^\7\3\2\2]_\5\60\31\2^]\3\2\2\2^_\3\2\2\2_\17\3\2\2")
+        buf.write("\2`a\7\4\2\2ab\5\60\31\2bc\5\4\3\2c\21\3\2\2\2de\7\5\2")
+        buf.write("\2ef\5\4\3\2f\23\3\2\2\2gh\7/\2\2hi\5\60\31\2ij\5\4\3")
+        buf.write("\2j\25\3\2\2\2kl\7\60\2\2lm\5\4\3\2m\27\3\2\2\2no\7\6")
+        buf.write("\2\2or\7C\2\2ps\5\32\16\2qs\5\34\17\2rp\3\2\2\2rq\3\2")
+        buf.write("\2\2st\3\2\2\2tu\5\4\3\2uv\7\61\2\2v\31\3\2\2\2wx\7\7")
+        buf.write("\2\2xy\5\60\31\2yz\7\b\2\2z}\5\60\31\2{|\7\t\2\2|~\5\60")
+        buf.write("\31\2}{\3\2\2\2}~\3\2\2\2~\33\3\2\2\2\177\u0080\7A\2\2")
+        buf.write("\u0080\u0081\5\60\31\2\u0081\35\3\2\2\2\u0082\u0083\7")
+        buf.write("\n\2\2\u0083\u0084\5\60\31\2\u0084\u0088\5\4\3\2\u0085")
         buf.write("\u0087\5\24\13\2\u0086\u0085\3\2\2\2\u0087\u008a\3\2\2")
         buf.write("\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\u008c")
         buf.write("\3\2\2\2\u008a\u0088\3\2\2\2\u008b\u008d\5\26\f\2\u008c")
         buf.write("\u008b\3\2\2\2\u008c\u008d\3\2\2\2\u008d\u008e\3\2\2\2")
-        buf.write("\u008e\u008f\7\60\2\2\u008f\37\3\2\2\2\u0090\u0093\5&")
+        buf.write("\u008e\u008f\7\62\2\2\u008f\37\3\2\2\2\u0090\u0093\5&")
         buf.write("\24\2\u0091\u0093\5(\25\2\u0092\u0090\3\2\2\2\u0092\u0091")
         buf.write("\3\2\2\2\u0093\u0094\3\2\2\2\u0094\u0095\7\63\2\2\u0095")
         buf.write("!\3\2\2\2\u0096\u0098\5\20\t\2\u0097\u0096\3\2\2\2\u0098")
@@ -99,7 +99,7 @@ def serializedATN():
         buf.write("\u00bc\u00be\7\31\2\2\u00bd\u00bc\3\2\2\2\u00bd\u00be")
         buf.write("\3\2\2\2\u00be\u00bf\3\2\2\2\u00bf\u00c0\5\"\22\2\u00c0")
         buf.write(")\3\2\2\2\u00c1\u00c2\7\r\2\2\u00c2\u00c3\5\60\31\2\u00c3")
-        buf.write("\u00c4\5\4\3\2\u00c4\u00c5\7\62\2\2\u00c5+\3\2\2\2\u00c6")
+        buf.write("\u00c4\5\4\3\2\u00c4\u00c5\7\64\2\2\u00c5+\3\2\2\2\u00c6")
         buf.write("\u00cb\5\60\31\2\u00c7\u00c8\7\31\2\2\u00c8\u00ca\5\60")
         buf.write("\31\2\u00c9\u00c7\3\2\2\2\u00ca\u00cd\3\2\2\2\u00cb\u00c9")
         buf.write("\3\2\2\2\u00cb\u00cc\3\2\2\2\u00cc\u00cf\3\2\2\2\u00cd")
@@ -183,8 +183,8 @@ class wizardParser ( Parser ):
                      "':'", "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "'Break'", "'Elif'", "'Else'", "'EndIf'", 
-                     "'EndFor'", "'EndWhile'", "'EndSelect'", "'Continue'", 
+                     "<INVALID>", "'Break'", "'Continue'", "'Elif'", "'Else'", 
+                     "'EndFor'", "'EndIf'", "'EndSelect'", "'EndWhile'", 
                      "'Return'", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "<INVALID>", "'/'", "'-'", "'+'", "'^'", "'*'", "'%'", 
                      "<INVALID>", "'in'" ]
@@ -199,8 +199,8 @@ class wizardParser ( Parser ):
                       "RightBracket", "Colon", "CompoundAdd", "CompoundSub", 
                       "CompoundMul", "CompoundDiv", "CompoundExp", "CompoundMod", 
                       "Equal", "GreaterOrEqual", "Greater", "LesserOrEqual", 
-                      "Lesser", "NotEqual", "Assign", "Break", "Elif", "Else", 
-                      "EndIf", "EndFor", "EndWhile", "EndSelect", "Continue", 
+                      "Lesser", "NotEqual", "Assign", "Break", "Continue", 
+                      "Elif", "Else", "EndFor", "EndIf", "EndSelect", "EndWhile", 
                       "Return", "Keyword", "Number", "DoubleQuotedString", 
                       "SingleQuotedString", "Divide", "Minus", "Plus", "Raise", 
                       "Times", "Modulo", "Decrement", "In", "Increment", 
@@ -287,13 +287,13 @@ class wizardParser ( Parser ):
     NotEqual=41
     Assign=42
     Break=43
-    Elif=44
-    Else=45
-    EndIf=46
+    Continue=44
+    Elif=45
+    Else=46
     EndFor=47
-    EndWhile=48
+    EndIf=48
     EndSelect=49
-    Continue=50
+    EndWhile=50
     Return=51
     Keyword=52
     Number=53
