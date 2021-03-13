@@ -14,7 +14,7 @@ setup(
     # Name of the package:
     name="bain-wizard-interpreter",
     # Version of the package:
-    version="0.0.1",
+    version="0.0.2",
     # Find the package automatically (include everything):
     packages=find_packages(exclude=("tests",)),
     package_data={"wizard": ["py.typed"]},
@@ -38,7 +38,7 @@ setup(
     # Requirements:
     install_requires=[
         "chardet",
-        "antlr4-python3-runtime<4.9",
+        "antlr4-python3-runtime==4.9.2",
     ],
     extras_require={"dev": dev_requires},
 )
