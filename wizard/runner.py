@@ -157,12 +157,15 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
     def __init__(self, subpackages: SubPackages, severity: SeverityContext):
         super().__init__(severity)
         self._subpackages = subpackages
-        self._plugins = [
-            Path(f).name
+
+        # Use a dictionary to keep insertion order:
+        plugins = {
+            Path(f).name: True
             for sp in self._subpackages
             for f in sp.files
             if self.is_plugin(f)
-        ]
+        }
+        self._plugins = list(plugins.keys())
 
     @property
     def subpackages(self) -> SubPackages:
