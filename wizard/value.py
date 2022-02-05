@@ -1,17 +1,61 @@
 # -*- encoding: utf-8 -*-
 
+import operator
 from abc import abstractproperty
 from enum import Enum, auto
-from typing import (
-    Generic,
-    List,
-    Iterable,
-    Optional,
-    Sequence,
-    Type,
-    TypeVar,
-    Union,
-)
+from pathlib import Path
+from typing import Callable, Generic, Iterable, List, Optional, Type, TypeVar, Union
+
+
+class CaseFoldNamedObject:
+
+    _name: str
+
+    def __init__(self, name: str):
+        self._name = name
+
+    @property
+    def name(self) -> str:
+        """
+        Returns:
+            The name of the object.
+        """
+        return self._name
+
+    def _cmp(self, other: object, cmp: Callable[[str, str], bool]) -> bool:
+        if isinstance(other, CaseFoldNamedObject):
+            return cmp(self.name.casefold(), other.name.casefold())
+        elif isinstance(other, str):
+            return cmp(self.name.casefold(), other.casefold())
+        else:
+            raise TypeError(f"Cannot compare {type(self)} with {type(other)}.")
+
+    def __eq__(self, other: object) -> bool:
+        return self._cmp(other, operator.eq)
+
+    def __ne__(self, other: object) -> bool:
+        return self._cmp(other, operator.ne)
+
+    def __lt__(self, other: object) -> bool:
+        return self._cmp(other, operator.lt)
+
+    def __le__(self, other: object) -> bool:
+        return self._cmp(other, operator.le)
+
+    def __gt__(self, other: object) -> bool:
+        return self._cmp(other, operator.gt)
+
+    def __ge__(self, other: object) -> bool:
+        return self._cmp(other, operator.ge)
+
+    def __hash__(self) -> int:
+        return hash(self.name.casefold())
+
+    def __str__(self) -> str:
+        return self._name
+
+    def __repr__(self) -> str:
+        return repr(self._name)
 
 
 class Void:
@@ -24,35 +68,30 @@ class Void:
     pass
 
 
-class SubPackage:
+class Plugin(CaseFoldNamedObject):
+    ...
 
-    _name: str
 
-    def __init__(self, name: str):
-        self._name = name
-
-    @property
-    def name(self) -> str:
-        """
-        Returns:
-            The name of the subpackage.
-        """
-        return self._name
-
+class SubPackage(CaseFoldNamedObject):
     @abstractproperty
     def files(self) -> Iterable[str]:
         pass
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, SubPackage):
-            return self.name == other.name
-        elif isinstance(other, str):
-            return self.name == other
-        else:
-            raise TypeError(f"Cannot compare SubPackage with {type(other)}.")
+    @staticmethod
+    def is_plugin(name: str) -> bool:
+        """
+        Check if the given name corresponds to a plugin.
 
-    def __str__(self) -> str:
-        return self._name
+        Args:
+            name: The name of the file.
+
+        Returns:
+            True if the name corresponds to a plugin, False otherwise.
+        """
+        return name.endswith(".esp") or name.endswith(".esm") or name.endswith(".esl")
+
+    def plugins(self) -> Iterable[Plugin]:
+        return (Plugin(Path(file).name) for file in self.files if self.is_plugin(file))
 
 
 class SubPackages(List[SubPackage]):
@@ -61,8 +100,7 @@ class SubPackages(List[SubPackage]):
     Class to wrap the 'SubPackages' variable.
     """
 
-    def __init__(self, subpackages: Sequence[SubPackage] = []):
-        super().__init__(subpackages)
+    ...
 
 
 class VariableType(Enum):

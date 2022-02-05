@@ -1,25 +1,19 @@
 # -*- encoding: utf-8 -*-
 
 from pathlib import Path
-from typing import Iterable, Optional, Union, BinaryIO, TextIO, overload
+from typing import BinaryIO, Iterable, Optional, TextIO, Union, overload
 
 import chardet
 
-from antlr4 import (
-    InputStream,
-    CommonTokenStream,
-    Parser,
-    Token,
-)
+from antlr4 import CommonTokenStream, InputStream, Parser, Token
+from antlr4.error.ErrorListener import ConsoleErrorListener, ErrorListener
 from antlr4.error.Errors import RecognitionException
-from antlr4.error.ErrorListener import ErrorListener, ConsoleErrorListener
 from antlr4.error.ErrorStrategy import DefaultErrorStrategy
 from antlr4.IntervalSet import IntervalSet
 
 from .antlr4.wizardLexer import wizardLexer
 from .antlr4.wizardParser import wizardParser
-
-from .contexts import WizardTopLevelContext, WizardInterpreterContextFactory
+from .contexts import WizardInterpreterContextFactory, WizardTopLevelContext
 from .contexts.utils import wrap_exceptions
 from .expr import WizardExpressionVisitor
 from .functions import make_basic_functions, make_manager_functions
@@ -234,7 +228,7 @@ def make_top_level_context(
     script: Union[InputStream, Path, TextIO, str],
     factory: WizardInterpreterContextFactory,
     state: ContextState,
-    **kwargs
+    **kwargs,
 ) -> WizardTopLevelContext[ContextState]:
     ...
 
@@ -243,7 +237,7 @@ def make_top_level_context(
 def make_top_level_context(
     script: Union[InputStream, Path, TextIO, str],
     factory: WizardInterpreterContextFactory,
-    **kwargs
+    **kwargs,
 ) -> WizardTopLevelContext[WizardInterpreterState]:
     ...
 
@@ -252,7 +246,7 @@ def make_top_level_context(
     script: Union[InputStream, Path, TextIO, str],
     factory: WizardInterpreterContextFactory,
     state: Optional[ContextState] = None,
-    **kwargs
+    **kwargs,
 ) -> Union[
     WizardTopLevelContext[ContextState], WizardTopLevelContext[WizardInterpreterState]
 ]:

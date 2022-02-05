@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 dev_requires = [
     "black",
@@ -14,7 +14,7 @@ setup(
     # Name of the package:
     name="bain-wizard-interpreter",
     # Version of the package:
-    version="0.0.2",
+    version="0.0.3",
     # Find the package automatically (include everything):
     packages=find_packages(exclude=("tests",)),
     package_data={"wizard": ["py.typed"]},

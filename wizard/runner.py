@@ -1,14 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from pathlib import Path
-from typing import (
-    Any,
-    Mapping,
-    MutableMapping,
-    List,
-    Optional,
-    Sequence,
-)
+from typing import Any, List, Mapping, MutableMapping, Optional, Sequence, cast
 
 from .contexts import WizardKeywordContext
 from .errors import WizardMissingPackageError, WizardMissingPluginError
@@ -17,7 +9,7 @@ from .keywords import WizardKeywordVisitor
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
 from .tweaks import WizardINISetting, WizardINISettingEdit, WizardINITweaks
-from .value import SubPackage, SubPackages
+from .value import Plugin, SubPackage, SubPackages
 
 
 class WizardRunnerState(WizardInterpreterState):
@@ -28,11 +20,11 @@ class WizardRunnerState(WizardInterpreterState):
     """
 
     # The list of selected subpackages and plugins:
-    _subpackages: List[str]
-    _plugins: List[str]
+    _subpackages: List[SubPackage]
+    _plugins: List[Plugin]
 
     # Renaming of plugins (original name -> new name):
-    _renames: MutableMapping[str, str]
+    _renames: MutableMapping[Plugin, str]
 
     # The INI tweaks (disabled and modified settings):
     _tweaks: WizardINITweaks
@@ -59,23 +51,23 @@ class WizardRunnerState(WizardInterpreterState):
         return state
 
     @property
-    def subpackages(self) -> Sequence[str]:
+    def subpackages(self) -> Sequence[SubPackage]:
         """
         Returns:
             The name of the selected sub-packages (sorted).
         """
-        return sorted(self._subpackages, key=lambda s: s.lower())
+        return [sp for sp in sorted(self._subpackages)]
 
     @property
-    def plugins(self) -> Sequence[str]:
+    def plugins(self) -> Sequence[Plugin]:
         """
         Returns:
             The name of the selected plugins (sorted).
         """
-        return sorted(self._plugins, key=lambda s: s.lower())
+        return [sp for sp in sorted(self._plugins)]
 
     @property
-    def renames(self) -> Mapping[str, str]:
+    def renames(self) -> Mapping[Plugin, str]:
         """
         Returns:
             The mapping for renamed plugins (original name -> new name).
@@ -152,19 +144,14 @@ class WizardRunnerExpressionVisitor(WizardExpressionVisitor):
 class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
 
     _subpackages: SubPackages
-    _plugins: List[str]
+    _plugins: List[Plugin]
 
     def __init__(self, subpackages: SubPackages, severity: SeverityContext):
         super().__init__(severity)
         self._subpackages = subpackages
 
-        # Use a dictionary to keep insertion order:
-        plugins = {
-            Path(f).name: True
-            for sp in self._subpackages
-            for f in sp.files
-            if self.is_plugin(f)
-        }
+        # use a dictionary to keep insertion order and remove duplicates
+        plugins = {pg: True for sp in self._subpackages for pg in sp.plugins()}
         self._plugins = list(plugins.keys())
 
     @property
@@ -176,31 +163,19 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         return self._subpackages
 
     @property
-    def plugins(self) -> List[str]:
+    def plugins(self) -> List[Plugin]:
         """
         Returns:
             The list of all available plugins.
         """
         return self._plugins
 
-    def plugins_for(self, subpackage: SubPackage) -> List[str]:
+    def plugins_for(self, subpackage: SubPackage) -> List[Plugin]:
         """
         Returns:
             The list of plugin names in the given subpackage.
         """
-        return [Path(f).name for f in subpackage.files if self.is_plugin(f)]
-
-    def is_plugin(self, name: str) -> bool:
-        """
-        Check if the given name corresponds to a plugin.
-
-        Args:
-            name: The name of the file.
-
-        Returns:
-            True if the name corresponds to a plugin, False otherwise.
-        """
-        return name.endswith(".esp") or name.endswith(".esm") or name.endswith(".esl")
+        return list(subpackage.plugins())
 
     def visitDeSelectAll(self, context: WizardKeywordContext, state: WizardRunnerState):
         state._subpackages.clear()
@@ -224,7 +199,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             name: The name of the plugin to de-select.
         """
         if name in state._plugins:
-            state._plugins.remove(name)
+            state._plugins.remove(cast(Plugin, name))
 
     def visitDeSelectSubPackage(
         self, context: WizardKeywordContext, state: WizardRunnerState, name: str
@@ -235,7 +210,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             name: The name of the subpackage to de-select.
         """
         if name in state._subpackages:
-            state._subpackages.remove(name)
+            state._subpackages.remove(cast(SubPackage, name))
 
     def visitNote(
         self, context: WizardKeywordContext, state: WizardRunnerState, text: str
@@ -260,7 +235,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             original_name: The original name of the plugin.
             new_name: The new name of the plugin.
         """
-        state._renames[original_name] = new_name
+        state._renames[Plugin(original_name)] = new_name
 
     def visitRequireVersions(
         self,
@@ -298,14 +273,14 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             name: The original name of the plugin.
         """
         if name in state._renames:
-            del state._renames[name]
+            del state._renames[cast(Plugin, name)]
 
     def visitSelectAll(self, context: WizardKeywordContext, state: WizardRunnerState):
         """
         Args:
             state: The interpreter state to update.
         """
-        state._subpackages = [str(sp) for sp in self._subpackages]
+        state._subpackages = list(self._subpackages)
         self.visitSelectAllPlugins(context, state)
 
     def visitSelectAllPlugins(
@@ -316,12 +291,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             state: The interpreter state to update.
         """
         # Guess we only select plugins from selected subpackages?
-        state._plugins = [
-            Path(f).name
-            for sp in self._subpackages
-            for f in sp.files
-            if sp in state._subpackages and self.is_plugin(f)
-        ]
+        state._plugins = [pg for sp in state._subpackages for pg in sp.plugins()]
 
     def visitSelectPlugin(
         self, context: WizardKeywordContext, state: WizardRunnerState, name: str
@@ -331,14 +301,17 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             state: The interpreter state to update.
             name: The name of the plugin to select.
         """
-        if name not in self._plugins:
+        try:
+            ipg = self._plugins.index(cast(Plugin, name))
+        except ValueError:
             self._severity.raise_or_warn(
                 Issue.SELECT_MISSING_PLUGIN,
                 WizardMissingPluginError(context.context, name),
                 f"Trying to select plugin '{name}' that does not exist.",
             )
             return
-        state._plugins.append(name)
+
+        state._plugins.append(self._plugins[ipg])
 
     def visitSelectSubPackage(
         self, context: WizardKeywordContext, state: WizardRunnerState, name: str
@@ -361,10 +334,8 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             return
 
         subpackage = self._subpackages[isp]
-
-        state._subpackages.append(name)
+        state._subpackages.append(subpackage)
 
         # Auto-select plugins?
-        for f in subpackage.files:
-            if self.is_plugin(f):
-                self.visitSelectPlugin(context, state, Path(f).name)
+        for plugin in subpackage.plugins():
+            state._plugins.append(plugin)
