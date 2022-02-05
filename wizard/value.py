@@ -241,7 +241,7 @@ class Value(Generic[ValueType]):
             other._value, (int, float)
         ):
             raise TypeError("Cannot raise non-numeric values.")
-        return Value(self._value ** other._value)
+        return Value(self._value**other._value)
 
     def __mod__(self, other: "Value") -> "Value":
         if not isinstance(self._value, (int, float)) or not isinstance(
