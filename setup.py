@@ -15,13 +15,13 @@ setup(
     # Name of the package:
     name="bain-wizard-interpreter",
     # Version of the package:
-    version="0.0.4",
+    version="1.0.0",
     # Find the package automatically (include everything):
     packages=find_packages(exclude=("tests",)),
     package_data={"wizard": ["py.typed"]},
     # Author information:
     author="Holt59",
-    author_email="capelle.mikael@gmail",
+    author_email="capelle.mikael@gmail.com",
     # Description of the package:
     description="A BAIN Wizard Interpreter based on wizparse.",
     long_description=open("README.md").read(),
