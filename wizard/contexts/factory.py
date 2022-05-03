@@ -1,22 +1,14 @@
 # -*- encoding: utf-8 -*-
 
 import copy
-
-from typing import (
-    List,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import List, Optional, TypeVar, Union
 
 from ..antlr4.wizardParser import wizardParser
-
 from ..expr import WizardExpressionVisitor
 from ..keywords import WizardKeywordVisitor
 from ..manager import SelectOption
 from ..severity import SeverityContext
 from ..state import WizardInterpreterState
-
 from .contexts import (
     WizardAssignmentContext,
     WizardBodyContext,
@@ -32,8 +24,8 @@ from .contexts import (
     WizardReturnContext,
     WizardSelectCasesContext,
     WizardSelectContext,
-    WizardSelectOneContext,
     WizardSelectManyContext,
+    WizardSelectOneContext,
     WizardTerminationContext,
     WizardWhileLoopContext,
 )

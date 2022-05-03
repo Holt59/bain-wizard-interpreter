@@ -3,11 +3,11 @@
 import pytest  # noqa: F401
 
 from wizard.contexts import WizardSelectContext, WizardTerminationContext
-from wizard.errors import WizardTypeError, WizardParseError, WizardNameError
+from wizard.errors import WizardNameError, WizardParseError, WizardTypeError
 from wizard.expr import SubPackages, Value
 from wizard.manager import SelectOption
 
-from .test_utils import InterpreterChecker, RunnerChecker, MockSubPackage
+from .test_utils import InterpreterChecker, MockSubPackage, RunnerChecker
 
 
 def test_basic():

@@ -4,8 +4,8 @@ from enum import Enum
 from typing import Generic, Optional
 
 from .contexts.keywords import WizardKeywordContext
-from .state import ContextState
 from .severity import SeverityContext
+from .state import ContextState
 
 
 class WizardKeyword(Enum):

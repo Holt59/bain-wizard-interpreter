@@ -2,11 +2,10 @@
 
 import codecs
 import re
-
-from typing import overload, Callable, Mapping, List, Optional, Type
+from typing import Callable, List, Mapping, Optional, Type, overload
 
 from .antlr4.wizardParser import wizardParser
-from .errors import WizardTypeError, WizardIndexError, WizardNameError, WizardParseError
+from .errors import WizardIndexError, WizardNameError, WizardParseError, WizardTypeError
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
 from .value import (  # noqa: F401

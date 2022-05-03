@@ -4,8 +4,9 @@ from setuptools import find_packages, setup
 
 dev_requires = [
     "black",
-    "flake8",
     "flake8-black",
+    "flake8",
+    "isort",
     "mypy",
     "pytest",
 ]
@@ -32,6 +33,8 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     # License:
     license="MIT",

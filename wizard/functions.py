@@ -6,8 +6,7 @@ i.e. functions that do not require specific handling.
 """
 
 import inspect
-
-from typing import Dict, Mapping, Callable, List, Union
+from typing import Callable, Dict, List, Mapping, Union
 
 from .expr import SubPackage, SubPackages, Value, VariableType, Void
 from .manager import ManagerModInterface

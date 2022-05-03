@@ -4,10 +4,10 @@ from typing import Optional
 
 from antlr4 import Parser, ParserRuleContext, Token
 from antlr4.error.Errors import (
-    RecognitionException,
-    NoViableAltException,
-    InputMismatchException,
     FailedPredicateException,
+    InputMismatchException,
+    NoViableAltException,
+    RecognitionException,
 )
 
 

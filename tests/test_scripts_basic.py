@@ -8,9 +8,9 @@ Important: If a script contains While loop that are cancelled by user,
 it should not be tested here.
 """
 
-from antlr4.error.Errors import ParseCancellationException
-
 from pathlib import Path
+
+from antlr4.error.Errors import ParseCancellationException
 
 from wizard.errors import WizardError
 

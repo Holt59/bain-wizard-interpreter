@@ -1,13 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 from abc import abstractproperty
-from typing import Callable, List, Optional, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, List, Optional, Tuple
 
 from ..antlr4.wizardParser import wizardParser
 from ..errors import WizardNameError, WizardTypeError
 from ..severity import Issue
 from ..value import Value, VariableType
-
 from .contexts import ContextState, WizardInterpreterContext
 
 if TYPE_CHECKING:

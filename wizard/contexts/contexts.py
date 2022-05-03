@@ -7,6 +7,7 @@ interpreter.
 
 from abc import abstractmethod
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Generic,
@@ -16,18 +17,16 @@ from typing import (
     Tuple,
     TypeVar,
     Union,
-    TYPE_CHECKING,
 )
 
 from antlr4 import ParserRuleContext
-from ..antlr4.wizardParser import wizardParser
 
+from ..antlr4.wizardParser import wizardParser
 from ..errors import WizardError, WizardNameError, WizardParseError, WizardTypeError
 from ..manager import SelectOption
 from ..severity import Issue
 from ..state import ContextState
-from ..value import Value, SubPackage, SubPackages
-
+from ..value import SubPackage, SubPackages, Value
 from .utils import wrap_exceptions
 
 if TYPE_CHECKING:

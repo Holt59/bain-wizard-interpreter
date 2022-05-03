@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import BinaryIO, Iterable, Optional, TextIO, Union, overload
 
 import chardet
-
 from antlr4 import CommonTokenStream, InputStream, Parser, Token
 from antlr4.error.ErrorListener import ConsoleErrorListener, ErrorListener
 from antlr4.error.Errors import RecognitionException

@@ -8,8 +8,8 @@ from antlr4 import InputStream
 from .contexts import (
     WizardInterpreterContext,
     WizardInterpreterContextFactory,
-    WizardTopLevelContext,
     WizardTerminationContext,
+    WizardTopLevelContext,
 )
 from .state import ContextState, WizardInterpreterState
 from .utils import make_top_level_context

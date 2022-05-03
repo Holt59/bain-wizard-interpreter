@@ -9,18 +9,18 @@ from antlr4 import InputStream
 from .contexts import (
     WizardInterpreterContext,
     WizardInterpreterContextFactory,
-    WizardTopLevelContext,
-    WizardSelectOneContext,
     WizardSelectManyContext,
+    WizardSelectOneContext,
     WizardTerminationContext,
+    WizardTopLevelContext,
 )
 from .functions import make_basic_functions, make_manager_functions
 from .interpreter import WizardInterpreter
 from .manager import ManagerModInterface, ManagerUserInterface
 from .runner import (
-    WizardRunnerState,
     WizardRunnerExpressionVisitor,
     WizardRunnerKeywordVisitor,
+    WizardRunnerState,
 )
 from .severity import SeverityContext
 from .value import SubPackages

@@ -2,17 +2,13 @@
 
 import json
 import sys
+from typing import Any, Callable, List, Mapping, MutableMapping, Optional, Union
 
-from typing import Any, Callable, List, Optional, Mapping, MutableMapping, Union
+from antlr4 import BailErrorStrategy, CommonTokenStream, InputStream
 
-from antlr4 import InputStream, CommonTokenStream, BailErrorStrategy
 from wizard.antlr4.wizardLexer import wizardLexer
 from wizard.antlr4.wizardParser import wizardParser
-
-from wizard.contexts import (
-    WizardInterpreterContext,
-    WizardTerminationContext,
-)
+from wizard.contexts import WizardInterpreterContext, WizardTerminationContext
 from wizard.expr import SubPackage, Value, WizardExpressionVisitor
 from wizard.interpreter import WizardInterpreter
 from wizard.manager import SelectOption

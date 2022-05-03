@@ -3,14 +3,9 @@
 from typing import Callable, Optional, TypeVar
 
 from antlr4 import ParserRuleContext
-from antlr4.error.Errors import ParseCancellationException, InputMismatchException
+from antlr4.error.Errors import InputMismatchException, ParseCancellationException
 
-from ..errors import (
-    WizardError,
-    WizardParseError,
-    WizardIndexError,
-    WizardTypeError,
-)
+from ..errors import WizardError, WizardIndexError, WizardParseError, WizardTypeError
 
 T = TypeVar("T")
 

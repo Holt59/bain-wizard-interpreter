@@ -2,16 +2,8 @@
 
 import pytest
 
-from wizard.expr import (
-    SubPackages,
-    Value,
-    VariableType,
-)
-from wizard.errors import (
-    WizardNameError,
-    WizardTypeError,
-    WizardIndexError,
-)
+from wizard.errors import WizardIndexError, WizardNameError, WizardTypeError
+from wizard.expr import SubPackages, Value, VariableType
 
 from .test_utils import ExpressionChecker, MockSubPackage
 
