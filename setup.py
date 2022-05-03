@@ -41,7 +41,7 @@ setup(
     # Requirements:
     install_requires=[
         "chardet",
-        "antlr4-python3-runtime==4.9.2",
+        "antlr4-python3-runtime==4.10",
     ],
     extras_require={"dev": dev_requires, "tests": ["pytest"]},
 )
