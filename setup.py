@@ -8,7 +8,7 @@ dev_requires = [
     "flake8",
     "isort",
     "mypy",
-    "pytest",
+    "types-chardet",
 ]
 
 setup(
@@ -43,5 +43,5 @@ setup(
         "chardet",
         "antlr4-python3-runtime==4.9.2",
     ],
-    extras_require={"dev": dev_requires},
+    extras_require={"dev": dev_requires, "tests": ["pytest"]},
 )
