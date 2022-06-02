@@ -1,17 +1,22 @@
 # BAIN Wizard Interpreter
 
+![Python 3.8, 3.9, 3.10](https://img.shields.io/badge/Python-3.8,3.9,3.10-efefef)
+![Tests](https://github.com/holt59/bain-wizard-interpreter/actions/workflows/python-tests.yml/badge.svg)
+![MIT License](https://img.shields.io/badge/License-MIT-efefef)
+
 A BAIN Wizard Interpreter based on [`wizparse`](https://github.com/wrye-bash/wizparse) that can
 be used in various settings to run BAIN Wizard installers.
 
 # Basic Usage
 
-There are various way to use the interpreter. The easiest way is to extends the `WizardScriptRunner`
-and add the missing functionalities that are mod-manager / game specific.
-You can then use `WizardScriptRunner.run()` to execute a script, and everything will be called when
-required.
-
+There are various way to use the interpreter.
+The easiest way is to extends the `WizardScriptRunner` and add the missing
+functionalities that are mod-manager or game specific.
+You can then use `WizardScriptRunner.run()` to execute a script, and everything will
+be called when required.
 
 ```python
+from pathlib import Path
 from typing import List
 
 from wizard.manager import SelectOption
@@ -42,11 +47,11 @@ class MyRunner(WizardScriptRunner):
     Extends the runner and implement the missing methods.
     """
 
-    # These are the methods you need to provide - See manager.ManagerModInterface
-    # and manager.ManagerUserInterface for the documentation of each method.
-
-    # The WizardRunner class extends both interfaces and already implements many
-    # functions, but you can always override them.
+    # these are the methods you need to provide, see manager.ManagerModInterface
+    # and manager.ManagerUserInterface for the documentation of each method
+    #
+    # the WizardRunner class extends both interfaces and already implements many
+    # functions, but you can always override them
 
     def selectOne(
         self, description: str, options: List[SelectOption], default: SelectOption
@@ -88,21 +93,22 @@ class MyRunner(WizardScriptRunner):
     def getFolder(self, path: str) -> str:
         ...
 
-# Create the sub-packages:
+# create the sub-packages
 subpackages = SubPackages([MySubPackage(...) for ...])
 
-# Create the runner:
+# create the runner
 runner = MyRunner(subpackages)
 
-# Run a script:
-status, result = runner.run("wizard.txt")
+# run a script - use a Path() object, otherwise the string will be interpreted
+# as a script
+status, result = runner.run(Path("wizard.txt"))
 
-status  # Status of the execution.
-result.subpackages  # List of selected subpackages.
-result.plugins  # List of enabled plugins.
-result.notes  # List of notes.
-result.tweaks.disabled  # List of disabled INI settings.
-result.tweaks.modified  # List of new or modified INI settings.
+status  # status of the execution
+result.subpackages  # list of selected sub-packages
+result.plugins  # list of enabled plugins
+result.notes  # list of notes
+result.tweaks.disabled  # list of disabled INI settings
+result.tweaks.modified  # list of new or modified INI settings
 ```
 
 ## Handling errors
@@ -113,7 +119,7 @@ method re-raise the error, you can change it:
 
 ```python
 def error(self, exc: Exception):
-    # Do whatever you want.
+    # handle the error
     ...
 ```
 
@@ -127,13 +133,13 @@ during the execution, e.g. in `selectOne`, `selectMany`, `error`, `complete`, et
 ```python
 runner = WizardRunner(...)
 
-# Abort the execution - Equivalent to a 'Cancel' keyword:
+# abort the execution - Equivalent to a 'Cancel' keyword
 runner.abort()
 
-# Retrieve the current context:
+# retrieve the current context
 context = runner.context()
 
-# Rewind to the given context:
+# rewind to the given context
 runner.rewind(context)
 ```
 
@@ -149,13 +155,13 @@ from the [`wizparse`](https://github.com/wrye-bash/wizparse) repository.
 To generate the file, you need `antlr4`, and you simply have to run:
 
 ```bash
-# IMPORTANT: Use FORWARD SLASH (/) everywhere, otherwise it does not work
+# IMPORTANT: use FORWARD SLASH (/) everywhere, otherwise it does not work
 java -jar antlr-4.10.1-complete.jar -visitor -Dlanguage=Python3 -o ./wizard/antlr4 ./vendor/wizparse/wizards/wizard.g4
 ```
 
 ## Run tests
 
-To run the tests,  you need the Python 3 ANTLR4 runtime and `pytest`:
+To run the tests, you need the Python 3 ANTLR4 runtime and `pytest`:
 
 ```bash
 pip install antlr4-python3-runtime pytest

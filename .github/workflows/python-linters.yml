@@ -1,4 +1,4 @@
-name: Python - Linters
+name: Linters
 
 on: [push, pull_request]
 
