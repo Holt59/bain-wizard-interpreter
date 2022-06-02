@@ -1,10 +1,10 @@
 # BAIN Wizard Interpreter
 
-![Python Versions](https://img.shields.io/pypi/pyversions/bain-wizard-interpreter)
-![PyPi](https://img.shields.io/pypi/v/bain-wizard-interpreter?style=flat-square)
-![Tests](https://img.shields.io/github/workflow/status/holt59/bain-wizard-interpreter/Tests?style=flat-square)
-![Linters](https://img.shields.io/github/workflow/status/holt59/bain-wizard-interpreter/Linters?style=flat-square)
-![MIT License](https://img.shields.io/github/license/holt59/bain-wizard-interpreter?style=flat-square)
+![Python Versions](https://img.shields.io/pypi/pyversions/bain-wizard-interpreter?style=flat-square)
+[![PyPi](https://img.shields.io/pypi/v/bain-wizard-interpreter?style=flat-square)](https://pypi.org/project/bain-wizard-interpreter/)
+[![Tests](https://img.shields.io/github/workflow/status/holt59/bain-wizard-interpreter/Tests?label=tests&style=flat-square)](https://github.com/Holt59/bain-wizard-interpreter/actions/workflows/python-tests.yml)
+[![Linters](https://img.shields.io/github/workflow/status/holt59/bain-wizard-interpreter/Linters?label=linters&style=flat-square)](https://github.com/Holt59/bain-wizard-interpreter/actions/workflows/python-linters.yml)
+[![MIT License](https://img.shields.io/github/license/holt59/bain-wizard-interpreter?style=flat-square)](https://opensource.org/licenses/MIT)
 
 A BAIN Wizard Interpreter based on [`wizparse`](https://github.com/wrye-bash/wizparse) that can
 be used in various settings to run BAIN Wizard installers.
