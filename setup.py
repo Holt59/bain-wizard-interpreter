@@ -26,7 +26,7 @@ setup(
     # Description of the package:
     description="A BAIN Wizard Interpreter based on wizparse.",
     long_description=open("README.md").read(),
-    ong_description_content_type="text/markdown",
+    long_description_content_type="text/markdown",
     # URL for sources:
     url="https://github.com/Holt59/bain-wizard-interpreter",
     classifiers=[

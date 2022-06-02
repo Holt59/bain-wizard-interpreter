@@ -1,9 +1,9 @@
-name: linters
+name: Python - Tests
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
-  checks:
+  tests:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -11,9 +11,11 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Replace Python version for tox
@@ -28,4 +30,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox
     - name: Test with tox
-      run: tox -e py${{ steps.version.outputs.replaced }}-lint
+      run: tox -e py${{ steps.version.outputs.replaced }}
