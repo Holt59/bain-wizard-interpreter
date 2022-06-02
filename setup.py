@@ -21,7 +21,7 @@ setup(
     package_data={"wizard": ["py.typed"]},
     # Author information:
     author="Holt59",
-    author_email="capelle.mikael@gmail",
+    author_email="capelle.mikael@gmail.com",
     # Description of the package:
     description="A BAIN Wizard Interpreter based on wizparse.",
     long_description=open("README.md").read(),
