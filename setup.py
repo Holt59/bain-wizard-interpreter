@@ -4,6 +4,7 @@ from setuptools import find_packages, setup
 
 dev_requires = [
     "black",
+    "bump2version",
     "flake8-black",
     "flake8",
     "isort",
