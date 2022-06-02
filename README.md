@@ -1,8 +1,10 @@
 # BAIN Wizard Interpreter
 
-![Python 3.8, 3.9, 3.10](https://img.shields.io/badge/Python-3.8,3.9,3.10-efefef)
-![Tests](https://github.com/holt59/bain-wizard-interpreter/actions/workflows/python-tests.yml/badge.svg)
-![MIT License](https://img.shields.io/badge/License-MIT-efefef)
+![Python Versions](https://img.shields.io/pypi/pyversions/bain-wizard-interpreter)
+![PyPi](https://img.shields.io/pypi/v/bain-wizard-interpreter?style=flat-square)
+![Tests](https://img.shields.io/github/workflow/status/holt59/bain-wizard-interpreter/Tests?style=flat-square)
+![Linters](https://img.shields.io/github/workflow/status/holt59/bain-wizard-interpreter/Linters?style=flat-square)
+![MIT License](https://img.shields.io/github/license/holt59/bain-wizard-interpreter?style=flat-square)
 
 A BAIN Wizard Interpreter based on [`wizparse`](https://github.com/wrye-bash/wizparse) that can
 be used in various settings to run BAIN Wizard installers.
