@@ -16,7 +16,7 @@ setup(
     # Name of the package:
     name="bain-wizard-interpreter",
     # Version of the package:
-    version="1.0.2",
+    version="1.0.3",
     # Find the package automatically (include everything):
     packages=find_packages(exclude=("tests",)),
     package_data={"wizard": ["py.typed"]},
