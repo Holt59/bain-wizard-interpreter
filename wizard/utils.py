@@ -46,7 +46,6 @@ class WizardErrorStrategy(DefaultErrorStrategy):
     }
 
     def recover(self, recognizer: Parser, e: RecognitionException):
-
         # Mark the context (and "some" parent contexts):
         recognizer._ctx.exception = e
 
@@ -62,7 +61,6 @@ class WizardErrorStrategy(DefaultErrorStrategy):
         if recognizer.state == state and recognizer._input.index == index:
             super().recover(recognizer, e)
         else:
-
             # Something was consumed, but do we have to consume the next token
             # to close the statement? Yes if the current context if a "block"
             # context and the next context its close token:
@@ -81,7 +79,6 @@ class WizardErrorStrategy(DefaultErrorStrategy):
         recoverSet = IntervalSet()
 
         while ctx is not None and ctx.invokingState >= 0:
-
             # If statement (for Else we only want EndIf):
             if isinstance(
                 ctx, (wizardParser.IfStmtContext, wizardParser.ElifStmtContext)

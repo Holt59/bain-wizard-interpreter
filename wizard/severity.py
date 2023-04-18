@@ -6,14 +6,12 @@ from typing import MutableMapping
 
 
 class Severity(Enum):
-
     ALLOW = auto()
     WARNING = auto()
     ERROR = auto()
 
 
 class Issue(Enum):
-
     # Indicates if multiple default values are allowed in SelectOne statement.
     MULTIPLE_DEFAULTS_IN_SELECT_ON = auto()
 
@@ -32,7 +30,6 @@ class Issue(Enum):
 
 
 class SeverityContext:
-
     _default_severity: Severity
     _context: MutableMapping[Issue, Severity] = {}
 

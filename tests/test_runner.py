@@ -7,7 +7,6 @@ from .test_utils import RunnerChecker
 
 
 def test_abort():
-
     c = RunnerChecker()
 
     # Test abort - We should not reach the "c = 10" line:

@@ -142,7 +142,6 @@ class WizardRunnerExpressionVisitor(WizardExpressionVisitor):
 
 
 class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
-
     _subpackages: SubPackages
     _plugins: List[Plugin]
 

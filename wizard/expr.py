@@ -84,7 +84,6 @@ class WizardExpressionVisitor:
         ctx: wizardParser.FunctionCallContext,
         state: WizardInterpreterState,
     ) -> Value:
-
         name = ctx.Identifier().getText()
 
         # Specific handle for Exec:

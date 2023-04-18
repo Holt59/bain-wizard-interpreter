@@ -8,7 +8,6 @@ from typing import Callable, Generic, Iterable, List, Optional, Type, TypeVar, U
 
 
 class CaseFoldNamedObject:
-
     _name: str
 
     def __init__(self, name: str):
@@ -104,7 +103,6 @@ class SubPackages(List[SubPackage]):
 
 
 class VariableType(Enum):
-
     BOOL = auto()
     INTEGER = auto()
     FLOAT = auto()
@@ -348,7 +346,6 @@ class Value(Generic[ValueType]):
     def slice(
         self, start: Optional["Value"], end: Optional["Value"], step: Optional["Value"]
     ) -> "Value":
-
         if not isinstance(self._value, str):
             raise TypeError(f"Cannot access slice of variable of type {self._type}.")
 

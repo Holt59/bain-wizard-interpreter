@@ -4,7 +4,6 @@ from typing import Any, List, Optional
 
 
 class WizardINISetting:
-
     _filename: str
     _section: str
     _setting: str
@@ -40,7 +39,6 @@ class WizardINISetting:
 
 
 class WizardINISettingEdit(WizardINISetting):
-
     _value: Any
     _comment: Optional[str]
 
@@ -74,7 +72,6 @@ class WizardINISettingEdit(WizardINISetting):
 
 
 class WizardINITweaks:
-
     _disabled: List[WizardINISetting]
     _modified: List[WizardINISettingEdit]
 

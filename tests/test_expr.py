@@ -9,7 +9,6 @@ from .test_utils import ExpressionChecker, MockSubPackage
 
 
 def test_constant():
-
     c = ExpressionChecker()
 
     # Bool values:
@@ -50,7 +49,6 @@ def test_constant():
 
 
 def test_add_sub():
-
     c = ExpressionChecker(
         variables={"x": Value(4), "y": Value(-3), "s": Value("hello")}
     )
@@ -83,7 +81,6 @@ def test_add_sub():
 
 
 def test_mul_div_mod_pow():
-
     c = ExpressionChecker(variables={"x": Value(4), "y": Value(1.3)})
 
     # Constant:
@@ -99,7 +96,6 @@ def test_mul_div_mod_pow():
 
 
 def test_increment_decrement():
-
     c = ExpressionChecker(variables={"x": Value(0), "y": Value(0)})
 
     assert c.parse("x++") == Value(1)
@@ -116,7 +112,6 @@ def test_increment_decrement():
 
 
 def test_containers():
-
     subpackages = SubPackages(
         [
             MockSubPackage("foo", ["a", "x/y", "b"]),
@@ -177,7 +172,6 @@ def test_index_and_slice():
 
 
 def test_functions():
-
     c = ExpressionChecker(
         functions={
             "nargs": lambda st, vs: len(vs),

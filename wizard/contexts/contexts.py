@@ -303,7 +303,6 @@ class WizardBodyContext(
         self._ichild = 0
 
     def exec_(self) -> WizardInterpreterContext:
-
         # Empty block or no more children:
         if not self._context.children or self._ichild == len(self._context.children):
             if isinstance(self._parent, WizardTopLevelContext):
@@ -345,7 +344,6 @@ class WizardBodyContext(
     def _make_control_flow_context(
         self, ctx: wizardParser.ControlFlowStmtContext, parent: "WizardBodyContext"
     ) -> WizardInterpreterContext:
-
         if isinstance(ctx, wizardParser.ForContext):
             return self._factory.make_for_loop_context(ctx.forStmt(), parent)
         elif isinstance(ctx, wizardParser.WhileContext):
@@ -370,7 +368,6 @@ class WizardBreakContext(
     WizardInterpreterContext[ContextState, wizardParser.BreakContext]
 ):
     def exec_(self) -> WizardInterpreterContext:
-
         # Find the first loop or case:
         loop_or_case: Optional[WizardInterpreterContext] = self
 
@@ -391,7 +388,6 @@ class WizardContinueContext(
     WizardInterpreterContext[ContextState, wizardParser.ContinueContext]
 ):
     def exec_(self) -> WizardInterpreterContext:
-
         # Find the first parent loop:
         loop: Optional[WizardInterpreterContext] = self
 
@@ -437,7 +433,6 @@ class WizardIfContext(
     WizardInterpreterContext[ContextState, wizardParser.IfStmtContext]
 ):
     def exec_(self) -> WizardInterpreterContext:
-
         parent = self._factory._copy_parent(self)
 
         if self._factory.evisitor.visitExpr(self.context.expr(), parent.state):
@@ -491,7 +486,6 @@ class WizardForLoopContext(
     def _for_range_header(
         self, ctx: wizardParser.ForRangeHeaderContext
     ) -> Sequence[Value]:
-
         sta: Value[int] = self._factory.evisitor.visitExpr(ctx.expr(0), self.state, int)
         end: Value[int] = self._factory.evisitor.visitExpr(ctx.expr(1), self.state, int)
 
@@ -503,7 +497,6 @@ class WizardForLoopContext(
         return [Value(i) for i in range(sta.value, end.value + 1, by.value)]
 
     def _for_in_header(self, ctx: wizardParser.ForInHeaderContext) -> Sequence[Value]:
-
         value = self._factory.evisitor.visitExpr(ctx.expr(), self.state)
 
         if isinstance(value.value, SubPackage):
@@ -519,7 +512,6 @@ class WizardForLoopContext(
             )
 
     def exec_(self) -> WizardInterpreterContext:
-
         # End of the loop:
         if self._index == len(self._values):
             return self._factory._copy_parent(self)
@@ -549,7 +541,6 @@ class WizardWhileLoopContext(
         return self
 
     def exec_(self) -> WizardInterpreterContext:
-
         loop = self._factory._copy_context(self)
 
         # If the expression evaluates to True, we return a body context:
@@ -567,7 +558,6 @@ class WizardAssignmentContext(
     ]
 ):
     def exec_(self) -> WizardInterpreterContext:
-
         parent = self._factory._copy_parent(self)
 
         # Retrieve the name:
@@ -590,7 +580,6 @@ class WizardCompoundAssignmentContext(
     ]
 ):
     def exec_(self) -> WizardInterpreterContext:
-
         parent = self._factory._copy_parent(self)
 
         # Retrieve the name:
@@ -637,7 +626,6 @@ def parse_select_options(
     context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
     state: ContextState,
 ) -> Tuple[str, List[SelectOption], List[SelectOption]]:
-
     # Parse the description and option:
     description = factory.evisitor.visitExpr(context.expr(), state, str).value
 
@@ -672,7 +660,6 @@ def parse_select_options(
 
 
 class WizardSelectContext(WizardInterpreterContext[ContextState, RuleContext]):
-
     # The description:
     _description: str
 
@@ -823,7 +810,6 @@ class WizardSelectCasesContext(
     WizardInterpreterContext[ContextState, wizardParser.SelectStmtContext],
     WizardBreakableContext,
 ):
-
     # The list of selected options:
     _options: List[SelectOption]
 
@@ -875,7 +861,6 @@ class WizardSelectCasesContext(
         return copy
 
     def exec_(self) -> WizardInterpreterContext:
-
         # Element found in a selectOne, returns to the parent:
         if self._found and not self._ismany and not self._fallthrough:
             return self._factory._copy_parent(self)
@@ -885,7 +870,6 @@ class WizardSelectCasesContext(
 
         # Cases remaining:
         if self._index < len(self._cases):
-
             # Find the next case:
             case = self._cases[self._index]
             snext._index += 1
@@ -898,7 +882,6 @@ class WizardSelectCasesContext(
             if self._fallthrough or any(
                 sopt.name == target.value for sopt in self._options
             ):
-
                 # We found the value, remember it:
                 snext._found = True
 

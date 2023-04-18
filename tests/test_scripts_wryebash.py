@@ -39,7 +39,6 @@ def read_subpackages(files_txt: Path) -> SubPackages:
 
 
 def test_better_cities():
-
     # You can get this one Nexus: https://www.nexusmods.com/oblivion/mods/16513
     folder = Path("tests/data/Better Cities v6.0.13-16513-6-0-13-1590843631")
 
@@ -127,7 +126,6 @@ def test_better_cities():
 
 
 def test_majestic_mountains():
-
     # You can get this one Nexus: https://www.nexusmods.com/skyrim/mods/86292
     folder = Path("tests/data/Majestic Mountains Main-86292-1-4")
 
@@ -204,13 +202,11 @@ Otherwise, right-click the installer again and choose Install""",
 
 
 def test_book_covers():
-
     # Language Pack (testing both LE and SE):
     for name in [
         "Language Pack - Book Covers Skyrim SE.7z-901-4-2",
         "Language Pack - Book Covers Skyrim 3_5 Legendary-35399-3-6",
     ]:
-
         folder = Path("tests/data").joinpath(name)
 
         # Read the script:
@@ -283,7 +279,6 @@ def test_book_covers():
 
 
 def test_farmhouse_chimneys():
-
     # You can get this one Nexus: https://www.nexusmods.com/skyrimspecialedition/mods/8766 # noqa: E501
     folder = Path("tests/data/Farmhouse Chimneys v3.0.2-8766-3-0-2")
 
@@ -363,7 +358,6 @@ Otherwise, right-click the installer again and choose Install""",
 
 
 def test_demo_wizard():
-
     # You can get this one Nexus: https://www.nexusmods.com/skyrimspecialedition/mods/38857 # noqa: E501
     folder = Path("tests/data/DEMO Wizard 292 SIMPLE Archive Structure-38857-292")
 

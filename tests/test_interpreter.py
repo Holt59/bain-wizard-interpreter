@@ -11,7 +11,6 @@ from .test_utils import InterpreterChecker, MockSubPackage, RunnerChecker
 
 
 def test_basic():
-
     c = InterpreterChecker()
 
     # Test 1:
@@ -25,7 +24,6 @@ x += 4
 
 
 def test_forloop():
-
     subpackages = SubPackages(
         [
             MockSubPackage("ab", ["a", "x/y", "b"]),
@@ -74,7 +72,6 @@ EndFor
 
 
 def test_whileloop():
-
     c = InterpreterChecker()
 
     # Test 1:
@@ -112,7 +109,6 @@ EndWhile
 
 
 def test_if():
-
     c = InterpreterChecker()
 
     s = """
@@ -165,7 +161,6 @@ EndIf
 
 
 def test_select():
-
     runner = RunnerChecker()
 
     s = r"""
@@ -302,7 +297,6 @@ EndSelect
 
 
 def test_default_functions():
-
     c = InterpreterChecker()
 
     r = c.run("s = int('3')")
@@ -336,7 +330,6 @@ Cancel "Cancel."
 
 
 def test_exec():
-
     c = InterpreterChecker()
 
     s = """
@@ -358,7 +351,6 @@ a += 2
 
 
 def test_exceptions():
-
     c = InterpreterChecker()
 
     with pytest.raises(WizardTypeError):
@@ -396,7 +388,6 @@ x += str(s)
 
 
 def test_recover():
-
     c = InterpreterChecker()
 
     # Note: This is actually parsed as "If True.a = False", hence this matches

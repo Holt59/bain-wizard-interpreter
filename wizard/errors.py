@@ -126,7 +126,6 @@ class WizardUnsupportedOperation(WizardError):
 
 
 class WizardIndexError(WizardError):
-
     _index: int
 
     def __init__(self, context: ParserRuleContext, index: int):
@@ -139,7 +138,6 @@ class WizardIndexError(WizardError):
 
 
 class WizardNameError(WizardError):
-
     _name: str
 
     def __init__(self, context: ParserRuleContext, name):
@@ -156,7 +154,6 @@ class WizardTypeError(WizardError):
 
 
 class WizardMissingPackageError(WizardError):
-
     _name: str
 
     def __init__(self, context: ParserRuleContext, name: str):
@@ -169,7 +166,6 @@ class WizardMissingPackageError(WizardError):
 
 
 class WizardMissingPluginError(WizardError):
-
     _name: str
 
     def __init__(self, context: ParserRuleContext, name: str):

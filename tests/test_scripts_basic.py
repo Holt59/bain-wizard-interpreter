@@ -18,7 +18,6 @@ from .test_utils import RunnerChecker
 
 
 def test_wizparse_scripts():
-
     # List the scripts:
     scripts = list(Path("vendor/wizparse/tests/expect-success").glob("*.txt"))
 

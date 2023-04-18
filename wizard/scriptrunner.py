@@ -61,7 +61,6 @@ class WizardScriptRunnerKeywordFactory(WizardRunnerKeywordVisitor):
 
 
 class WizardScriptRunnerStatus(Enum):
-
     # A 'Cancel' instruction was encountered:
     CANCEL = auto()
 
@@ -161,7 +160,6 @@ class WizardScriptRunner(
         ctx: WizardInterpreterContext = self.make_top_level_context(script)
 
         while True:
-
             self._ctx = ctx
 
             try:

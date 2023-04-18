@@ -20,7 +20,6 @@ from wizard.value import SubPackages
 
 
 class MockSubPackage(SubPackage):
-
     _files: List[str]
 
     def __init__(self, name: str, files: List[str]):
@@ -129,13 +128,11 @@ class RunnerChecker(WizardScriptRunner):
         return self._calls
 
     def __getattribute__(self, item):
-
         fn = object.__getattribute__(self, item)
 
         if hasattr(fn, "__isabstractmethod__") and fn.__isabstractmethod__:
 
             def fn(*args):
-
                 # Note using str() otherwise we would loose quote around strings, and
                 # not use repr() because the quote (" or ') is inconsistent. JSON is
                 # consistent:
@@ -195,7 +192,6 @@ class RunnerChecker(WizardScriptRunner):
     def selectOne(
         self, description: str, options: List[SelectOption], default: SelectOption
     ) -> SelectOption:
-
         if not self._next_opts:
             return default
 
@@ -219,7 +215,6 @@ class RunnerChecker(WizardScriptRunner):
         options: List[SelectOption],
         default: List[SelectOption] = [],
     ) -> List[SelectOption]:
-
         if not self._next_opts:
             return default
 

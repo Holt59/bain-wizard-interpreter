@@ -35,7 +35,6 @@ WizardContext = TypeVar("WizardContext", bound=WizardInterpreterContext)
 
 
 class WizardInterpreterContextFactory:
-
     # The visitors:
     _evisitor: WizardExpressionVisitor
     _kvisitor: WizardKeywordVisitor

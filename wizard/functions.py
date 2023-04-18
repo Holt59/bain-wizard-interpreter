@@ -120,7 +120,6 @@ def wrap_function(
     varargs: bool = False,
     rawargs: bool = False,
 ) -> Callable[[WizardInterpreterState, List[Value]], Value]:
-
     """
     Wrap the given function to be usable by the Wizard expression visitor.
 
@@ -134,7 +133,6 @@ def wrap_function(
     """
 
     def fn(st: WizardInterpreterState, vs: List[Value]) -> Value:
-
         # List of Python arguments:
         pargs: List = []
 
@@ -175,9 +173,9 @@ def wrap_function(
     return fn
 
 
-def make_basic_functions() -> Dict[
-    str, Callable[[WizardInterpreterState, List[Value]], Value]
-]:
+def make_basic_functions() -> (
+    Dict[str, Callable[[WizardInterpreterState, List[Value]], Value]]
+):
     """
     Create a list of basic functions.
 
