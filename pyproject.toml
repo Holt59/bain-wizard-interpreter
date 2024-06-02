@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "bain-wizard-interpreter"
+version = "1.0.3"
+description = "BAIN Wizard Interpreter based on wizparse."
+authors = ["Mikaël Capelle <capelle.mikael@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "wizard", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.12.1,<4.0"
+chardet = "^5.2.0"
+antlr4-python3-runtime = "^4.13.1"
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.23.0"
+pyright = "^1.1.365"
+types-chardet = "^5.0.4.6"
+pytest = "^8.2.1"
+ruff = "^0.4.7"
+types-antlr4-python3-runtime = "^4.13.0.20240519"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+format-imports = "ruff check --select I src tests --fix"
+format-ruff = "ruff format src tests"
+format.sequence = ["format-imports", "format-ruff"]
+lint-ruff = "ruff check src tests"
+lint-ruff-format = "ruff format --check src tests"
+lint-pyright = "pyright src tests"
+lint.sequence = ["lint-ruff", "lint-ruff-format", "lint-pyright"]
+lint.ignore_fail = "return_non_zero"
+
+[tool.ruff]
+target-version = "py312"
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = ["B", "Q", "I"]
+exclude = ["src/wizard/antlr4/*"]
+
+[tool.ruff.lint.isort]
+known-first-party = ['tas']
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["wizard.value.Value"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = true
+exclude = ["src/wizard/antlr4"]

@@ -1,8 +1,6 @@
-# -*- encoding: utf-8 -*-
+from typing import cast
 
-from typing import Optional
-
-from antlr4 import Parser, ParserRuleContext, Token
+from antlr4 import Parser, ParserRuleContext, Token, TokenStream
 from antlr4.error.Errors import (
     FailedPredicateException,
     InputMismatchException,
@@ -19,22 +17,26 @@ class WizardError(Exception):
     at the beginning.
     """
 
-    _ctx: ParserRuleContext
+    _ctx: ParserRuleContext | None
 
-    def __init__(self, context: ParserRuleContext, *args):
+    def __init__(self, context: ParserRuleContext | None, *args: object):
         super().__init__(*args)
         self._ctx = context
 
     @property
-    def context(self) -> Optional[ParserRuleContext]:
+    def context(self) -> ParserRuleContext | None:
         return self._ctx
 
     @property
     def line(self) -> int:
+        if not self._ctx:
+            return -1
         return self._ctx.start.line  # type: ignore
 
     @property
     def column(self) -> int:
+        if not self._ctx:
+            return -1
         return self._ctx.start.column  # type: ignore
 
     # The messageXXX are taken from ANTLR4 error strategy (reportXXX):
@@ -45,10 +47,10 @@ class WizardError(Exception):
         s = s.replace("\t", "\\t")
         return "'" + s + "'"
 
-    def getTokenErrorDisplay(self, t: Token):
+    def getTokenErrorDisplay(self, t: Token | None):
         if t is None:
             return "<no token>"
-        s = t.text
+        s = cast(str | None, t.text)  # pyright: ignore[reportUnknownMemberType]
         if s is None:
             if t.type == Token.EOF:
                 s = "<EOF>"
@@ -59,12 +61,12 @@ class WizardError(Exception):
     def messageNoViableAlternative(
         self, recognizer: Parser, e: NoViableAltException
     ) -> str:
-        tokens = recognizer.getTokenStream()
+        tokens = cast(TokenStream | None, recognizer.getTokenStream())  # pyright: ignore[reportUnknownMemberType]
         if tokens is not None:
             if e.startToken.type == Token.EOF:
                 input = "<EOF>"
             else:
-                input = tokens.getText(e.startToken, e.offendingToken)
+                input = cast(str, tokens.getText(e.startToken, e.offendingToken))  # type: ignore
         else:
             input = "<unknown input>"
         return "no viable alternative at input " + self.escapeWSAndQuote(input)
@@ -72,18 +74,23 @@ class WizardError(Exception):
     def messageInputMismatch(
         self, recognizer: Parser, e: InputMismatchException
     ) -> str:
-        msg: str = (
+        return (
             "mismatched input "
             + self.getTokenErrorDisplay(e.offendingToken)
             + " expecting "
-            + e.getExpectedTokens().toString(
-                recognizer.literalNames, recognizer.symbolicNames
+            + cast(
+                str,
+                e.getExpectedTokens().toString(  # type: ignore
+                    recognizer.literalNames,  # type: ignore
+                    recognizer.symbolicNames,  # type: ignore
+                ),
             )
         )
-        return msg
 
-    def messageFailedPredicate(self, recognizer, e) -> str:
-        ruleName = recognizer.ruleNames[recognizer._ctx.getRuleIndex()]
+    def messageFailedPredicate(
+        self, recognizer: Parser, e: FailedPredicateException
+    ) -> str:
+        ruleName: str = recognizer.ruleNames[recognizer._ctx.getRuleIndex()]  # type: ignore
         return f"rule {ruleName} {e.message}"
 
     @property
@@ -108,7 +115,6 @@ class WizardError(Exception):
 
 
 class WizardParseError(WizardError):
-
     """
     Error raised when a parsing error occurs.
     """
@@ -121,14 +127,14 @@ class WizardUnsupportedOperation(WizardError):
     Error raised when an operation is not supported (not yet implemented).
     """
 
-    def __init__(self, context: ParserRuleContext, operation: str):
+    def __init__(self, context: ParserRuleContext | None, operation: str):
         super().__init__(context, f"'{operation}' operation is not implemented.")
 
 
 class WizardIndexError(WizardError):
     _index: int
 
-    def __init__(self, context: ParserRuleContext, index: int):
+    def __init__(self, context: ParserRuleContext | None, index: int):
         super().__init__(context, f"Index {index} out of range.")
         self._index = index
 
@@ -140,7 +146,7 @@ class WizardIndexError(WizardError):
 class WizardNameError(WizardError):
     _name: str
 
-    def __init__(self, context: ParserRuleContext, name):
+    def __init__(self, context: ParserRuleContext | None, name: str):
         super().__init__(context, f"The name '{name}' is not defined.")
         self._name = name
 

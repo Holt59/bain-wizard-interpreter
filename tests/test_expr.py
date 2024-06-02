@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+from typing import cast
 
 import pytest
 
@@ -16,7 +16,7 @@ def test_constant():
     assert c.parse("True") == Value(True)
 
     # SubPackages:
-    assert c.parse("SubPackages") == Value(c._subpackages)
+    assert c.parse("SubPackages") == Value(c._subpackages)  # pyright: ignore[reportPrivateUsage]
 
     # Int values:
     assert c.parse("0") == Value(0)
@@ -26,11 +26,11 @@ def test_constant():
     # Float values:
     v1 = c.parse("1.5")
     assert v1.type == VariableType.FLOAT
-    assert v1.value == pytest.approx(1.5)
+    assert v1.value == pytest.approx(1.5)  # pyright: ignore[reportUnknownMemberType]
 
     v2 = c.parse("-1.3")
     assert v2.type == VariableType.FLOAT
-    assert v2.value == pytest.approx(-1.3)
+    assert v2.value == pytest.approx(-1.3)  # pyright: ignore[reportUnknownMemberType]
 
     # String values:
     assert c.parse('""') == Value("")
@@ -174,9 +174,9 @@ def test_index_and_slice():
 def test_functions():
     c = ExpressionChecker(
         functions={
-            "nargs": lambda st, vs: len(vs),
-            "add": lambda st, vs: sum(vs, Value(type(vs[0].value)())),
-            "string.trim": lambda st, vs: Value(vs[0]._value.strip()),
+            "nargs": lambda _st, vs: Value(len(vs)),
+            "add": lambda _st, vs: sum(vs, Value(type(vs[0].value)())),
+            "string.trim": lambda _st, vs: Value(cast(str, vs[0].value).strip()),
         },
     )
 
@@ -197,5 +197,5 @@ def test_functions():
         c.parse("fn()")
     assert ex.value.name == "fn"
 
-    setattr(c, "visitFn", lambda st, x: 2 * x)
+    c.visitFn = lambda st, x: 2 * x  # type: ignore
     assert c.parse("Fn(1)") == Value(2)

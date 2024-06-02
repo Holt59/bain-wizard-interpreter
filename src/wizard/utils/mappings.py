@@ -1,23 +1,23 @@
-# -*- encoding: utf-8 -*-
+from __future__ import annotations
 
-from typing import Iterator, MutableMapping, Optional, Set, TypeVar
+from collections.abc import Iterator, MutableMapping
+from typing import TypeVar
 
 K = TypeVar("K")
 V = TypeVar("V")
 
 
 class StackMutableMapping(MutableMapping[K, V]):
-
     """
     Class representing a stacked mapping. It exposes the usual MutableMapping
     interface, but contains a "fallback" mapping and expose the union of both.
     """
 
-    _parent: Optional["StackMutableMapping[K, V]"]
-    _variables: MutableMapping[K, V]
-    _deleted: Set[K]
+    _parent: StackMutableMapping[K, V] | None
+    _variables: dict[K, V]
+    _deleted: set[K]
 
-    def __init__(self, parent: Optional["StackMutableMapping[K, V]"] = None):
+    def __init__(self, parent: StackMutableMapping[K, V] | None = None):
         self._parent = parent
         self._variables = {}
         self._deleted = set()
@@ -55,7 +55,7 @@ class StackMutableMapping(MutableMapping[K, V]):
 
     def __iter__(self) -> Iterator[K]:
         # Retrieve the parent keys:
-        keys: Set[K] = set()
+        keys: set[K] = set()
 
         if self._parent is not None:
             keys.update(self._parent)
@@ -67,7 +67,7 @@ class StackMutableMapping(MutableMapping[K, V]):
 
     def __len__(self) -> int:
         # Retrieve the parent keys:
-        keys: Set[K] = set()
+        keys: set[K] = set()
 
         if self._parent is not None:
             keys.update(self._parent)

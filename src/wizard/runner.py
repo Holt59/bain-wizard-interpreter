@@ -1,6 +1,7 @@
-# -*- encoding: utf-8 -*-
+# pyright: reportPrivateUsage=false
 
-from typing import Any, List, Mapping, MutableMapping, Optional, Sequence, cast
+from collections.abc import Mapping, MutableMapping, Sequence
+from typing import Any, cast
 
 from .contexts import WizardKeywordContext
 from .errors import WizardMissingPackageError, WizardMissingPluginError
@@ -13,15 +14,14 @@ from .value import Plugin, SubPackage, SubPackages
 
 
 class WizardRunnerState(WizardInterpreterState):
-
     """
     Wrapper around multiple containers that are updated during the execution
     of a Wizard script and need to be rewound.
     """
 
     # The list of selected subpackages and plugins:
-    _subpackages: List[SubPackage]
-    _plugins: List[Plugin]
+    _subpackages: list[SubPackage]
+    _plugins: list[Plugin]
 
     # Renaming of plugins (original name -> new name):
     _renames: MutableMapping[Plugin, str]
@@ -30,7 +30,7 @@ class WizardRunnerState(WizardInterpreterState):
     _tweaks: WizardINITweaks
 
     # The list of notes:
-    _notes: List[str]
+    _notes: list[str]
 
     def __init__(self):
         super().__init__()
@@ -93,7 +93,6 @@ class WizardRunnerState(WizardInterpreterState):
 
 
 class WizardRunnerExpressionVisitor(WizardExpressionVisitor):
-
     """
     Simple extension of the expression visitor to update INI tweaks.
     """
@@ -120,7 +119,7 @@ class WizardRunnerExpressionVisitor(WizardExpressionVisitor):
         section: str,
         setting: str,
         value: Any,
-        comment: Optional[str] = "",
+        comment: str | None = "",
     ):
         """
         Create an INI tweak file with some tweaks in it. If file that to apply the
@@ -141,9 +140,9 @@ class WizardRunnerExpressionVisitor(WizardExpressionVisitor):
         )
 
 
-class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
+class WizardRunnerKeywordVisitor(WizardKeywordVisitor[WizardRunnerState]):
     _subpackages: SubPackages
-    _plugins: List[Plugin]
+    _plugins: list[Plugin]
 
     def __init__(self, subpackages: SubPackages, severity: SeverityContext):
         super().__init__(severity)
@@ -162,26 +161,30 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         return self._subpackages
 
     @property
-    def plugins(self) -> List[Plugin]:
+    def plugins(self) -> Sequence[Plugin]:
         """
         Returns:
             The list of all available plugins.
         """
         return self._plugins
 
-    def plugins_for(self, subpackage: SubPackage) -> List[Plugin]:
+    def plugins_for(self, subpackage: SubPackage) -> Sequence[Plugin]:
         """
         Returns:
             The list of plugin names in the given subpackage.
         """
         return list(subpackage.plugins())
 
-    def visitDeSelectAll(self, context: WizardKeywordContext, state: WizardRunnerState):
+    def visitDeSelectAll(
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+    ):
         state._subpackages.clear()
         state._plugins.clear()
 
     def visitDeSelectAllPlugins(
-        self, context: WizardKeywordContext, state: WizardRunnerState
+        self, context: WizardKeywordContext[WizardRunnerState], state: WizardRunnerState
     ):
         """
         Args:
@@ -190,29 +193,38 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         state._plugins.clear()
 
     def visitDeSelectPlugin(
-        self, context: WizardKeywordContext, state: WizardRunnerState, name: str
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+        name: str,
     ):
         """
         Args:
             state: The interpreter state to update.
             name: The name of the plugin to de-select.
         """
-        if name in state._plugins:
-            state._plugins.remove(cast(Plugin, name))
+        if name in state.plugins:
+            state._plugins.remove(Plugin(name))
 
     def visitDeSelectSubPackage(
-        self, context: WizardKeywordContext, state: WizardRunnerState, name: str
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+        name: str,
     ):
         """
         Args:
             state: The interpreter state to update.
             name: The name of the subpackage to de-select.
         """
-        if name in state._subpackages:
-            state._subpackages.remove(cast(SubPackage, name))
+        if name in state.subpackages:
+            state._subpackages.remove(SubPackage(name))
 
     def visitNote(
-        self, context: WizardKeywordContext, state: WizardRunnerState, text: str
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+        text: str,
     ):
         """
         Args:
@@ -223,7 +235,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
 
     def visitRenamePlugin(
         self,
-        context: WizardKeywordContext,
+        context: WizardKeywordContext[WizardRunnerState],
         state: WizardRunnerState,
         original_name: str,
         new_name: str,
@@ -240,9 +252,9 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         self,
         state: WizardRunnerState,
         game_version: str,
-        script_extender_version: Optional[str],
-        graphics_extender_version: Optional[str],
-        wrye_bash_version: Optional[str],
+        script_extender_version: str | None,
+        graphics_extender_version: str | None,
+        wrye_bash_version: str | None,
     ):
         """
         Args:
@@ -255,7 +267,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         ...
 
     def visitResetAllPluginNames(
-        self, context: WizardKeywordContext, state: WizardRunnerState
+        self, context: WizardKeywordContext[WizardRunnerState], state: WizardRunnerState
     ):
         """
         Args:
@@ -264,7 +276,10 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         state._renames.clear()
 
     def visitResetPluginName(
-        self, context: WizardKeywordContext, state: WizardRunnerState, name: str
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+        name: str,
     ):
         """
         Args:
@@ -272,9 +287,11 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
             name: The original name of the plugin.
         """
         if name in state._renames:
-            del state._renames[cast(Plugin, name)]
+            del state._renames[Plugin(name)]
 
-    def visitSelectAll(self, context: WizardKeywordContext, state: WizardRunnerState):
+    def visitSelectAll(
+        self, context: WizardKeywordContext[WizardRunnerState], state: WizardRunnerState
+    ):
         """
         Args:
             state: The interpreter state to update.
@@ -283,7 +300,7 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         self.visitSelectAllPlugins(context, state)
 
     def visitSelectAllPlugins(
-        self, context: WizardKeywordContext, state: WizardRunnerState
+        self, context: WizardKeywordContext[WizardRunnerState], state: WizardRunnerState
     ):
         """
         Args:
@@ -293,7 +310,10 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         state._plugins = [pg for sp in state._subpackages for pg in sp.plugins()]
 
     def visitSelectPlugin(
-        self, context: WizardKeywordContext, state: WizardRunnerState, name: str
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+        name: str,
     ):
         """
         Args:
@@ -313,7 +333,10 @@ class WizardRunnerKeywordVisitor(WizardKeywordVisitor):
         state._plugins.append(self._plugins[ipg])
 
     def visitSelectSubPackage(
-        self, context: WizardKeywordContext, state: WizardRunnerState, name: str
+        self,
+        context: WizardKeywordContext[WizardRunnerState],
+        state: WizardRunnerState,
+        name: str,
     ):
         """
         Args:

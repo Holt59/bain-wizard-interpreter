@@ -1,7 +1,8 @@
-# -*- encoding: utf-8 -*-
+from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Sequence, TextIO, Type, Union, overload
+from typing import Any, Generic, TextIO, overload
 
 from antlr4 import InputStream
 
@@ -15,18 +16,17 @@ from .state import ContextState, WizardInterpreterState
 from .utils import make_top_level_context
 
 
-class WizardInterpreter:
-
+class WizardInterpreter(Generic[ContextState]):
     """
     The WizardInterpreter is the main interpreter for Wizard scripts.
     """
 
     # The severity context:
-    _factory: WizardInterpreterContextFactory
+    _factory: WizardInterpreterContextFactory[ContextState]
 
     def __init__(
         self,
-        factory: WizardInterpreterContextFactory,
+        factory: WizardInterpreterContextFactory[ContextState],
     ):
         """
         Args:
@@ -37,7 +37,7 @@ class WizardInterpreter:
     def exec_until(
         self,
         context: WizardInterpreterContext[ContextState, Any],
-        targets: Sequence[Type[WizardInterpreterContext]],
+        targets: Sequence[type[WizardInterpreterContext[ContextState, Any]]],
     ) -> WizardInterpreterContext[ContextState, Any]:
         """
         Execute the contexts until a context of the given type is found, or
@@ -61,22 +61,20 @@ class WizardInterpreter:
 
     @overload
     def make_top_level_context(
-        self, script: Union[InputStream, Path, TextIO, str], state: ContextState
-    ) -> WizardTopLevelContext[ContextState]:
-        ...
+        self, script: InputStream | Path | TextIO | str, state: ContextState
+    ) -> WizardTopLevelContext[ContextState]: ...
 
     @overload
     def make_top_level_context(
-        self, script: Union[InputStream, Path, TextIO, str]
-    ) -> WizardTopLevelContext[WizardInterpreterState]:
-        ...
+        self, script: InputStream | Path | TextIO | str
+    ) -> WizardTopLevelContext[WizardInterpreterState]: ...
 
     def make_top_level_context(
         self,
-        script: Union[InputStream, Path, TextIO, str],
-        state: Optional[ContextState] = None,
-    ) -> Union[
-        WizardTopLevelContext[ContextState],
-        WizardTopLevelContext[WizardInterpreterState],
-    ]:
+        script: InputStream | Path | TextIO | str,
+        state: ContextState | None = None,
+    ) -> (
+        WizardTopLevelContext[ContextState]
+        | WizardTopLevelContext[WizardInterpreterState]
+    ):
         return make_top_level_context(script, self._factory, state)  # type: ignore

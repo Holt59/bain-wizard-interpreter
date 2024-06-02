@@ -1,44 +1,47 @@
-# -*- encoding: utf-8 -*-
-
 """
 This file contains the implementation of the "basic" functions for BAIN Wizard,
 i.e. functions that do not require specific handling.
 """
 
 import inspect
-from typing import Callable, Dict, List, Mapping, Union
+from collections.abc import Sequence
+from typing import Any, Callable, TypeAlias, cast
 
-from .expr import SubPackage, SubPackages, Value, VariableType, Void
+from .expr import SubPackage, SubPackages, VariableType
 from .manager import ManagerModInterface
 from .severity import SeverityContext
 from .state import WizardInterpreterState
+from .value import Value, Void
+
+WizardFunction: TypeAlias = Callable[
+    [WizardInterpreterState, Sequence[Value[Any]]], Value[Any]
+]
 
 
 class WizardFunctions:
-
     """
     This is simply a class containing all the basic functions.
     """
 
-    def str(self, value: Value) -> Value:
+    def str_(self, value: Value[Any]) -> Value[str]:
         return Value(str(value.value))
 
-    def int(self, value: Value) -> Value:
+    def int_(self, value: Value[Any]) -> Value[int]:
         if isinstance(value.value, (SubPackage, SubPackages, Void)):
             return Value(0)
         return Value(int(value.value))
 
-    def float(self, value: Value) -> Value:
+    def float_(self, value: Value[Any]) -> Value[float]:
         if isinstance(value.value, (SubPackage, SubPackages, Void)):
             return Value(0.0)
         return Value(float(value.value))
 
-    def len(self, value: Value) -> Value:
+    def len_(self, value: Value[Any]) -> Value[int]:
         if not isinstance(value.value, str):
             return Value(0)
         return Value(len(value.value))
 
-    def startswith(self, value: Value, *args: Value) -> Value:
+    def startswith(self, value: Value[Any], *args: Value[Any]) -> Value[bool]:
         if not isinstance(value.value, str):
             return Value(False)
         for prefix in args:
@@ -48,7 +51,7 @@ class WizardFunctions:
                 return Value(True)
         return Value(False)
 
-    def endswith(self, value: Value, *args: Value) -> Value:
+    def endswith(self, value: Value[Any], *args: Value[Any]) -> Value[bool]:
         if not isinstance(value.value, str):
             return Value(False)
         for prefix in args:
@@ -58,18 +61,18 @@ class WizardFunctions:
                 return Value(True)
         return Value(False)
 
-    def lower(self, value: Value) -> Value:
+    def lower(self, value: Value[Any]) -> Value[str]:
         if not isinstance(value.value, str):
             return value
         return Value(value.value.lower())
 
     def find(
         self,
-        string: Value,
-        substring: Value,
-        start: Value = Value(0),
-        end: Value = Value(-1),
-    ) -> Value:
+        string: Value[Any],
+        substring: Value[Any],
+        start: Value[Any] = Value(0),
+        end: Value[Any] = Value(-1),
+    ) -> Value[int]:
         if (
             not isinstance(string.value, str)
             or not isinstance(substring.value, str)
@@ -86,11 +89,11 @@ class WizardFunctions:
 
     def rfind(
         self,
-        string: Value,
-        substring: Value,
-        start: Value = Value(0),
-        end: Value = Value(-1),
-    ) -> Value:
+        string: Value[Any],
+        substring: Value[Any],
+        start: Value[Any] = Value(0),
+        end: Value[Any] = Value(-1),
+    ) -> Value[int]:
         if (
             not isinstance(string.value, str)
             or not isinstance(substring.value, str)
@@ -115,11 +118,11 @@ class optional:
 
 def wrap_function(
     name: str,
-    method,
-    *args: Union[optional, type],
+    method: Callable[..., Any],
+    *args: optional | type,
     varargs: bool = False,
     rawargs: bool = False,
-) -> Callable[[WizardInterpreterState, List[Value]], Value]:
+) -> WizardFunction:
     """
     Wrap the given function to be usable by the Wizard expression visitor.
 
@@ -132,9 +135,9 @@ def wrap_function(
             object.
     """
 
-    def fn(st: WizardInterpreterState, vs: List[Value]) -> Value:
+    def fn(st: WizardInterpreterState, vs: Sequence[Value[Any]]) -> Value[Any]:
         # List of Python arguments:
-        pargs: List = []
+        pargs: list[Any] = []
 
         if not varargs and len(vs) > len(args):
             raise TypeError(f"{name}: too many arguments.")
@@ -145,7 +148,7 @@ def wrap_function(
 
             tp: type
             if isinstance(arg, optional):
-                tp = arg.t
+                tp = cast(type, arg.t)  # type: ignore
             else:
                 tp = arg
 
@@ -161,21 +164,19 @@ def wrap_function(
             else:
                 pargs.append(vs[iarg].value)
 
-        ret: Value = method(*pargs)
+        ret: Value[Any] | Void | None = method(*pargs)
         if ret is None:
             ret = Void()
 
         if not rawargs:
-            ret = Value(ret)  # type: ignore
+            ret = Value(ret)
 
-        return ret
+        return cast(Value[Any], ret)
 
     return fn
 
 
-def make_basic_functions() -> (
-    Dict[str, Callable[[WizardInterpreterState, List[Value]], Value]]
-):
+def make_basic_functions() -> dict[str, WizardFunction]:
     """
     Create a list of basic functions.
 
@@ -187,7 +188,7 @@ def make_basic_functions() -> (
     """
 
     wf = WizardFunctions()
-    fns: Dict[str, Callable[[WizardInterpreterState, List[Value]], Value]] = {}
+    fns: dict[str, WizardFunction] = {}
 
     # Add all the free functions:
     for fname in dir(wf):
@@ -196,7 +197,7 @@ def make_basic_functions() -> (
         sig = inspect.signature(getattr(wf, fname))
         varargs = "args" in sig.parameters
         fns[fname] = wrap_function(
-            fname,
+            fname.rstrip("_"),
             getattr(wf, fname),
             *(object for _ in range(len(sig.parameters) - varargs)),
             varargs=varargs,
@@ -210,14 +211,15 @@ def make_basic_functions() -> (
         fns["string." + fname] = fns[fname]
 
     for t in ("integer", "float", "bool"):
-        fns[t + ".str"] = fns["str"]
+        fns[t + ".str"] = fns["str_"]
 
-    return fns
+    # strip the right _ from the name for special function (int_, float_, etc.)
+    return {name.rstrip("_"): fn for name, fn in fns.items()}
 
 
 def make_manager_functions(
     manager: ManagerModInterface, scontext: SeverityContext
-) -> Mapping[str, Callable[[WizardInterpreterState, List[Value]], Value]]:
+) -> dict[str, WizardFunction]:
     """
     Add manager functions to the _functions member variables. These functions
     calls method of the manager passed in.
@@ -227,7 +229,7 @@ def make_manager_functions(
         scontext: The severity context to use (for the Note keyword for instance).
     """
 
-    fns: Dict[str, Callable[[WizardInterpreterState, List[Value]], Value]] = {}
+    fns: dict[str, WizardFunction] = {}
 
     for t in [
         # Functions:

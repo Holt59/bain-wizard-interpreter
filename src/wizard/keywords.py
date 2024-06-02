@@ -1,7 +1,5 @@
-# -*- encoding: utf-8 -*-
-
 from enum import Enum
-from typing import Generic, Optional
+from typing import Generic
 
 from .contexts.keywords import WizardKeywordContext
 from .severity import SeverityContext
@@ -9,7 +7,6 @@ from .state import ContextState
 
 
 class WizardKeyword(Enum):
-
     """
     Enumeration representing possible keywords in a Wizard scripts.
     """
@@ -30,7 +27,6 @@ class WizardKeyword(Enum):
 
 
 class WizardKeywordVisitor(Generic[ContextState]):
-
     """
     Keyword visitor that can be extended to perform specific actions for
     each keywords. By default, none of the methods do anything.
@@ -41,7 +37,9 @@ class WizardKeywordVisitor(Generic[ContextState]):
     def __init__(self, severity: SeverityContext):
         self._severity = severity
 
-    def visitDeSelectAll(self, context: WizardKeywordContext, state: ContextState):
+    def visitDeSelectAll(
+        self, context: WizardKeywordContext[ContextState], state: ContextState
+    ):
         """
         Args:
             context: The context corresponding to the keyword.
@@ -50,7 +48,7 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitDeSelectAllPlugins(
-        self, context: WizardKeywordContext, state: ContextState
+        self, context: WizardKeywordContext[ContextState], state: ContextState
     ):
         """
         Args:
@@ -60,7 +58,10 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitDeSelectPlugin(
-        self, context: WizardKeywordContext, state: ContextState, name: str
+        self,
+        context: WizardKeywordContext[ContextState],
+        state: ContextState,
+        name: str,
     ):
         """
         Args:
@@ -71,7 +72,10 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitDeSelectSubPackage(
-        self, context: WizardKeywordContext, state: ContextState, name: str
+        self,
+        context: WizardKeywordContext[ContextState],
+        state: ContextState,
+        name: str,
     ):
         """
         Args:
@@ -81,7 +85,12 @@ class WizardKeywordVisitor(Generic[ContextState]):
         """
         ...
 
-    def visitNote(self, context: WizardKeywordContext, state: ContextState, text: str):
+    def visitNote(
+        self,
+        context: WizardKeywordContext[ContextState],
+        state: ContextState,
+        text: str,
+    ):
         """
         Args:
             context: The context corresponding to the keyword.
@@ -92,7 +101,7 @@ class WizardKeywordVisitor(Generic[ContextState]):
 
     def visitRenamePlugin(
         self,
-        context: WizardKeywordContext,
+        context: WizardKeywordContext[ContextState],
         state: ContextState,
         original_name: str,
         new_name: str,
@@ -110,9 +119,9 @@ class WizardKeywordVisitor(Generic[ContextState]):
         self,
         state: ContextState,
         game_version: str,
-        script_extender_version: Optional[str],
-        graphics_extender_version: Optional[str],
-        wrye_bash_version: Optional[str],
+        script_extender_version: str | None,
+        graphics_extender_version: str | None,
+        wrye_bash_version: str | None,
     ):
         """
         Args:
@@ -126,7 +135,7 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitResetAllPluginNames(
-        self, context: WizardKeywordContext, state: ContextState
+        self, context: WizardKeywordContext[ContextState], state: ContextState
     ):
         """
         Args:
@@ -136,7 +145,10 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitResetPluginName(
-        self, context: WizardKeywordContext, state: ContextState, name: str
+        self,
+        context: WizardKeywordContext[ContextState],
+        state: ContextState,
+        name: str,
     ):
         """
         Args:
@@ -146,7 +158,9 @@ class WizardKeywordVisitor(Generic[ContextState]):
         """
         ...
 
-    def visitSelectAll(self, context: WizardKeywordContext, state: ContextState):
+    def visitSelectAll(
+        self, context: WizardKeywordContext[ContextState], state: ContextState
+    ):
         """
         Args:
             context: The context corresponding to the keyword.
@@ -154,7 +168,9 @@ class WizardKeywordVisitor(Generic[ContextState]):
         """
         ...
 
-    def visitSelectAllPlugins(self, context: WizardKeywordContext, state: ContextState):
+    def visitSelectAllPlugins(
+        self, context: WizardKeywordContext[ContextState], state: ContextState
+    ):
         """
         Args:
             context: The context corresponding to the keyword.
@@ -163,7 +179,10 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitSelectPlugin(
-        self, context: WizardKeywordContext, state: ContextState, name: str
+        self,
+        context: WizardKeywordContext[ContextState],
+        state: ContextState,
+        name: str,
     ):
         """
         Args:
@@ -174,7 +193,10 @@ class WizardKeywordVisitor(Generic[ContextState]):
         ...
 
     def visitSelectSubPackage(
-        self, context: WizardKeywordContext, state: ContextState, name: str
+        self,
+        context: WizardKeywordContext[ContextState],
+        state: ContextState,
+        name: str,
     ):
         """
         Args:

@@ -1,11 +1,14 @@
-# -*- encoding: utf-8 -*-
-
 import pytest  # noqa: F401
 
-from wizard.contexts import WizardSelectContext, WizardTerminationContext
+from wizard.contexts import (
+    WizardSelectContext,
+    WizardTerminationContext,
+)
+from wizard.contexts.contexts import WizardSelectOneContext
 from wizard.errors import WizardNameError, WizardParseError, WizardTypeError
 from wizard.expr import SubPackages, Value
 from wizard.manager import SelectOption
+from wizard.value import AnyValueType
 
 from .test_utils import InterpreterChecker, MockSubPackage, RunnerChecker
 
@@ -53,10 +56,9 @@ EndFor
     assert r.state.variables == {"s": Value("abef"), "pkg": Value(subpackages[-1])}
 
     # Test 3:
-    values = []
-    c._factory.evisitor._functions["fn"] = lambda st, vs: values.append(
-        (vs[0].value, vs[1].value)
-    )
+    values: list[tuple[AnyValueType, AnyValueType]] = []
+
+    c.register_function("fn", lambda _s, vs: values.append((vs[0].value, vs[1].value)))
     s = """
 c = 0
 For i from 1 to 4
@@ -88,9 +90,7 @@ EndWhile
     assert r.state.variables == {"u": Value("5461"), "i": 4, "x": 5461}
 
     # Kaprekar number, yay!
-    c._factory.evisitor._functions["sort"] = lambda st, vs: Value(
-        "".join(sorted(vs[0].value))
-    )
+    c.register_function("sort", lambda _st, vs: Value("".join(sorted(vs[0].value))))
     s = """
 input = 3524
 target = 6174
@@ -179,9 +179,8 @@ Default
     Break
 EndSelect
 """
-
-    context = runner.make_top_level_context(s)
-    context: WizardSelectContext = runner.exec_until(context, (WizardSelectContext,))
+    top_context = runner.make_top_level_context(s)
+    context = runner.exec_until(top_context, (WizardSelectOneContext,))
     assert isinstance(context, WizardSelectContext)
     assert len(context.options) == 2
 
@@ -265,9 +264,10 @@ Case "O2"
 EndSelect
 """
 
-    context = runner.make_top_level_context(s)
-    context: WizardSelectContext = runner.exec_until(context, (WizardSelectContext,))
-    assert isinstance(context, WizardSelectContext)
+    context = runner.exec_until(
+        runner.make_top_level_context(s), (WizardSelectOneContext,)
+    )
+    assert isinstance(context, WizardSelectOneContext)
     assert context.options == [
         SelectOption("O1", "Description O1", "ImgO1"),
         SelectOption("O2", "Description O2", "ImgO2"),
