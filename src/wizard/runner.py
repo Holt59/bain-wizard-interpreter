@@ -1,5 +1,7 @@
 # pyright: reportPrivateUsage=false
 
+from __future__ import annotations
+
 from collections.abc import Mapping, MutableMapping, Sequence
 from typing import Any, cast
 
@@ -40,7 +42,7 @@ class WizardRunnerState(WizardInterpreterState):
         self._tweaks = WizardINITweaks()
         self._notes = []
 
-    def copy(self) -> "WizardRunnerState":
+    def copy(self) -> WizardRunnerState:
         state: WizardRunnerState = super().copy()  # type: ignore
         state._subpackages.extend(self._subpackages)
         state._plugins.extend(self._plugins)
