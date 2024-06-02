@@ -10,13 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Replace string
-        uses: frabert/replace-string-action@v1.1
-        id: version
-        with:
-          string: ${{ github.ref_name }}
-          pattern: "v?([0-9][.][0-9][.][0-9]).*"
-          replace-with: "$1"
       - uses: actions/setup-python@v2
         with:
           python-version: 3.12
