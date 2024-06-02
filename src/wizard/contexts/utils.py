@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-
-from typing import Callable, Optional, TypeVar
+from typing import Callable, TypeVar
 
 from antlr4 import ParserRuleContext
 from antlr4.error.Errors import InputMismatchException, ParseCancellationException
@@ -10,9 +8,7 @@ from ..errors import WizardError, WizardIndexError, WizardParseError, WizardType
 T = TypeVar("T")
 
 
-def wrap_exceptions(
-    fn: Callable[[], T], context: Optional[ParserRuleContext] = None
-) -> T:
+def wrap_exceptions(fn: Callable[[], T], context: ParserRuleContext | None = None) -> T:
     """
     Wrap the given call to `fn` in a proper try/except block to convert as many
     exceptions as possible to WizardError.
@@ -29,9 +25,10 @@ def wrap_exceptions(
         if context is None and isinstance(ex.args[0], InputMismatchException):
             context = ex.args[0].ctx
 
-        raise WizardParseError(context, ex)
+        raise WizardParseError(context, ex) from ex
+
     # Wrap "known" exceptions:
     except TypeError as te:
-        raise WizardTypeError(context, te)
+        raise WizardTypeError(context, te) from te
     except IndexError as ie:
-        raise WizardIndexError(context, *ie.args)
+        raise WizardIndexError(context, *ie.args) from ie

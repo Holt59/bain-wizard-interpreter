@@ -1,8 +1,6 @@
-# -*- encoding: utf-8 -*-
-
 from enum import Enum, auto
 from pathlib import Path
-from typing import Optional, TextIO, Tuple, Union
+from typing import Any, TextIO
 
 from antlr4 import InputStream
 
@@ -27,7 +25,6 @@ from .value import SubPackages
 
 
 class WizardScriptRunnerKeywordFactory(WizardRunnerKeywordVisitor):
-
     """
     Small extension of the runner keyword visitor to call requireVersions()
     on a manager.
@@ -48,9 +45,9 @@ class WizardScriptRunnerKeywordFactory(WizardRunnerKeywordVisitor):
         self,
         state: WizardRunnerState,
         game_version: str,
-        script_extender_version: Optional[str],
-        graphics_extender_version: Optional[str],
-        wrye_bash_version: Optional[str],
+        script_extender_version: str | None,
+        graphics_extender_version: str | None,
+        wrye_bash_version: str | None,
     ):
         self._manager.requiresVersions(
             game_version,
@@ -75,9 +72,11 @@ class WizardScriptRunnerStatus(Enum):
 
 
 class WizardScriptRunner(
-    WizardInterpreter, ManagerModInterface, ManagerUserInterface, SeverityContext
+    WizardInterpreter[WizardRunnerState],
+    ManagerModInterface,
+    ManagerUserInterface,
+    SeverityContext,
 ):
-
     """
     The WizardRunner is a high-level interface for the interpreter that
     uses callbacks to interact with the user.
@@ -88,18 +87,16 @@ class WizardScriptRunner(
 
     # Internal exceptions used to rewind / cancel at any point:
     class RewindFlow(Exception):
-
         """
         Exception used to rewind a script execution when calling rewind().
         """
 
-        context: WizardInterpreterContext
+        context: WizardInterpreterContext[WizardRunnerState, Any]
 
-        def __init__(self, context: WizardInterpreterContext):
+        def __init__(self, context: WizardInterpreterContext[WizardRunnerState, Any]):
             self.context = context
 
     class CancelFlow(Exception):
-
         """
         Exception used to cancel a script execution when calling abort().
         """
@@ -107,12 +104,13 @@ class WizardScriptRunner(
         ...
 
     # The current context:
-    _ctx: WizardInterpreterContext
+    _ctx: WizardInterpreterContext[WizardRunnerState, Any]
 
-    def __init__(self, subpackages: SubPackages = SubPackages()):
+    def __init__(self, subpackages: SubPackages | None = None):
         functions = make_basic_functions()
         functions.update(make_manager_functions(self, self))
 
+        subpackages = subpackages or SubPackages()
         factory = WizardInterpreterContextFactory(
             WizardRunnerExpressionVisitor(subpackages, functions, self),
             WizardScriptRunnerKeywordFactory(self, subpackages, self),
@@ -120,29 +118,31 @@ class WizardScriptRunner(
         )
 
         SeverityContext.__init__(self)
-        WizardInterpreter.__init__(self, factory)
 
-    def context(self) -> WizardInterpreterContext:
+        # TODO: find a way to remove type: ignore here
+        WizardInterpreter.__init__(self, factory)  # type: ignore
+
+    def context(self) -> WizardInterpreterContext[WizardRunnerState, Any]:
         return self._ctx
 
     def abort(self):
         raise WizardScriptRunner.CancelFlow()
 
-    def rewind(self, context: WizardInterpreterContext):
+    def rewind(self, context: WizardInterpreterContext[WizardRunnerState, Any]):
         raise WizardScriptRunner.RewindFlow(context)
 
     def make_top_level_context(  # type: ignore
         self,
-        script: Union[InputStream, Path, TextIO, str],
-        state: Optional[WizardRunnerState] = None,
+        script: InputStream | Path | TextIO | str,
+        state: WizardRunnerState | None = None,
     ) -> WizardTopLevelContext[WizardRunnerState]:
         if state is None:
             state = WizardRunnerState()
         return super().make_top_level_context(script, state)
 
     def run(
-        self, script: Union[InputStream, Path, TextIO, str]
-    ) -> Tuple[WizardScriptRunnerStatus, WizardRunnerState]:
+        self, script: InputStream | Path | TextIO | str
+    ) -> tuple[WizardScriptRunnerStatus, WizardRunnerState]:
         """
         Run the script from the given input stream.
 
@@ -157,7 +157,9 @@ class WizardScriptRunner(
         """
 
         # Run the interpret:
-        ctx: WizardInterpreterContext = self.make_top_level_context(script)
+        ctx: WizardInterpreterContext[WizardRunnerState, Any] = (
+            self.make_top_level_context(script)
+        )
 
         while True:
             self._ctx = ctx

@@ -1,8 +1,7 @@
-# -*- encoding: utf-8 -*-
-
 import json
 import sys
-from typing import Any, Callable, List, Mapping, MutableMapping, Optional, Union
+from collections.abc import Mapping, MutableMapping, Sequence
+from typing import Any, Callable
 
 from antlr4 import BailErrorStrategy, CommonTokenStream, InputStream
 
@@ -12,6 +11,7 @@ from wizard.contexts import WizardInterpreterContext, WizardTerminationContext
 from wizard.expr import SubPackage, Value, WizardExpressionVisitor
 from wizard.interpreter import WizardInterpreter
 from wizard.manager import SelectOption
+from wizard.runner import WizardRunnerState
 from wizard.scriptrunner import WizardScriptRunner
 from wizard.severity import SeverityContext
 from wizard.state import WizardInterpreterState
@@ -20,9 +20,9 @@ from wizard.value import SubPackages
 
 
 class MockSubPackage(SubPackage):
-    _files: List[str]
+    _files: list[str]
 
-    def __init__(self, name: str, files: List[str]):
+    def __init__(self, name: str, files: list[str]):
         super().__init__(name)
         self._files = files
 
@@ -39,15 +39,17 @@ class MockSeverityContext(SeverityContext):
 class ExpressionChecker(WizardExpressionVisitor):
     def __init__(
         self,
-        variables: Optional[MutableMapping[str, Value]] = None,
-        state: Optional[WizardInterpreterState] = None,
-        subpackages: SubPackages = SubPackages(),
+        variables: MutableMapping[str, Value[Any]] | None = None,
+        state: WizardInterpreterState | None = None,
+        subpackages: SubPackages | None = None,
         functions: Mapping[
-            str, Callable[[WizardInterpreterState, List[Value]], Value]
+            str, Callable[[WizardInterpreterState, Sequence[Value[Any]]], Value[Any]]
         ] = {},
-        severity: SeverityContext = MockSeverityContext(),
+        severity: SeverityContext | None = None,
     ):
-        super().__init__(subpackages, functions, severity)
+        super().__init__(
+            subpackages or SubPackages(), functions, severity or MockSeverityContext()
+        )
 
         assert variables is None or state is None
 
@@ -58,7 +60,7 @@ class ExpressionChecker(WizardExpressionVisitor):
         elif state is not None:
             self.state = state
 
-    def parse(self, expr: str) -> Value:
+    def parse(self, expr: str) -> Value[Any]:
         input_stream = InputStream(expr)
         lexer = wizardLexer(input_stream)
         stream = CommonTokenStream(lexer)
@@ -67,17 +69,21 @@ class ExpressionChecker(WizardExpressionVisitor):
         return self.visitExpr(parser.parseWizard().body().expr(0), self.state)
 
 
-class InterpreterChecker(WizardInterpreter):
+class InterpreterChecker(WizardInterpreter[WizardInterpreterState]):
     def __init__(
         self,
-        subpackages: SubPackages = SubPackages(),
-        severity: SeverityContext = MockSeverityContext(),
+        subpackages: SubPackages | None = None,
+        severity: SeverityContext | None = None,
     ):
-        super().__init__(make_basic_context_factory(subpackages, severity))
+        super().__init__(
+            make_basic_context_factory(
+                subpackages or SubPackages(), severity or MockSeverityContext()
+            )
+        )
 
     def run(self, script: str) -> WizardTerminationContext[WizardInterpreterState]:
-        ctx: WizardInterpreterContext = self.make_top_level_context(
-            script, WizardInterpreterState()
+        ctx: WizardInterpreterContext[WizardInterpreterState, Any] = (
+            self.make_top_level_context(script, WizardInterpreterState())
         )
 
         while not isinstance(ctx, WizardTerminationContext):
@@ -85,9 +91,17 @@ class InterpreterChecker(WizardInterpreter):
 
         return ctx
 
+    def register_function(
+        self,
+        name: str,
+        function: Callable[
+            [WizardInterpreterState, Sequence[Value[Any]]], Value[Any] | None
+        ],
+    ):
+        self._factory.evisitor._functions[name] = function  # type: ignore
+
 
 class RunnerChecker(WizardScriptRunner):
-
     """
     Provides the following functionalities:
 
@@ -107,15 +121,12 @@ class RunnerChecker(WizardScriptRunner):
     the method (e.g. selectPlugin) and a, b, c the repr() of the arguments.
     """
 
-    _next_opts: List[Union[str, List[str]]]
-    _returns: MutableMapping[str, Callable]
-    _calls: List[str]
+    _next_opts: list[str | list[str]]
+    _returns: MutableMapping[str, Callable[..., Any]]
+    _calls: list[str]
 
-    def __init__(
-        self,
-        subpackages: SubPackages = SubPackages(),
-    ):
-        super().__init__(subpackages)
+    def __init__(self, subpackages: SubPackages | None = None):
+        super().__init__(subpackages or SubPackages())
         self.clear()
 
     def clear(self):
@@ -124,15 +135,14 @@ class RunnerChecker(WizardScriptRunner):
         self._calls = []
 
     @property
-    def calls(self) -> List[str]:
+    def calls(self) -> list[str]:
         return self._calls
 
-    def __getattribute__(self, item):
-        fn = object.__getattribute__(self, item)
+    def __getattribute__(self, item: Any) -> Any:
+        fn: Callable[..., Any] = object.__getattribute__(self, item)
+        if hasattr(fn, "__isabstractmethod__") and fn.__isabstractmethod__:  # type: ignore
 
-        if hasattr(fn, "__isabstractmethod__") and fn.__isabstractmethod__:
-
-            def fn(*args):
+            def _fn(*args: Any) -> Any:
                 # Note using str() otherwise we would loose quote around strings, and
                 # not use repr() because the quote (" or ') is inconsistent. JSON is
                 # consistent:
@@ -143,7 +153,18 @@ class RunnerChecker(WizardScriptRunner):
                 if item in self._returns:
                     return self._returns[item](*args)
 
+            fn = _fn
+
         return fn
+
+    def register_function(
+        self,
+        name: str,
+        function: Callable[
+            [WizardRunnerState, Sequence[Value[Any]]], Value[Any] | None
+        ],
+    ):
+        self._factory.evisitor._functions[name] = function  # type: ignore
 
     def setReturnValue(self, fn: str, value: Any):
         """
@@ -157,7 +178,7 @@ class RunnerChecker(WizardScriptRunner):
         """
         self._returns[fn] = lambda *args: value
 
-    def setReturnFunction(self, fn: str, value: Callable):
+    def setReturnFunction(self, fn: str, value: Callable[..., Any]):
         """
         Sets a function to use in place of the specified one. This replace a previous
         call to setReturnValue.
@@ -168,7 +189,7 @@ class RunnerChecker(WizardScriptRunner):
         """
         self._returns[fn] = value
 
-    def onSelect(self, options: Union[str, List[str]]):
+    def onSelect(self, options: str | Sequence[str]):
         """
         Specify the option(s) to return on the next selectXXX call.
 
@@ -178,9 +199,9 @@ class RunnerChecker(WizardScriptRunner):
         if isinstance(options, str):
             self._next_opts = [options]
         else:
-            self._next_opts = [options]
+            self._next_opts = [list(options)]
 
-    def onSelects(self, options: List[Union[str, List[str]]]):
+    def onSelects(self, options: list[str | list[str]]):
         """
         Specify the option(s) to return on the next selectXXX calls.
 
@@ -190,7 +211,7 @@ class RunnerChecker(WizardScriptRunner):
         self._next_opts = options
 
     def selectOne(
-        self, description: str, options: List[SelectOption], default: SelectOption
+        self, description: str, options: Sequence[SelectOption], default: SelectOption
     ) -> SelectOption:
         if not self._next_opts:
             return default
@@ -212,11 +233,11 @@ class RunnerChecker(WizardScriptRunner):
     def selectMany(
         self,
         description: str,
-        options: List[SelectOption],
-        default: List[SelectOption] = [],
-    ) -> List[SelectOption]:
+        options: Sequence[SelectOption],
+        default: Sequence[SelectOption] = [],
+    ) -> list[SelectOption]:
         if not self._next_opts:
-            return default
+            return list(default)
 
         if not isinstance(self._next_opts[0], list):
             raise ValueError(

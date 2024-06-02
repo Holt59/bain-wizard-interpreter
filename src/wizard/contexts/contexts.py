@@ -1,23 +1,13 @@
-# -*- encoding: utf-8 -*-
-
 """
 This file contains "context" which are used to rewind the
 interpreter.
 """
 
+from __future__ import annotations
+
 from abc import abstractmethod
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Generic,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Any, Callable, Generic, Self, TypeVar
 
 from antlr4 import ParserRuleContext
 
@@ -37,7 +27,6 @@ RuleContext = TypeVar("RuleContext", bound=ParserRuleContext)
 
 
 class WizardInterpreterContext(Generic[ContextState, RuleContext]):
-
     """
     The base context class. The context are represented by a tree, where each
     child has access to his parent. Unlike ANTLR4 context, not all rules or
@@ -45,23 +34,23 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
     """
 
     # The interpreter:
-    _factory: "WizardInterpreterContextFactory"
+    _factory: WizardInterpreterContextFactory[ContextState]
 
     # The ANTLR4 context:
     _context: RuleContext
 
     # The parent context:
-    _parent: "WizardInterpreterContext"
+    _parent: WizardInterpreterContext[ContextState, Any]
 
     # The state of this context:
     _state: ContextState
 
     def __init__(
         self,
-        factory: "WizardInterpreterContextFactory",
+        factory: WizardInterpreterContextFactory[ContextState],
         context: RuleContext,
-        parent: "WizardInterpreterContext[ContextState, Any]",
-        state: Optional[ContextState] = None,
+        parent: WizardInterpreterContext[ContextState, Any],
+        state: ContextState | None = None,
     ):
         """
         Args:
@@ -80,8 +69,15 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         else:
             self._state = state
 
+    def is_top_level(self) -> bool:
+        """
+        Returns:
+            True if this context is top-level (no parent), False otherwise.
+        """
+        return self is self.parent
+
     @property
-    def factory(self) -> "WizardInterpreterContextFactory":
+    def factory(self) -> WizardInterpreterContextFactory[ContextState]:
         """
         Returns:
             The factory associated with this context.
@@ -89,7 +85,7 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         return self._factory
 
     @property
-    def parent(self) -> "WizardInterpreterContext":
+    def parent(self) -> WizardInterpreterContext[ContextState, Any]:
         """
         Returns:
             The parent context.
@@ -113,7 +109,7 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         return self._state
 
     @abstractmethod
-    def exec_(self) -> "WizardInterpreterContext":
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         """
         Execute the next 'step' of this context and returns the next context
         to execute. When done, should return the parent context.
@@ -123,7 +119,7 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         """
         pass
 
-    def exec(self) -> "WizardInterpreterContext":
+    def exec(self) -> WizardInterpreterContext[ContextState, Any]:
         """
         Execute the next 'step' of this context and returns the next context
         to execute. When done, should return the parent context.
@@ -133,14 +129,13 @@ class WizardInterpreterContext(Generic[ContextState, RuleContext]):
         return wrap_exceptions(self.exec_, self.context)
 
 
-class WizardBreakableContext:
-
+class WizardBreakableContext(Generic[ContextState]):
     """
     Context that can be broken by a 'Break' expression.
     """
 
     @abstractmethod
-    def break_(self) -> WizardInterpreterContext:
+    def break_(self) -> WizardInterpreterContext[ContextState, Any]:
         """
         Called when a 'Break' instruction is encountered, should usually return
         the parent.
@@ -151,14 +146,13 @@ class WizardBreakableContext:
         pass
 
 
-class WizardContinuableContext:
-
+class WizardContinuableContext(Generic[ContextState]):
     """
     Context that can be broken by a 'Continue' expression.
     """
 
     @abstractmethod
-    def continue_(self) -> WizardInterpreterContext:
+    def continue_(self) -> WizardInterpreterContext[ContextState, Any]:
         """
         Called when a 'Continue' instruction is encountered, should usually return
         the context itself.
@@ -172,14 +166,13 @@ class WizardContinuableContext:
 class WizardTerminationContext(
     WizardInterpreterContext[ContextState, wizardParser.ParseWizardContext]
 ):
-
     """
     Special context returned at the end of the execution. You can check what caused
     the termination using the `is_cancel`, `is_return` and `is_complete` method. If you
     want to check for "normal" completion, you can check for `not is_return()`.
     """
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         raise NotImplementedError("exec() should not be called on termination context.")
 
     def is_cancel(self) -> bool:
@@ -189,7 +182,7 @@ class WizardTerminationContext(
         """
         return isinstance(self.parent, WizardCancelContext)
 
-    def message(self) -> Optional[str]:
+    def message(self) -> str | None:
         """
         Returns:
             The cancel message, if any. If `is_cancel()` is False, this returns None.
@@ -216,17 +209,16 @@ class WizardTerminationContext(
 class WizardTopLevelContext(
     WizardInterpreterContext[ContextState, wizardParser.ParseWizardContext]
 ):
-
     """
     Special context to be the entry context point.
     """
 
     def __init__(
         self,
-        factory: "WizardInterpreterContextFactory",
+        factory: WizardInterpreterContextFactory[ContextState],
         context: wizardParser.ParseWizardContext,
-        state: ContextState,
-        parent: Optional[WizardInterpreterContext] = None,
+        parent: WizardInterpreterContext[ContextState, Any] | None,
+        state: ContextState | None = None,
     ):
         """
         Args:
@@ -238,25 +230,30 @@ class WizardTopLevelContext(
         """
         super().__init__(factory, context, self if parent is None else parent, state)
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardBodyContext[ContextState]:
         # We forward the parent, which is either self (no parent) or the parent body
         # for Exec().
         return self._factory.make_body_context(self.context.body(), self.parent)
 
 
 class WizardCancelContext(
-    WizardInterpreterContext[ContextState, wizardParser.CancelContext]
+    WizardInterpreterContext[ContextState, wizardParser.CancelStmtContext]
 ):
-
     """
     Special context that is returned when a 'Cancel' instruction is encountered.
     """
 
     # The cancel message:
-    _message: Optional[str]
+    _message: str | None
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        factory: WizardInterpreterContextFactory[ContextState],
+        context: wizardParser.CancelStmtContext,
+        parent: WizardInterpreterContext[ContextState, Any],
+        state: ContextState | None = None,
+    ):
+        super().__init__(factory, context, parent, state)
 
         self._message = None
         if self.context.expr():
@@ -264,33 +261,31 @@ class WizardCancelContext(
                 self.context.expr(), self.state, str
             ).value
 
-    def message(self) -> Optional[str]:
+    def message(self) -> str | None:
         """
         Returns:
             The cancel message, if any.
         """
         return self._message
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardTerminationContext[ContextState]:
         return self._factory.make_termination_context(self)
 
 
 class WizardReturnContext(
     WizardInterpreterContext[ContextState, wizardParser.ReturnContext]
 ):
-
     """
     Special context that is returned when a 'Return' instruction is encountered.
     """
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardTerminationContext[ContextState]:
         return self._factory.make_termination_context(self)
 
 
 class WizardBodyContext(
     WizardInterpreterContext[ContextState, wizardParser.BodyContext]
 ):
-
     """
     Body context.
     """
@@ -298,21 +293,28 @@ class WizardBodyContext(
     # Index of the next child to process.
     _ichild: int
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        factory: WizardInterpreterContextFactory[ContextState],
+        context: wizardParser.BodyContext,
+        parent: WizardInterpreterContext[ContextState, Any],
+        state: ContextState | None = None,
+    ):
+        super().__init__(factory, context, parent, state)
+
         self._ichild = 0
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         # Empty block or no more children:
         if not self._context.children or self._ichild == len(self._context.children):
             if isinstance(self._parent, WizardTopLevelContext):
                 return self._factory.make_termination_context(self)
-            return self._factory._copy_parent(self)
+            return self._factory.copy_parent(self)
 
         child = self._context.children[self._ichild]
 
         # Copy the body and increment the child counter:
-        body = self._factory._copy_context(self)
+        body = self._factory.copy_context(self)
         body._ichild += 1
 
         # Expression - Standard context:
@@ -342,8 +344,10 @@ class WizardBodyContext(
         raise WizardParseError(child, f"Unknown context in body: {child}.")
 
     def _make_control_flow_context(
-        self, ctx: wizardParser.ControlFlowStmtContext, parent: "WizardBodyContext"
-    ) -> WizardInterpreterContext:
+        self,
+        ctx: wizardParser.ControlFlowStmtContext,
+        parent: WizardBodyContext[ContextState],
+    ) -> WizardInterpreterContext[ContextState, Any]:
         if isinstance(ctx, wizardParser.ForContext):
             return self._factory.make_for_loop_context(ctx.forStmt(), parent)
         elif isinstance(ctx, wizardParser.WhileContext):
@@ -367,52 +371,54 @@ class WizardBodyContext(
 class WizardBreakContext(
     WizardInterpreterContext[ContextState, wizardParser.BreakContext]
 ):
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         # Find the first loop or case:
-        loop_or_case: Optional[WizardInterpreterContext] = self
+        loop_or_case: WizardInterpreterContext[ContextState, Any] = self
 
-        while loop_or_case is not None and not isinstance(
+        while not loop_or_case.is_top_level() and not isinstance(
             loop_or_case, WizardBreakableContext
         ):
             loop_or_case = loop_or_case.parent
 
-        if loop_or_case is None:
+        if not isinstance(loop_or_case, WizardBreakableContext):
             raise WizardParseError(
                 self.context, "Invalid 'Break' statement encountered."
             )
 
-        return self._factory._copy_context(loop_or_case.break_(), self.state)
+        context: WizardInterpreterContext[ContextState, Any] = loop_or_case.break_()
+        return self._factory.copy_context(context, self.state)
 
 
 class WizardContinueContext(
     WizardInterpreterContext[ContextState, wizardParser.ContinueContext]
 ):
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         # Find the first parent loop:
-        loop: Optional[WizardInterpreterContext] = self
+        loop: WizardInterpreterContext[ContextState, Any] = self
 
-        while loop is not None and not isinstance(loop, WizardContinuableContext):
+        while loop.is_top_level() and not isinstance(loop, WizardContinuableContext):
             loop = loop.parent
 
-        if loop is None:
+        if not isinstance(loop, WizardContinuableContext):
             raise WizardParseError(
                 self.context, "Invalid 'Continue' statement encountered."
             )
 
-        return self._factory._copy_context(loop.continue_(), self.state)
+        context: WizardInterpreterContext[ContextState, Any] = loop.continue_()
+        return self._factory.copy_context(context, self.state)
 
 
 class WizardExecContext(
     WizardInterpreterContext[ContextState, wizardParser.FunctionCallContext]
 ):
-    def exec_(self) -> WizardInterpreterContext:
-        # Import here otherwise we have circular imports:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
+        # import here otherwise we have circular imports
         from ..utils import make_parse_wizard_context
 
         state = self.state.copy()
 
         # Parse the expression:
-        args: List[wizardParser.ExprContext] = list(self.context.argList().expr())
+        args = list(self.context.argList().expr())
         if len(args) != 1:
             raise WizardTypeError(
                 self.context, f"Exec() expect exactly one argument, found {len(args)}."
@@ -423,17 +429,17 @@ class WizardExecContext(
             context = make_parse_wizard_context(script)
         except WizardError as we:
             # If an error occurs, the WizardError does not have a context, set it:
-            we._ctx = self.context
+            we._ctx = self.context  # type: ignore
             raise we
 
-        return WizardTopLevelContext(self._factory, context, state, self.parent)
+        return WizardTopLevelContext(self._factory, context, self.parent, state)
 
 
 class WizardIfContext(
     WizardInterpreterContext[ContextState, wizardParser.IfStmtContext]
 ):
-    def exec_(self) -> WizardInterpreterContext:
-        parent = self._factory._copy_parent(self)
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
+        parent = self._factory.copy_parent(self)
 
         if self._factory.evisitor.visitExpr(self.context.expr(), parent.state):
             return self._factory.make_body_context(self.context.body(), parent)
@@ -453,21 +459,26 @@ class WizardIfContext(
 
 class WizardForLoopContext(
     WizardInterpreterContext[ContextState, wizardParser.ForStmtContext],
-    WizardBreakableContext,
-    WizardContinuableContext,
+    WizardBreakableContext[ContextState],
+    WizardContinuableContext[ContextState],
 ):
-
     """
     For-loop context.
     """
 
     # Name of the loop variable, sequence of values and current index:
     _name: str
-    _values: Sequence[Value]
+    _values: Sequence[Value[Any]]
     _index: int
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        factory: WizardInterpreterContextFactory[ContextState],
+        context: wizardParser.ForStmtContext,
+        parent: WizardInterpreterContext[ContextState, Any],
+        state: ContextState | None = None,
+    ):
+        super().__init__(factory, context, parent, state)
 
         if self.context.forInHeader():
             self._values = self._for_in_header(self.context.forInHeader())
@@ -477,26 +488,28 @@ class WizardForLoopContext(
         self._name = self.context.Identifier().getText()
         self._index = 0
 
-    def break_(self) -> WizardInterpreterContext:
-        return self._factory._copy_parent(self)
+    def break_(self) -> WizardInterpreterContext[ContextState, Any]:
+        return self._factory.copy_parent(self)
 
-    def continue_(self) -> WizardInterpreterContext:
+    def continue_(self) -> WizardInterpreterContext[ContextState, Any]:
         return self
 
     def _for_range_header(
         self, ctx: wizardParser.ForRangeHeaderContext
-    ) -> Sequence[Value]:
+    ) -> Sequence[Value[Any]]:
         sta: Value[int] = self._factory.evisitor.visitExpr(ctx.expr(0), self.state, int)
         end: Value[int] = self._factory.evisitor.visitExpr(ctx.expr(1), self.state, int)
 
-        if ctx.expr(2):
-            by = self._factory.evisitor.visitExpr(ctx.expr(2), self.state, int)
+        if e2 := ctx.expr(2):
+            by = self._factory.evisitor.visitExpr(e2, self.state, int)
         else:
             by = Value(1)
 
         return [Value(i) for i in range(sta.value, end.value + 1, by.value)]
 
-    def _for_in_header(self, ctx: wizardParser.ForInHeaderContext) -> Sequence[Value]:
+    def _for_in_header(
+        self, ctx: wizardParser.ForInHeaderContext
+    ) -> Sequence[Value[Any]]:
         value = self._factory.evisitor.visitExpr(ctx.expr(), self.state)
 
         if isinstance(value.value, SubPackage):
@@ -511,19 +524,19 @@ class WizardForLoopContext(
                 ctx, f"Cannot iterable over value of type {value.type}."
             )
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         # End of the loop:
         if self._index == len(self._values):
-            return self._factory._copy_parent(self)
+            return self._factory.copy_parent(self)
 
         # Retrieve the next value and set it:
         value = self._values[self._index]
 
         # Copy the context:
-        loop = self._factory._copy_context(self)
+        loop = self._factory.copy_context(self)
         loop._index += 1
 
-        loop.state._variables[self._name] = value
+        loop.state.set(self._name, value)
 
         # Return a body context:
         return self._factory.make_body_context(self.context.body(), loop)
@@ -531,24 +544,24 @@ class WizardForLoopContext(
 
 class WizardWhileLoopContext(
     WizardInterpreterContext[ContextState, wizardParser.WhileStmtContext],
-    WizardBreakableContext,
-    WizardContinuableContext,
+    WizardBreakableContext[ContextState],
+    WizardContinuableContext[ContextState],
 ):
-    def break_(self) -> WizardInterpreterContext:
-        return self._factory._copy_parent(self)
+    def break_(self) -> WizardInterpreterContext[ContextState, Any]:
+        return self._factory.copy_parent(self)
 
-    def continue_(self) -> WizardInterpreterContext:
+    def continue_(self) -> WizardInterpreterContext[ContextState, Any]:
         return self
 
-    def exec_(self) -> WizardInterpreterContext:
-        loop = self._factory._copy_context(self)
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
+        loop = self._factory.copy_context(self)
 
         # If the expression evaluates to True, we return a body context:
         if self._factory.evisitor.visitExpr(self.context.expr(), loop.state):
             return self._factory.make_body_context(self.context.body(), loop)
 
         # Otherwise we return the parent (after updating the variables):
-        return self._factory._copy_parent(loop)
+        return self._factory.copy_parent(loop)
 
 
 class WizardAssignmentContext(
@@ -557,18 +570,18 @@ class WizardAssignmentContext(
         wizardParser.AssignmentContext,
     ]
 ):
-    def exec_(self) -> WizardInterpreterContext:
-        parent = self._factory._copy_parent(self)
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
+        parent = self._factory.copy_parent(self)
 
         # Retrieve the name:
         name: str = self.context.Identifier().getText()
 
         # Evaluate the expression:
-        value: Value = self._factory.evisitor.visitExpr(
+        value: Value[Any] = self._factory.evisitor.visitExpr(
             self.context.expr(), parent.state
         )
 
-        parent.state._variables[name] = value
+        parent.state.set(name, value)
 
         return parent
 
@@ -579,21 +592,21 @@ class WizardCompoundAssignmentContext(
         wizardParser.CompoundAssignmentContext,
     ]
 ):
-    def exec_(self) -> WizardInterpreterContext:
-        parent = self._factory._copy_parent(self)
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
+        parent = self._factory.copy_parent(self)
 
         # Retrieve the name:
         name: str = self.context.Identifier().getText()
 
         # Evaluate the expression:
-        value: Value = self._factory.evisitor.visitExpr(
+        value: Value[Any] = self._factory.evisitor.visitExpr(
             self.context.expr(), parent.state
         )
 
-        if name not in parent.state._variables:
-            raise WizardNameError(self.context.Identifier(), name)
+        if name not in parent.state.variables:
+            raise WizardNameError(self.context, name)
 
-        op: Callable[[Value, Value], Value]
+        op: Callable[[Value[Any], Value[Any]], Value[Any]]
         if self.context.CompoundExp():
             op = Value.__pow__
         elif self.context.CompoundMul():
@@ -612,25 +625,25 @@ class WizardCompoundAssignmentContext(
             )
 
         try:
-            value = op(parent.state._variables[name], value)
+            value = op(parent.state.variables[name], value)
         except TypeError as te:
-            raise WizardTypeError(self.context, str(te))
+            raise WizardTypeError(self.context, str(te)) from te
 
-        parent.state._variables[name] = value
+        parent.state.set(name, value)
 
         return parent
 
 
 def parse_select_options(
-    factory: "WizardInterpreterContextFactory",
-    context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
+    factory: WizardInterpreterContextFactory[ContextState],
+    context: wizardParser.SelectOneContext | wizardParser.SelectManyContext,
     state: ContextState,
-) -> Tuple[str, List[SelectOption], List[SelectOption]]:
+) -> tuple[str, list[SelectOption], list[SelectOption]]:
     # Parse the description and option:
     description = factory.evisitor.visitExpr(context.expr(), state, str).value
 
-    options: List[SelectOption] = []
-    defaults: List[SelectOption] = []
+    options: list[SelectOption] = []
+    defaults: list[SelectOption] = []
     for opt in context.optionTuple():
         a, b, c = (
             factory.evisitor.visitExpr(opt.expr(0), state, str),
@@ -659,24 +672,33 @@ def parse_select_options(
     return description, options, defaults
 
 
-class WizardSelectContext(WizardInterpreterContext[ContextState, RuleContext]):
+_SelectOneOrManyRuleContext = TypeVar(
+    "_SelectOneOrManyRuleContext",
+    wizardParser.SelectOneContext,
+    wizardParser.SelectManyContext,
+)
+
+
+class WizardSelectContext(
+    WizardInterpreterContext[ContextState, _SelectOneOrManyRuleContext]
+):
     # The description:
     _description: str
 
     # The list of options:
-    _options: List[SelectOption]
+    _options: list[SelectOption]
 
     # The default option(s):
-    _default: List[SelectOption]
+    _default: list[SelectOption]
 
     # The selected option(s):
-    _selected: List[SelectOption]
+    _selected: list[SelectOption]
 
     def __init__(
         self,
-        factory: "WizardInterpreterContextFactory",
-        context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
-        parent: WizardInterpreterContext,
+        factory: WizardInterpreterContextFactory[ContextState],
+        context: _SelectOneOrManyRuleContext,
+        parent: WizardInterpreterContext[ContextState, Any],
     ):
         super().__init__(factory, context, parent)
 
@@ -695,14 +717,14 @@ class WizardSelectContext(WizardInterpreterContext[ContextState, RuleContext]):
         return self._description
 
     @property
-    def options(self) -> List[SelectOption]:
+    def options(self) -> Sequence[SelectOption]:
         """
         Returns:
             The available options for this select context.
         """
         return self._options
 
-    def _select(self, options: List[SelectOption]) -> "WizardSelectContext":
+    def _select(self, options: Sequence[SelectOption]) -> Self:
         """
         Select the given options and return the object.
 
@@ -712,11 +734,13 @@ class WizardSelectContext(WizardInterpreterContext[ContextState, RuleContext]):
         Returns:
             A copy of the current object with the given options selected.
         """
-        copy = self._factory._copy_context(self)
-        copy._selected = options
+        copy = self._factory.copy_context(self)
+        copy._selected = list(options)
         return copy
 
-    def exec_(self) -> "WizardSelectCasesContext":
+    def exec_(
+        self,
+    ) -> WizardSelectCasesContext[ContextState, _SelectOneOrManyRuleContext]:
         # This completely delegates to the other context:
         return self._factory.make_select_cases_context(
             self._selected, self.context, self.parent
@@ -728,9 +752,9 @@ class WizardSelectOneContext(
 ):
     def __init__(
         self,
-        factory: "WizardInterpreterContextFactory",
+        factory: WizardInterpreterContextFactory[ContextState],
         context: wizardParser.SelectOneContext,
-        parent: WizardInterpreterContext,
+        parent: WizardInterpreterContext[ContextState, Any],
     ):
         super().__init__(factory, context, parent)
 
@@ -758,7 +782,7 @@ class WizardSelectOneContext(
         """
         return self._defaults[0]
 
-    def select(self, option: SelectOption) -> "WizardSelectOneContext":
+    def select(self, option: SelectOption) -> WizardSelectOneContext[ContextState]:
         """
         Select the given option and return the object.
 
@@ -768,17 +792,17 @@ class WizardSelectOneContext(
         Returns:
             A copy of the current object with the given option selected.
         """
-        return self._select([option])  # type: ignore
+        return self._select([option])
 
 
 class WizardSelectManyContext(
-    WizardSelectContext[ContextState, wizardParser.SelectOneContext]
+    WizardSelectContext[ContextState, wizardParser.SelectManyContext]
 ):
     def __init__(
         self,
-        factory: "WizardInterpreterContextFactory",
+        factory: WizardInterpreterContextFactory[ContextState],
         context: wizardParser.SelectManyContext,
-        parent: WizardInterpreterContext,
+        parent: WizardInterpreterContext[ContextState, Any],
     ):
         super().__init__(factory, context, parent)
 
@@ -786,14 +810,16 @@ class WizardSelectManyContext(
         self._selected = self._defaults
 
     @property
-    def defaults(self) -> List[SelectOption]:
+    def defaults(self) -> Sequence[SelectOption]:
         """
         Returns:
             The default options for this select context.
         """
         return self._defaults
 
-    def select(self, options: List[SelectOption]) -> "WizardSelectManyContext":
+    def select(
+        self, options: Sequence[SelectOption]
+    ) -> WizardSelectManyContext[ContextState]:
         """
         Select the given list of options and return the object.
 
@@ -803,31 +829,31 @@ class WizardSelectManyContext(
         Returns:
             A copy of the current object with the given options selected.
         """
-        return self._select(options)  # type: ignore
+        return self._select(options)
 
 
 class WizardSelectCasesContext(
-    WizardInterpreterContext[ContextState, wizardParser.SelectStmtContext],
-    WizardBreakableContext,
+    WizardInterpreterContext[ContextState, _SelectOneOrManyRuleContext],
+    WizardBreakableContext[ContextState],
 ):
     # The list of selected options:
-    _options: List[SelectOption]
+    _options: list[SelectOption]
 
     # The list of cases, the current index, a boolean indicating if
     # the value has been found, and a boolean for fallthrough:
     _ismany: bool
-    _cases: List[wizardParser.CaseStmtContext]
-    _default: Optional[wizardParser.DefaultStmtContext]
+    _cases: list[wizardParser.CaseStmtContext]
+    _default: wizardParser.DefaultStmtContext | None
     _index: int
     _found: bool
     _fallthrough: bool
 
     def __init__(
         self,
-        factory: "WizardInterpreterContextFactory",
-        options: List[SelectOption],
-        context: Union[wizardParser.SelectOneContext, wizardParser.SelectManyContext],
-        parent: WizardInterpreterContext,
+        factory: WizardInterpreterContextFactory[ContextState],
+        options: Sequence[SelectOption],
+        context: _SelectOneOrManyRuleContext,
+        parent: WizardInterpreterContext[ContextState, Any],
     ):
         """
         Args:
@@ -838,7 +864,7 @@ class WizardSelectCasesContext(
         """
         super().__init__(factory, context, parent)
 
-        self._options = options
+        self._options = list(options)
 
         if isinstance(self.context, wizardParser.SelectOneContext):
             self._ismany = False
@@ -852,21 +878,21 @@ class WizardSelectCasesContext(
         self._found = False
         self._fallthrough = False
 
-    def break_(self) -> WizardInterpreterContext:
+    def break_(self) -> WizardInterpreterContext[ContextState, Any]:
         # Disable fallthrough:
-        copy = self._factory._copy_context(self)
+        copy = self._factory.copy_context(self)
         copy._fallthrough = False
 
         # We return the context itself to keep evaluating cases:
         return copy
 
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardInterpreterContext[ContextState, Any]:
         # Element found in a selectOne, returns to the parent:
         if self._found and not self._ismany and not self._fallthrough:
-            return self._factory._copy_parent(self)
+            return self._factory.copy_parent(self)
 
         # Copy the current context:
-        snext = self._factory._copy_context(self)
+        snext = self._factory.copy_context(self)
 
         # Cases remaining:
         if self._index < len(self._cases):
@@ -901,15 +927,14 @@ class WizardSelectCasesContext(
 
         # No need to copy from snext since if we reach this return statement, nothing
         # has been updated in snext.
-        return self._factory._copy_parent(self)
+        return self._factory.copy_parent(self)
 
 
 class WizardCaseContext(
     WizardInterpreterContext[
-        ContextState,
-        Union[wizardParser.CaseStmtContext, wizardParser.DefaultStmtContext],
+        ContextState, wizardParser.CaseStmtContext | wizardParser.DefaultStmtContext
     ]
 ):
-    def exec_(self) -> WizardInterpreterContext:
+    def exec_(self) -> WizardBodyContext[ContextState]:
         # It's the select context job to check if this should be executed:
         return self._factory.make_body_context(self.context.body(), self.parent)

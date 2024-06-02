@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-
 """
 This files contain tests for scripts in tests/data. The results of the test
 where obtain with Wrye-Bash (version 307).
@@ -10,7 +8,6 @@ Each folder under tests/data should contain:
 """
 
 from pathlib import Path
-from typing import List
 
 import pytest
 
@@ -29,7 +26,7 @@ def read_subpackages(files_txt: Path) -> SubPackages:
     # This is dirty, but I would have to write a proper checker...
     spnames = set(Path(f).parts[0] for f in files if f.split(" ")[0].isdigit())
 
-    sp: List[MockSubPackage] = []
+    sp: list[MockSubPackage] = []
     for spname in sorted(spnames):
         sp.append(
             MockSubPackage(spname, [f for f in files if Path(f).parts[:1] == (spname,)])
@@ -54,7 +51,8 @@ def test_better_cities():
 
     # I had these installed, so I use them to check:
     runner.setReturnFunction(
-        "dataFileExists", lambda s: s in ["Knights.esp", "All Natural.esp"]
+        "dataFileExists",
+        lambda s: s in ["Knights.esp", "All Natural.esp"],  # pyright: ignore[reportUnknownArgumentType, reportUnknownLambdaType]
     )
 
     # First run:
@@ -115,7 +113,7 @@ def test_better_cities():
         ]
     )
 
-    status, result = runner.run(script)
+    _, result = runner.run(script)
 
     # The call is a JSON dump, hence the "null" for the None argument.
     assert 'requiresVersions("1.2.0.416", "0.0.18.6", null, "294")' in runner.calls
@@ -232,7 +230,7 @@ def test_book_covers():
 
         for opt, sub in options:
             runner.onSelect(opt)
-            status, result = runner.run(script)
+            _, result = runner.run(script)
             assert result.notes == []
             assert result.subpackages == [sub]
             assert result.plugins == ["Book Covers Skyrim.esp"]
@@ -251,25 +249,25 @@ def test_book_covers():
     runner = RunnerChecker(subpackages)
 
     runner.onSelects([[]])
-    status, result = runner.run(script)
+    _, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == []
     assert result.plugins == []
 
     runner.onSelects([["World"]])
-    status, result = runner.run(script)
+    _, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == ["01 BCS Optional Paper World"]
     assert result.plugins == []
 
     runner.onSelects([["Inventory"]])
-    status, result = runner.run(script)
+    _, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == ["01 BCS Optional Paper Inventory"]
     assert result.plugins == []
 
     runner.onSelects([["World", "Inventory"]])
-    status, result = runner.run(script)
+    _, result = runner.run(script)
     assert result.notes == []
     assert result.subpackages == [
         "01 BCS Optional Paper Inventory",
@@ -294,7 +292,7 @@ def test_farmhouse_chimneys():
 
     # Quick test:
     context = runner.make_top_level_context(script)
-    context: WizardSelectContext = runner.exec_until(context, (WizardSelectContext,))
+    context = runner.exec_until(context, (WizardSelectContext,))
     assert isinstance(context, WizardSelectContext)
     assert len(context.options) == 3
 
@@ -350,7 +348,7 @@ Otherwise, right-click the installer again and choose Install""",
         ]
     )
 
-    status, result = runner.run(script)
+    _, result = runner.run(script)
 
     assert result.notes == notes
     assert result.subpackages == packages
@@ -379,13 +377,13 @@ def test_demo_wizard():
 
     # Should not raise anything:
     runner.onSelects(["No", ["Cancel"]])
-    status, result = runner.run(script)
+    status, _ = runner.run(script)
     assert status == WizardScriptRunnerStatus.CANCEL
 
     runner.onSelects(["No", ["Return"]])
-    status, result = runner.run(script)
+    status, _ = runner.run(script)
     assert status == WizardScriptRunnerStatus.RETURN
 
     runner.onSelects(["No", ["RequireVersions"]])
-    status, result = runner.run(script)
+    status, _ = runner.run(script)
     assert status == WizardScriptRunnerStatus.COMPLETE

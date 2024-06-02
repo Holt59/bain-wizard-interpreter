@@ -1,6 +1,5 @@
-# -*- encoding: utf-8 -*-
-
-from typing import Any, List, Optional
+from collections.abc import Sequence
+from typing import Any
 
 
 class WizardINISetting:
@@ -40,7 +39,7 @@ class WizardINISetting:
 
 class WizardINISettingEdit(WizardINISetting):
     _value: Any
-    _comment: Optional[str]
+    _comment: str | None
 
     def __init__(
         self,
@@ -48,7 +47,7 @@ class WizardINISettingEdit(WizardINISetting):
         section: str,
         setting: str,
         value: Any,
-        comment: Optional[str] = None,
+        comment: str | None = None,
     ):
         super().__init__(filename, section, setting)
         self._value = value
@@ -63,7 +62,7 @@ class WizardINISettingEdit(WizardINISetting):
         return self._value
 
     @property
-    def comment(self) -> Optional[str]:
+    def comment(self) -> str | None:
         """
         Returns:
             The comment for the setting.
@@ -72,15 +71,15 @@ class WizardINISettingEdit(WizardINISetting):
 
 
 class WizardINITweaks:
-    _disabled: List[WizardINISetting]
-    _modified: List[WizardINISettingEdit]
+    _disabled: list[WizardINISetting]
+    _modified: list[WizardINISettingEdit]
 
     def __init__(self):
         self._disabled = []
         self._modified = []
 
     @property
-    def disabled(self) -> List[WizardINISetting]:
+    def disabled(self) -> Sequence[WizardINISetting]:
         """
         Returns:
             The list of INI settings that have been disabled by the script.
@@ -88,7 +87,7 @@ class WizardINITweaks:
         return self._disabled
 
     @property
-    def modified(self) -> List[WizardINISettingEdit]:
+    def modified(self) -> Sequence[WizardINISettingEdit]:
         """
         Returns:
             The list of settings that have been created or modified by the script. May
@@ -96,7 +95,7 @@ class WizardINITweaks:
         """
         return self._modified
 
-    def files(self) -> List[str]:
+    def files(self) -> Sequence[str]:
         """
         Returns:
             The list of all files containing INI tweaks (either modified or disabled).
@@ -107,7 +106,7 @@ class WizardINITweaks:
             )
         )
 
-    def tweaks(self, file: str) -> List[WizardINISetting]:
+    def tweaks(self, file: str) -> Sequence[WizardINISetting]:
         """
         Args:
             file: The file to retrieve the tweaks for.
@@ -116,7 +115,7 @@ class WizardINITweaks:
             The union of modified and disabled tweaks for the given file.
         """
         file = file.lower()
-        tweaks: List[WizardINISetting] = [
+        tweaks: list[WizardINISetting] = [
             m for m in self.modified if m.filename.lower() == file
         ]
         tweaks.extend(m for m in self.disabled if m.filename.lower() == file)

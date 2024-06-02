@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-
 """
 These tests are only here to check that running the test scripts do
 not actually fails.

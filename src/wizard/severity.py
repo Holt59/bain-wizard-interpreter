@@ -1,8 +1,6 @@
-# -*- encoding: utf-8 -*-
-
 from abc import abstractmethod
+from collections.abc import MutableMapping
 from enum import Enum, auto
-from typing import MutableMapping
 
 
 class Severity(Enum):

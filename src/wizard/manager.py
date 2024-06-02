@@ -1,12 +1,8 @@
-# -*- encoding: utf-8 -*-
-
-
 from abc import abstractmethod
-from typing import List, Optional
+from collections.abc import Sequence
 
 
 class ManagerModInterface:
-
     """
     The ManagerModInterface represents the interface to implement to let the
     interpreter (or runner) interact with the game information and files.
@@ -103,7 +99,7 @@ class ManagerModInterface:
         ...
 
     @abstractmethod
-    def getPluginStatus(self, filename) -> int:
+    def getPluginStatus(self, filename: str) -> int:
         """
         Returns the status of a plugin in the Data directory.
 
@@ -151,12 +147,11 @@ class ManagerModInterface:
 
 
 class SelectOption:
-
     """
     Option from SelectOne or SelectMany statement.
     """
 
-    def __init__(self, name: str, desc: str, image: Optional[str] = None):
+    def __init__(self, name: str, desc: str, image: str | None = None):
         self._name = name
         self._desc = desc
         self._image = image
@@ -178,7 +173,7 @@ class SelectOption:
         return self._desc
 
     @property
-    def image(self) -> Optional[str]:
+    def image(self) -> str | None:
         """
         Returns:
             The image for the option, or None if there are no image.
@@ -199,7 +194,6 @@ class SelectOption:
 
 
 class ManagerUserInterface:
-
     """
     The ManagerUserInterface represents the interface to implement to let the
     interpreter (or runner) interact with the user.
@@ -251,7 +245,7 @@ class ManagerUserInterface:
 
     @abstractmethod
     def selectOne(
-        self, description: str, options: List[SelectOption], default: SelectOption
+        self, description: str, options: Sequence[SelectOption], default: SelectOption
     ) -> SelectOption:
         """
         Query user to select one of the proposed options.
@@ -270,9 +264,9 @@ class ManagerUserInterface:
     def selectMany(
         self,
         description: str,
-        options: List[SelectOption],
-        default: List[SelectOption] = [],
-    ) -> List[SelectOption]:
+        options: Sequence[SelectOption],
+        default: Sequence[SelectOption] = [],
+    ) -> Sequence[SelectOption]:
         """
         Query user to select many of the proposed options.
 
@@ -290,9 +284,9 @@ class ManagerUserInterface:
     def requiresVersions(
         self,
         game_version: str,
-        se_version: Optional[str],
-        ge_version: Optional[str],
-        wrye_bash_version: Optional[str],
+        se_version: str | None,
+        ge_version: str | None,
+        wrye_bash_version: str | None,
     ):
         """
         Tests the user system against version requirements you specify. If the

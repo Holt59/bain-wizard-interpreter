@@ -1,25 +1,22 @@
-# -*- encoding: utf-8 -*-
-
 import codecs
 import re
-from typing import Callable, List, Mapping, Optional, Type, overload
+from collections.abc import Mapping, Sequence
+from typing import Any, Callable, Type, overload
 
 from .antlr4.wizardParser import wizardParser
 from .errors import WizardIndexError, WizardNameError, WizardParseError, WizardTypeError
 from .severity import Issue, SeverityContext
 from .state import WizardInterpreterState
-from .value import (  # noqa: F401
+from .value import (
     SubPackage,
     SubPackages,
     Value,
     ValueType,
     VariableType,
-    Void,
 )
 
 
 class WizardExpressionVisitor:
-
     """
     Visitor for Wizard expression. This visitor can be used to interpret Wizard
     expression and return `Value` object. The main entry point is `visitExpr()`
@@ -29,13 +26,17 @@ class WizardExpressionVisitor:
     BAD_ESCAPE_SEQUENCE = re.compile(r"(^|(?<=[^\\]))\\(?=[^abfnrtuUx0-7\\])")
 
     _subpackages: SubPackages
-    _functions: Mapping[str, Callable[[WizardInterpreterState, List[Value]], Value]]
+    _functions: Mapping[
+        str, Callable[[WizardInterpreterState, Sequence[Value[Any]]], Value[Any]]
+    ]
     _severity: SeverityContext
 
     def __init__(
         self,
         subpackages: SubPackages,
-        functions: Mapping[str, Callable[[WizardInterpreterState, List[Value]], Value]],
+        functions: Mapping[
+            str, Callable[[WizardInterpreterState, Sequence[Value[Any]]], Value[Any]]
+        ],
         severity: SeverityContext,
     ):
         """
@@ -52,8 +53,10 @@ class WizardExpressionVisitor:
         self,
         ctx: wizardParser.TimesDivideModuloContext,
         state: WizardInterpreterState,
-    ) -> Value:
-        op: Callable[[Value, Value], Value] = Value.__mul__
+    ) -> Value[float] | Value[int]:
+        op: Callable[[Value[Any], Value[Any]], Value[int] | Value[float]] = (
+            Value.__mul__
+        )
         if ctx.Divide():
             op = Value.__div__
         elif ctx.Modulo():
@@ -65,8 +68,10 @@ class WizardExpressionVisitor:
 
     def visitPlusMinus(
         self, ctx: wizardParser.PlusMinusContext, state: WizardInterpreterState
-    ) -> Value:
-        op: Callable[[Value, Value], Value] = Value.__add__
+    ) -> Value[float] | Value[int] | Value[str]:
+        op: Callable[
+            [Value[Any], Value[Any]], Value[int] | Value[float] | Value[str]
+        ] = Value.__add__
         if ctx.Minus():
             op = Value.__sub__
         return op(
@@ -76,14 +81,14 @@ class WizardExpressionVisitor:
 
     def visitOr(
         self, ctx: wizardParser.OrContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[bool]:
         return self.visitExpr(ctx.expr(0), state) | self.visitExpr(ctx.expr(1), state)
 
     def visitFunctionCall(
         self,
         ctx: wizardParser.FunctionCallContext,
         state: WizardInterpreterState,
-    ) -> Value:
+    ) -> Value[Any]:
         name = ctx.Identifier().getText()
 
         # Specific handle for Exec:
@@ -92,7 +97,7 @@ class WizardExpressionVisitor:
         if name == "EndExec":
             raise WizardNameError(ctx, "EndExec() should not be used explicitly.")
 
-        function: Callable[[WizardInterpreterState, List[Value]], Value]
+        function: Callable[[WizardInterpreterState, Sequence[Value[Any]]], Value[Any]]
         if name in self._functions:
             function = self._functions[name]
             is_visit = False
@@ -102,7 +107,7 @@ class WizardExpressionVisitor:
         else:
             raise WizardNameError(ctx, name)
 
-        values: List[Value] = []
+        values: list[Value[Any]] = []
         if ctx.argList():
             for ex in ctx.argList().expr():
                 values.append(self.visitExpr(ex, state))
@@ -115,8 +120,8 @@ class WizardExpressionVisitor:
         self,
         ctx: wizardParser.DotFunctionCallContext,
         state: WizardInterpreterState,
-    ) -> Value:
-        values: List[Value] = [self.visitExpr(ctx.expr(), state)]
+    ) -> Value[Any]:
+        values: list[Value[Any]] = [self.visitExpr(ctx.expr(), state)]
 
         mname = "{}.{}".format(values[0].type, ctx.Identifier().getText())
         if mname not in self._functions:
@@ -130,23 +135,25 @@ class WizardExpressionVisitor:
 
     def visitIn(
         self, ctx: wizardParser.InContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[bool]:
         return self.visitExpr(ctx.expr(1), state).contains(
             self.visitExpr(ctx.expr(0), state), bool(ctx.Colon())
         )
 
     def doCmp(
         self,
-        op: Callable[[Value, Value], Value],
-        lhs: Value,
-        rhs: Value,
+        ctx: wizardParser.ExprContext,
+        op: Callable[[Value[Any], Value[Any]], Value[bool]],
+        lhs: Value[Any],
+        rhs: Value[Any],
         case_insensitive: bool = True,
-    ) -> Value:
+    ) -> Value[bool]:
         if case_insensitive:
             if not isinstance(lhs.value, str) or not isinstance(rhs.value, str):
                 raise WizardTypeError(
+                    ctx,
                     "Cannot use case-insensitive comparison with values of type"
-                    f" {lhs.type}, {rhs.type}."
+                    f" {lhs.type}, {rhs.type}.",
                 )
             lhs = Value(lhs.value.lower())
             rhs = Value(rhs.value.lower())
@@ -154,11 +161,12 @@ class WizardExpressionVisitor:
 
     def visitEqual(
         self, ctx: wizardParser.EqualContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[bool]:
         op = Value.equals
         if ctx.NotEqual():
             op = Value.not_equals
         return self.doCmp(
+            ctx,
             op,
             self.visitExpr(ctx.expr(0), state),
             self.visitExpr(ctx.expr(1), state),
@@ -167,11 +175,12 @@ class WizardExpressionVisitor:
 
     def visitLesser(
         self, ctx: wizardParser.LesserContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[bool]:
         op = Value.__le__
         if ctx.Lesser():
             op = Value.__lt__
         return self.doCmp(
+            ctx,
             op,
             self.visitExpr(ctx.expr(0), state),
             self.visitExpr(ctx.expr(1), state),
@@ -180,11 +189,12 @@ class WizardExpressionVisitor:
 
     def visitGreater(
         self, ctx: wizardParser.GreaterContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[bool]:
         op = Value.__ge__
         if ctx.Greater():
             op = Value.__gt__
         return self.doCmp(
+            ctx,
             op,
             self.visitExpr(ctx.expr(0), state),
             self.visitExpr(ctx.expr(1), state),
@@ -195,82 +205,83 @@ class WizardExpressionVisitor:
         self,
         ctx: wizardParser.ExponentiationContext,
         state: WizardInterpreterState,
-    ) -> Value:
+    ) -> Value[float] | Value[int]:
         return self.visitExpr(ctx.expr(0), state) ** self.visitExpr(ctx.expr(1), state)
 
     def visitIndex(
         self, ctx: wizardParser.IndexContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[str] | Value[SubPackage]:
         return self.visitExpr(ctx.expr(0), state)[self.visitExpr(ctx.expr(1), state)]
+
+    def _visitIncDec(
+        self,
+        ctx: wizardParser.PreDecrementContext
+        | wizardParser.PostDecrementContext
+        | wizardParser.PreIncrementContext
+        | wizardParser.PostIncrementContext,
+        offset: int,
+        state: WizardInterpreterState,
+    ) -> Value[int] | Value[float]:
+        name = ctx.Identifier().getText()
+        value = state.variables.get(name, None)
+        if value is None:
+            raise WizardNameError(ctx, name)
+
+        state.set(name, value + Value(offset))
+        return state.variables[name]
 
     def visitPreDecrement(
         self,
         ctx: wizardParser.PreDecrementContext,
         state: WizardInterpreterState,
-    ) -> Value:
-        name = ctx.Identifier().getText()
-        if name not in state._variables:
-            raise WizardNameError(ctx, name)
-        state._variables[ctx.Identifier().getText()] -= Value(1)
-        return state._variables[ctx.Identifier().getText()]
-
-    def visitPreIncrement(
-        self,
-        ctx: wizardParser.PreIncrementContext,
-        state: WizardInterpreterState,
-    ) -> Value:
-        name = ctx.Identifier().getText()
-        if name not in state._variables:
-            raise WizardNameError(ctx, name)
-        state._variables[ctx.Identifier().getText()] += Value(1)
-        return state._variables[ctx.Identifier().getText()]
-
-    def visitPostIncrement(
-        self,
-        ctx: wizardParser.PostIncrementContext,
-        state: WizardInterpreterState,
-    ) -> Value:
-        name = ctx.Identifier().getText()
-        if name not in state._variables:
-            raise WizardNameError(ctx, name)
-        state._variables[ctx.Identifier().getText()] += Value(1)
-        return state._variables[ctx.Identifier().getText()]
+    ) -> Value[int] | Value[float]:
+        return self._visitIncDec(ctx, -1, state)
 
     def visitPostDecrement(
         self,
         ctx: wizardParser.PostDecrementContext,
         state: WizardInterpreterState,
-    ) -> Value:
-        name = ctx.Identifier().getText()
-        if name not in state._variables:
-            raise WizardNameError(ctx, name)
-        state._variables[ctx.Identifier().getText()] -= Value(1)
-        return state._variables[ctx.Identifier().getText()]
+    ) -> Value[int] | Value[float]:
+        return self._visitIncDec(ctx, -1, state)
+
+    def visitPreIncrement(
+        self,
+        ctx: wizardParser.PreIncrementContext,
+        state: WizardInterpreterState,
+    ) -> Value[int] | Value[float]:
+        return self._visitIncDec(ctx, +1, state)
+
+    def visitPostIncrement(
+        self,
+        ctx: wizardParser.PostIncrementContext,
+        state: WizardInterpreterState,
+    ) -> Value[int] | Value[float]:
+        return self._visitIncDec(ctx, +1, state)
 
     def visitNegative(
         self, ctx: wizardParser.NegativeContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[int] | Value[float]:
         return -self.visitExpr(ctx.expr(), state)
 
     def visitNot(
         self, ctx: wizardParser.NotContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[bool]:
         return self.visitExpr(ctx.expr(), state).logical_not()
 
     def visitParenExpr(
         self, ctx: wizardParser.ParenExprContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[Any]:
         return self.visitExpr(ctx.expr(), state)
 
     def visitSlice(
         self, ctx: wizardParser.SliceContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[str]:
         # expr LeftBracket expr? Colon expr? (Colon expr?)? RightBracket
         lhs = self.visitExpr(ctx.expr(0), state)
 
-        start: Optional[Value] = None
-        end: Optional[Value] = None
-        step: Optional[Value] = None
+        start: Value[Any] | None = None
+        end: Value[Any] | None = None
+        step: Value[Any] | None = None
 
         # Index of end expression in ctx.children (without start by
         # default):
@@ -294,15 +305,16 @@ class WizardExpressionVisitor:
 
     def visitAnd(
         self, ctx: wizardParser.AndContext, state: WizardInterpreterState
-    ) -> Value:
-        lhs, rhs = self.visitExpr(ctx.expr(0), state), self.visitExpr(
-            ctx.expr(1), state
+    ) -> Value[bool]:
+        lhs, rhs = (
+            self.visitExpr(ctx.expr(0), state),
+            self.visitExpr(ctx.expr(1), state),
         )
         return lhs & rhs
 
     def visitValue(
         self, ctx: wizardParser.ValueContext, state: WizardInterpreterState
-    ) -> Value:
+    ) -> Value[Any]:
         if ctx.constant():
             return self.visitConstant(ctx.constant())
         if ctx.integer():
@@ -313,7 +325,7 @@ class WizardExpressionVisitor:
             return self.visitString(ctx.string())
         if ctx.Identifier():
             name = ctx.Identifier().getText()
-            if name not in state._variables:
+            if name not in state.variables:
                 # Severity check:
                 self._severity.raise_or_warn(
                     Issue.USAGE_OF_NOTSET_VARIABLES,
@@ -322,11 +334,13 @@ class WizardExpressionVisitor:
                 )
                 return Value(0)
             else:
-                return state._variables[ctx.Identifier().getText()]
+                return state.variables[ctx.Identifier().getText()]
 
         raise WizardNameError(ctx, ctx.getText())
 
-    def visitConstant(self, ctx: wizardParser.ConstantContext) -> Value:
+    def visitConstant(
+        self, ctx: wizardParser.ConstantContext
+    ) -> Value[bool] | Value[SubPackages]:
         if ctx.getText() == "False":
             return Value(False)
         elif ctx.getText() == "True":
@@ -334,13 +348,13 @@ class WizardExpressionVisitor:
         else:
             return Value(self._subpackages)
 
-    def visitInteger(self, ctx: wizardParser.IntegerContext) -> Value:
+    def visitInteger(self, ctx: wizardParser.IntegerContext) -> Value[int]:
         return Value(int(ctx.getText()))
 
-    def visitDecimal(self, ctx: wizardParser.DecimalContext) -> Value:
+    def visitDecimal(self, ctx: wizardParser.DecimalContext) -> Value[float]:
         return Value(float(ctx.getText()))
 
-    def visitString(self, ctx: wizardParser.StringContext) -> Value:
+    def visitString(self, ctx: wizardParser.StringContext) -> Value[str]:
         # Remove the quotation marks:
         txt = ctx.getText()[1:-1]
 
@@ -355,8 +369,7 @@ class WizardExpressionVisitor:
     @overload
     def visitExpr(
         self, ctx: wizardParser.ExprContext, state: WizardInterpreterState
-    ) -> Value:
-        ...
+    ) -> Value[Any]: ...
 
     @overload
     def visitExpr(
@@ -364,14 +377,13 @@ class WizardExpressionVisitor:
         ctx: wizardParser.ExprContext,
         state: WizardInterpreterState,
         typ: Type[ValueType],
-    ) -> Value[ValueType]:
-        ...
+    ) -> Value[ValueType]: ...
 
     def visitExpr(
         self,
         ctx: wizardParser.ExprContext,
         state: WizardInterpreterState,
-        typ: Optional[Type[ValueType]] = None,
+        typ: Type[ValueType] | None = None,
     ):
         """
         Evaluate the given expression.
@@ -391,11 +403,13 @@ class WizardExpressionVisitor:
             raise WizardParseError(ctx, ctx.exception)
 
         try:
-            value = getattr(self, "visit" + type(ctx).__name__[:-7])(ctx, state)
+            value: Value[Any] = getattr(self, "visit" + type(ctx).__name__[:-7])(
+                ctx, state
+            )
         except TypeError as te:
-            raise WizardTypeError(ctx, *te.args)
+            raise WizardTypeError(ctx, *te.args) from te
         except IndexError as ie:
-            raise WizardIndexError(ctx, *ie.args)
+            raise WizardIndexError(ctx, *ie.args) from ie
 
         if typ is not None and not isinstance(value.value, typ):
             raise WizardTypeError(
@@ -404,4 +418,4 @@ class WizardExpressionVisitor:
                 f" of type {value.type}.",
             )
 
-        return value  # type: ignore
+        return value

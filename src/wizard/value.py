@@ -1,16 +1,19 @@
-# -*- encoding: utf-8 -*-
+from __future__ import annotations
 
 import operator
-from abc import abstractproperty
+from abc import abstractmethod
+from collections.abc import Iterable
 from enum import Enum, auto
 from pathlib import Path
-from typing import Callable, Generic, Iterable, List, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Generic, Type, TypeAlias, TypeVar, cast
 
 
 class CaseFoldNamedObject:
     _name: str
 
-    def __init__(self, name: str):
+    def __init__(self, name: str | CaseFoldNamedObject):
+        if isinstance(name, CaseFoldNamedObject):
+            name = name.name
         self._name = name
 
     @property
@@ -58,7 +61,6 @@ class CaseFoldNamedObject:
 
 
 class Void:
-
     """
     Simple class representing the result of a function call without a return
     value.
@@ -67,12 +69,12 @@ class Void:
     pass
 
 
-class Plugin(CaseFoldNamedObject):
-    ...
+class Plugin(CaseFoldNamedObject): ...
 
 
 class SubPackage(CaseFoldNamedObject):
-    @abstractproperty
+    @property
+    @abstractmethod
     def files(self) -> Iterable[str]:
         pass
 
@@ -93,13 +95,16 @@ class SubPackage(CaseFoldNamedObject):
         return (Plugin(Path(file).name) for file in self.files if self.is_plugin(file))
 
 
-class SubPackages(List[SubPackage]):
-
+class SubPackages(list[SubPackage]):
     """
     Class to wrap the 'SubPackages' variable.
     """
 
     ...
+
+
+ValueType = TypeVar("ValueType", Void, SubPackage, SubPackages, bool, int, float, str)
+AnyValueType: TypeAlias = Void | SubPackage | SubPackages | bool | int | float | str
 
 
 class VariableType(Enum):
@@ -115,7 +120,7 @@ class VariableType(Enum):
     SUBPACKAGE = auto()
 
     @staticmethod
-    def from_pytype(pytype: Type) -> "VariableType":
+    def from_pytype(pytype: Type[ValueType]) -> VariableType:
         if pytype is Void:
             return VariableType.VOID
         if issubclass(pytype, SubPackages):
@@ -142,15 +147,7 @@ class VariableType(Enum):
         return super().__str__().lower().split(".")[-1]
 
 
-# Union of possible type for Wizard value:
-WizardValueType = Union[bool, int, float, str, SubPackage, SubPackages, Void]
-
-
-ValueType = TypeVar("ValueType", bound=WizardValueType)
-
-
 class Value(Generic[ValueType]):
-
     """
     Represent a value of a given type, that can be a constant or the result of
     a complex expression.
@@ -161,9 +158,9 @@ class Value(Generic[ValueType]):
 
     _value: ValueType
 
-    def __init__(self, value: ValueType):
+    def __init__(self, value: ValueType | None):
         if value is None:
-            value = Void()
+            value = cast(ValueType, Void())
         self._type = VariableType.from_pytype(type(value))
         self._value = value
 
@@ -190,21 +187,23 @@ class Value(Generic[ValueType]):
         """
         return self._value
 
-    def __pos__(self) -> "Value":
+    def __pos__(self) -> Value[ValueType]:
         if not isinstance(self._value, (int, float)):
             raise TypeError(
                 f"Cannot use plus operator on variable of type {self._type}."
             )
         return Value(self._value)
 
-    def __neg__(self) -> "Value":
-        if not isinstance(self._value, (int, float)):
+    def __neg__(self) -> Value[ValueType]:
+        if not isinstance(self._value, (int, float)) or isinstance(self._value, bool):
             raise TypeError(
                 f"Cannot use minus operator on variable of type {self._type}."
             )
         return Value(-self._value)
 
-    def __add__(self, other: "Value") -> "Value":
+    def __add__(
+        self: Value[Any], other: Value[Any]
+    ) -> Value[int] | Value[float] | Value[str]:
         if (
             not isinstance(self._value, (int, float, str))
             or not isinstance(other._value, (int, float, str))
@@ -213,57 +212,57 @@ class Value(Generic[ValueType]):
             raise TypeError(f"Cannot add values of types {self._type}, {other._type}.")
         return Value(self._value + other._value)  # type: ignore
 
-    def __sub__(self, other: "Value") -> "Value":
+    def __sub__(self: Value[Any], other: Value[Any]) -> Value[int] | Value[float]:
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
             raise TypeError("Cannot substract non-numeric values.")
         return Value(self._value - other._value)
 
-    def __mul__(self, other: "Value") -> "Value":
+    def __mul__(self: Value[Any], other: Value[Any]) -> Value[int] | Value[float]:
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
             raise TypeError("Cannot multiply non-numeric values.")
         return Value(self._value * other._value)
 
-    def __div__(self, other: "Value") -> "Value":
+    def __div__(self: Value[Any], other: Value[Any]) -> Value[int] | Value[float]:
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
             raise TypeError("Cannot divide non-numeric values.")
         return Value(self._value / other._value)
 
-    def __pow__(self, other: "Value") -> "Value":
+    def __pow__(self: Value[Any], other: Value[Any]) -> Value[int] | Value[float]:
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
             raise TypeError("Cannot raise non-numeric values.")
         return Value(self._value**other._value)
 
-    def __mod__(self, other: "Value") -> "Value":
+    def __mod__(self: Value[Any], other: Value[Any]) -> Value[int] | Value[float]:
         if not isinstance(self._value, (int, float)) or not isinstance(
             other._value, (int, float)
         ):
             raise TypeError("Cannot modulo non-numeric values.")
         return Value(self._value % other._value)
 
-    def logical_not(self) -> "Value":
+    def logical_not(self) -> Value[bool]:
         return Value(not self._value)
 
-    def equals(self, other: "Value") -> "Value":
+    def equals(self: Value[Any], other: Value[Any]) -> Value[bool]:
         return Value(self._value == other._value)
 
-    def not_equals(self, other: "Value") -> "Value":
+    def not_equals(self: Value[Any], other: Value[Any]) -> Value[bool]:
         return Value(self._value != other._value)
 
-    def __or__(self, other: "Value") -> "Value":
-        return Value(self._value or other._value)
+    def __or__(self, other: Value[Any]) -> Value[bool]:
+        return Value(bool(self._value or other._value))
 
-    def __and__(self, other: "Value") -> "Value":
+    def __and__(self, other: Value[Any]) -> Value[bool]:
         return Value(self._value and other._value)
 
-    def __gt__(self, other: "Value") -> "Value":
+    def __gt__(self: Value[Any], other: Value[Any]) -> Value[bool]:
         if isinstance(self._value, (int, float)) and isinstance(
             other._value, (int, float)
         ):
@@ -272,7 +271,7 @@ class Value(Generic[ValueType]):
             return Value(self._value > other._value)
         raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
-    def __ge__(self, other: "Value") -> "Value":
+    def __ge__(self: Value[Any], other: Value[Any]) -> Value[bool]:
         if isinstance(self._value, (int, float)) and isinstance(
             other._value, (int, float)
         ):
@@ -281,7 +280,7 @@ class Value(Generic[ValueType]):
             return Value(self._value >= other._value)
         raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
-    def __lt__(self, other: "Value") -> "Value":
+    def __lt__(self: Value[Any], other: Value[Any]) -> Value[bool]:
         if isinstance(self._value, (int, float)) and isinstance(
             other._value, (int, float)
         ):
@@ -290,7 +289,7 @@ class Value(Generic[ValueType]):
             return Value(self._value < other._value)
         raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
-    def __le__(self, other: "Value") -> "Value":
+    def __le__(self: Value[Any], other: Value[Any]) -> Value[bool]:
         if isinstance(self._value, (int, float)) and isinstance(
             other._value, (int, float)
         ):
@@ -299,7 +298,7 @@ class Value(Generic[ValueType]):
             return Value(self._value <= other._value)
         raise TypeError(f"Cannot compare values of types {self._type}, {other._type}.")
 
-    def contains(self, item: "Value", case_insensitive: bool = False) -> "Value":
+    def contains(self, item: Value[Any], case_insensitive: bool = False) -> Value[bool]:
         if not isinstance(self._value, (SubPackage, SubPackages)):
             raise TypeError(f"Cannot iterate variable of type {self._type}.")
 
@@ -326,26 +325,26 @@ class Value(Generic[ValueType]):
 
         return Value(False)
 
-    def __getitem__(self, index: "Value") -> "Value":
+    def __getitem__(self, index: Value[Any]) -> Value[str] | Value[SubPackage]:
         if not isinstance(self._value, (str, SubPackage, SubPackages)):
             raise TypeError(f"Cannot index variable of type {self._type}.")
         if not isinstance(index._value, (int)):
             raise TypeError(f"Cannot index with variable of type {index._type}.")
 
-        value: Union[str, SubPackages]
+        value: str | SubPackages
         if isinstance(self._value, SubPackage):
             value = self._value.name
         else:
             value = self._value
 
         try:
-            return Value(value[index._value])
-        except IndexError:
-            raise IndexError(index._value)
+            return Value(value[index._value])  # type: ignore
+        except IndexError as err:
+            raise IndexError(index._value) from err
 
     def slice(
-        self, start: Optional["Value"], end: Optional["Value"], step: Optional["Value"]
-    ) -> "Value":
+        self, start: Value[Any] | None, end: Value[Any] | None, step: Value[Any] | None
+    ) -> Value[str]:
         if not isinstance(self._value, str):
             raise TypeError(f"Cannot access slice of variable of type {self._type}.")
 
@@ -359,7 +358,7 @@ class Value(Generic[ValueType]):
             ]
         )
 
-    def __iter__(self) -> Iterable["Value"]:
+    def __iter__(self) -> Iterable[Value[SubPackage]] | Iterable[Value[str]]:
         if not isinstance(self._value, (SubPackage, SubPackages)):
             raise TypeError(f"Cannot iterate variable of type {self._type}.")
 
@@ -374,7 +373,7 @@ class Value(Generic[ValueType]):
     # Those operations are not "Wizardly", i.e. they make sense in Python:
 
     def __eq__(self, other: object) -> bool:
-        value: Value
+        value: Value[Any]
         if not isinstance(other, Value):
             value = Value(other)  # type: ignore
         else:

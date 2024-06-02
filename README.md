@@ -158,7 +158,7 @@ To generate the file, you need `antlr4`, and you simply have to run:
 
 ```bash
 # IMPORTANT: use FORWARD SLASH (/) everywhere, otherwise it does not work
-java -jar antlr-4.10.1-complete.jar -visitor -Dlanguage=Python3 -o ./wizard/antlr4 ./vendor/wizparse/wizards/wizard.g4
+java -jar antlr-4.13.1-complete.jar -visitor -Dlanguage=Python3 -o ./src/wizard/antlr4 ./vendor/wizparse/wizards/wizard.g4
 ```
 
 ## Run tests
