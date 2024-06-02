@@ -18,5 +18,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: abatilo/actions-poetry@v2
       - run: poetry install
-      - name: Lint
+      - name: Test
         run: poetry run pytest
